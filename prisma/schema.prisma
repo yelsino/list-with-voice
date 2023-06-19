@@ -1,0 +1,32 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model ItemList {
+  id             String    @id @default(auto()) @map("_id") @db.ObjectId
+  cantidad       Int
+  medida         String
+  nombreProducto String
+  precio         Float
+  costoTotal     Float
+  lista          Lista     @relation("ListaToItemList", fields: [listaId], references: [id])
+  listaId        String    @db.ObjectId
+}
+
+model Lista {
+  id              String     @id @default(auto()) @map("_id") @db.ObjectId
+  numero          Int
+  items           ItemList[] @relation("ListaToItemList")
+  nombreCliente   String
+  cosas           String
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+}
+
