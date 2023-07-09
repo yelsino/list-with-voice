@@ -1,27 +1,29 @@
-import { ItemList } from "@prisma/client";
 
 export interface ListaState  {
     nombreCliente: string;
     itemsList: ItemList[];
+    montoTotal: number;
+    edit: boolean
 };
 
-// export interface ItemList  {
-//     cantidad: number;
-//     medida: string;
-//     nombreProducto: string;
-//     precio: number;
-//     costoTotal: number;
-// };
+export interface ItemList  {
+    cantidad: number;
+    medida: string;
+    nombreProducto: string;
+    precio: number;
+    costoTotal: number;
+    index: number
+};
 
 
-// export interface Lista {
-//     id: string;
-//     numero: number;
-//     items: ItemList[];
-//     nombreCliente: string;
-//     createdAt: Date;
-//     updatedAt: Date;
-// };
+export interface Lista {
+    id?: string;
+    numero?: number;
+    items: ItemList[];
+    nombreCliente: string;
+    createdAt?: Date;
+    updatedAt?: Date;
+};
 
 export interface Message {
     role: string;

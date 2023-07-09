@@ -1,23 +1,25 @@
 import { NextResponse } from "next/server";
-import { Lista, PrismaClient } from "@prisma/client";
+import {  PrismaClient } from "@prisma/client";
+import { Lista } from "@/interfaces/list.interface";
 const prisma = new PrismaClient();
+
 
 
 
 export async function POST(request: Request) {
 
     const body: Lista = await request.json();
-    const { cosas, nombreCliente, } = body
 
     const ordenLista = await prisma.lista.count();
+    
     const nuevaLista = await prisma.lista.create({
         data: {
-            numero: ordenLista + 1,
-            items: items,
-            nombreCliente: nombreCliente
-        },
+            items:body.items as any,
+            numero:ordenLista + 1,
+            nombreCliente: body.nombreCliente
+        }
     })
-
+    
     return NextResponse.json(nuevaLista);
 }
 

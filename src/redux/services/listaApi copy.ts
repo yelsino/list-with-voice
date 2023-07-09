@@ -6,22 +6,63 @@ import {
 } from "@reduxjs/toolkit/query/react";
 
 
-const URLBASE = {
-    LOCAL: 'http://localhost:3000/api/',
-    GPT: 'https://api.openai.com/v1/chat/completions'
-}
 
+type MyFetchArgs = { url: string; method?: string; body?: any };
+
+// Define una baseQuery personalizada
+const customBaseQuery: BaseQueryFn<
+    MyFetchArgs | string,
+    unknown,
+    unknown
+> = async (args, api, extraOptions) => {
+    let url = "";
+    let headers = {};
+    let fetchOptions: RequestInit = {};
+
+    if (typeof args === "string") {
+        url = "http://localhost:3000/api/listas/";
+        headers = {
+            "Content-Type": "application/json",
+        };
+        fetchOptions = {
+            method: "GET",
+            headers,
+        };
+    } else if ("url" in args) {
+        if (args.url.includes("gpt")) {
+            url = "https://api.openai.com/v1/chat/completions";
+            headers = {
+                "Content-Type": "application/json",
+                Authorization: `Bearer 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`,
+            };
+            fetchOptions = {
+                method: args.method ?? "GET",
+                headers,
+                body:
+                    args.body !== null && args.method !== "GET"
+                        ? JSON.stringify(args.body)
+                        : undefined,
+            };
+        }
+    }
+
+    const result = await fetch(url, fetchOptions);
+
+    if (result.ok) {
+        return { data: await result.json() };
+    } else {
+        return { error: { status: result.status, data: await result.json() } };
+    }
+};
 
 export const listaApi = createApi({
     reducerPath: "listaApi",
     refetchOnFocus: true, // when the window is refocused, refetch the data
-    baseQuery: fetchBaseQuery({
-        baseUrl: ''
-    }),
+    baseQuery: customBaseQuery,
 
     endpoints: (builder) => ({
         getListas: builder.query<Lista[], null>({
-            query: () => `${URLBASE.LOCAL}/listas`,
+            query: () => "listas" as any,
         }),
         getListaById: builder.query<Lista, { id: string }>({
             query: ({ id }) => `listas/${id}` as any,
@@ -46,7 +87,7 @@ export const listaApi = createApi({
         }),
         convertTextOnItemGPT: builder.mutation<ResponseGPT, GptRequest>({
             query: ({ message }) => ({
-                url: URLBASE.GPT,
+                url: "gpt",
                 method: "POST",
                 body: {
                     model: "gpt-3.5-turbo",
@@ -84,16 +125,12 @@ export const listaApi = createApi({
                     ],
                     temperature: 1,
                 },
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: process.env.GPT_TOKEN,
-                }
             }),
         }),
         registrarListDB: builder.mutation<Lista, Lista>({
             query: (lista) => ({
                 method: 'POST',
-                url: `${URLBASE.LOCAL}/listas`,
+                url: 'listas',
                 body: JSON.stringify(lista)
             })
         })

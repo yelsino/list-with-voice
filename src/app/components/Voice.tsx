@@ -3,27 +3,41 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
-import { useConvertTextOnItemGPTMutation } from "@/redux/services/listaApi";
+import { useParams } from "next/navigation";
+import {
+    useConvertTextOnItemGPTMutation,
+    useRegistrarListDBMutation,
+} from "@/redux/services/listaApi";
 import {
     addItemToList,
-    listaSlice,
+    editarLista,
+    limpiarLista,
     nameLista,
+    sumarLista,
 } from "@/redux/features/listaSlice";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 
 function Voice() {
-    const dispatch = useAppDispatch();
-    const {itemsList,nombreCliente} = useAppSelector((state) => state.listaReducer);
-    const { push } = useRouter();
-    const [isListening, setIsListening] = useState<boolean>(false);
     const transcriptRef = useRef<string>(""); // Se usará useRef en lugar de useState
-    const [chatGPTResponse, setChatGPTResponse] = useState<string[]>([]);
     const recognitionReference = useRef<any | null>(null);
 
+    const dispatch = useAppDispatch();
     const pathname = usePathname();
+    const { params } = useParams();
+    const { push } = useRouter();
 
-    const [convertToItemGPT, { data, isLoading, error }] =
-        useConvertTextOnItemGPTMutation();
+    const { itemsList, nombreCliente, edit } = useAppSelector(
+        (state) => state.listaReducer
+    );
+
+    const [isListening, setIsListening] = useState<boolean>(false);
+    const [chatGPTResponse, setChatGPTResponse] = useState<string[]>([]);
+    const [convertToItemGPT] = useConvertTextOnItemGPTMutation();
+    const [registrarListDB] = useRegistrarListDBMutation();
+
+    const montoTotal = itemsList.reduce((acc, curr) => {
+        return Number(acc) + Number(curr.costoTotal);
+    }, 0);
 
     useEffect(() => {
         if ("webkitSpeechRecognition" in window) {
@@ -42,8 +56,6 @@ function Voice() {
             };
 
             recognitionReference.current.onend = () => {
-                console.log(transcriptRef.current);
-                
                 if (transcriptRef.current === "configuración") {
                     push("/configuracion");
                 }
@@ -55,14 +67,9 @@ function Voice() {
                 }
 
                 if (pathname === "/generar") {
-                    if (transcriptRef.current === "lista completada") {
-                        // 'ENVIAR LISTA GENERADA'
-                        // sumarListaGPT(transcriptRef.current);
-                    }
-
                     if (transcriptRef.current.includes("lista para")) {
-                        console.log('lista para ?');
-                        
+                        console.log("lista para ?");
+
                         const remainingText = transcriptRef.current
                             .split("lista para")[1]
                             .trimStart();
@@ -77,7 +84,7 @@ function Voice() {
                         "no entiendo",
                     ];
 
-                    const phCloseList = [
+                    const phFinishList = [
                         "generar lista",
                         "finalizar lista",
                         "terminar lista",
@@ -85,36 +92,82 @@ function Voice() {
                         "concluir lista",
                         "guardar lista",
                         "completar lista",
-                    ]
+                    ];
 
-                    if(phCloseList.includes(transcriptRef.current)){
-                        
-                        console.log('voy a generar la lista');
-                        
-                        const lista = {
+                    const phEditList = [
+                        "editar lista",
+                        "modificar lista",
+                        "cambiar lista",
+                        "actualizar lista",
+                        "ajustar lista",
+                        "modificar elementos de lista",
+                        "editar contenido de lista",
+                        "rectificar lista",
+                        "agregar más productos",
+                        "agregar más productos a la lista",
+                        "agregar productos",
+                    ];
+
+                    const phCloseRegister = [
+                        "cancelar registro",
+                        "anular registro",
+                        "cerrar registro",
+                        "detener registro",
+                        "abortar registro",
+                        "finalizar registro",
+                        "terminar registro",
+                        "concluir registro",
+                        "cancelar creación de lista",
+                        "salir del registro de lista",
+                    ];
+
+                    if (phFinishList.includes(transcriptRef.current)) {
+                        console.log(
+                            "ok, finalizar entonces",
+                            itemsList.length,
+                            montoTotal
+                        );
+
+                        dispatch(sumarLista(montoTotal));
+                        registrarListDB({
+                            items: itemsList,
                             nombreCliente: nombreCliente,
-                            itemsList: itemsList,
-                        }
-                        return 
+                        }).then(()=>{
+                            dispatch(editarLista(false))
+                        });
+                        return;
                     }
 
+                    if (phEditList.includes(transcriptRef.current))
+                        return dispatch(editarLista(true));
+
+                    if (phCloseRegister.includes(transcriptRef.current))
+                        return dispatch(limpiarLista());
+
                     convertToItemGPT({ message: transcriptRef.current })
-                        .then((response) => {
+                        .then((response: any) => {
                             // @ts-ignore
 
-                            const messageResult = response.data.choices[0].message.content
-                            const responseValida = phrases.some((phrase) => messageResult.includes(phrase));
+                            const messageResult =
+                                response?.data?.choices[0].message.content;
+                            const responseValida = phrases.some((phrase) =>
+                                messageResult.includes(phrase)
+                            );
                             console.log(responseValida);
-                            
+
                             if (responseValida) {
                                 transcriptRef.current = "";
                                 return;
                             }
 
-                            const itemJson = JSON.parse(messageResult)
+                            const itemJson = JSON.parse(messageResult);
+
+                            const indexItem = itemsList.length + 1;
 
                             // @ts-ignore
-                            dispatch(addItemToList(itemJson));
+                            dispatch(
+                                addItemToList({ ...itemJson, index: indexItem })
+                            );
                         })
                         .catch((error: unknown) => {});
                     transcriptRef.current = "";
@@ -125,7 +178,7 @@ function Voice() {
                 "Lo siento, tu navegador no soporta la API de reconocimiento de voz. Por favor, prueba con Google Chrome."
             );
         }
-    }, []);
+    }, [pathname, itemsList]);
 
     useEffect(() => {
         const responsesLStorage: string[] = JSON.parse(
@@ -152,6 +205,7 @@ function Voice() {
             }}
             className="absolute bottom-12 left-1/2 transform -translate-x-1/2"
         >
+            {pathname}
             <div className="bg-primary-100 h-20 w-20 relative rounded-full flex justify-center items-center">
                 <svg
                     xmlns="http://www.w3.org/2000/svg"

@@ -32,7 +32,7 @@ function ListasIdPage({ params }: { params: IParams }) {
                         className="text-secondary-100 "
                         key={index}
                     >
-                       <span className="text-secondary-200 text-xs">{index +1}.-  </span> {items}
+                       <span className="text-secondary-200 text-xs">{index +1}.-  </span> {items.costoTotal}
                     </p>
                 ))}
             </div>

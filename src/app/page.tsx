@@ -5,20 +5,54 @@ import { increment } from "@/redux/features/counterSlice";
 import Link from "next/link";
 
 export default function Home() {
-    // const count = useAppSelector((state) => state.counterReducer.value);
-    // const dispatch = useAppDispatch();
+    
+
+    const bottonPrueba = async() => {
+        try {
+            // @ts-nocheck
+            const device = await navigator.bluetooth.requestDevice({
+                filters: [
+                    {
+                        services: [
+                            "00001200-0000-1000-8000-00805f9b34fb",
+                        ],
+                    },
+                ],
+            });
+
+            console.log(device);
+            // El usuario ha seleccionado un dispositivo Bluetooth
+            console.log("aceptó");
+        } catch (error) {
+            if (
+                error instanceof DOMException &&
+                error.code === DOMException.NOT_FOUND_ERR
+            ) {
+                console.log(
+                    "El usuario ha cancelado la selección de dispositivo Bluetooth."
+                );
+            } else {
+                console.error(
+                    "Error al solicitar dispositivo de impresora Bluetooth:",
+                    error
+                );
+            }
+        }
+    }
 
     return (
         <>
             {/* header */}
             <div className="flex justify-between items-center ">
                 {/* <h4 className="text-secondary-100">{count} </h4> */}
-                {/* <button
+                
+
+                <button
                     className="text-secondary-100"
-                    onClick={() => dispatch(increment())}
+                    onClick={()=>bottonPrueba()}
                 >
-                    increment
-                </button> */}
+                    IMPRESORA
+                </button>
 
                 <h1 className="text-4xl font-bold font-poppins text-text1 tracking-wider text-secondary-100">
                     <Link href="/configuracion">
