@@ -5,7 +5,9 @@ const initialState: ListaState = {
     nombreCliente: "",
     itemsList: [],
     montoTotal: 0,
-    edit: true
+    edit: true,
+    pagada: false,
+    cargando: false,
 };
 
 export const listaSlice = createSlice({
@@ -22,14 +24,29 @@ export const listaSlice = createSlice({
             state.montoTotal = action.payload;
         },
         limpiarLista: (state) => {
-            state = { nombreCliente: "", itemsList: [], montoTotal: 0, edit: true };
+            state = {
+                nombreCliente: "",
+                itemsList: [],
+                montoTotal: 0,
+                edit: true,
+            };
         },
-        editarLista: (state, action: PayloadAction<boolean>) => {
-            state.edit = action.payload
+        listaPagada: (state, action: PayloadAction<boolean>) => {
+            state.pagada = action.payload;
+        },
+        changeCargando: (state, action: PayloadAction<boolean>) => {
+            state.cargando = action.payload;
         }
     },
 });
 
-export const { addItemToList, nameLista, sumarLista, limpiarLista,editarLista } = listaSlice.actions;
+export const {
+    addItemToList,
+    nameLista,
+    sumarLista,
+    limpiarLista,
+    listaPagada,
+    changeCargando,
+} = listaSlice.actions;
 
 export default listaSlice.reducer;

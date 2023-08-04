@@ -9,13 +9,30 @@ generator client {
   provider = "prisma-client-js"
 }
 
-
 model Lista {
-  id              String     @id @default(auto()) @map("_id") @db.ObjectId
-  numero          Int
-  items           Json[]
-  nombreCliente   String
-  createdAt       DateTime   @default(now())
-  updatedAt       DateTime   @updatedAt
+  id            String     @id @default(auto()) @map("_id") @db.ObjectId
+  numero        Int
+  items         ItemList[]
+  nombreCliente String
+  montoTotal    Float      @default(0)
+  pagado        Boolean    @default(false)
+  completado    Boolean    @default(false)
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
 }
 
+model ItemList {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  lista      Lista    @relation(fields: [listaId], references: [id])
+  listaId    String   @db.ObjectId
+  nombre     String
+  precio     Float
+  cantidad   Int
+  montoItem  Float
+  medida     String
+  voz        String
+  status     String
+  calculated Boolean  @default(true)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}

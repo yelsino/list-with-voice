@@ -2,31 +2,62 @@
 import { useGetListasQuery } from "@/redux/services/listaApi";
 import Link from "next/link";
 import React from "react";
-import SelectDate from "../components/SelectDate";
+import { moneyFormat } from "@/interfaces/mapper";
+import { Header } from "../components/Header";
+import { IconCalendar, IconHome } from "../components/Icons";
+import { SuperTitle } from "../components/SuperTitle";
+import { Loader } from "../components/Loader/Loader";
+import { ComprobanteDePago } from "../components/Comprobante/Comprobante";
 
 function ListasPage() {
     const { isLoading, isFetching, data, error } = useGetListasQuery(null);
     return (
-        <div className="flex flex-col gap-y-3">
-            <p className="text-xl font-black font-catamaran text-text1 leading-tight text-secondary-100 ">
-                Todas las listas
-            </p>
+        <>
+            {isLoading ? (
+                <Loader texto="cargando listas..." />
+            ) : (
+                <div className="flex flex-col gap-y-3">
+                    <Header
+                        childrenLeft={
+                            <Link href="/" className="text-2xl">
+                                <IconHome />
+                            </Link>
+                        }
+                        childrenRight={
+                            <Link href="/" className="text-2xl">
+                                <IconCalendar />
+                            </Link>
+                        }
+                    />
 
-            <SelectDate />
+                    <SuperTitle>
+                        <p className="text-4xl">
+                            <span>Todas</span>
+                            <br /> <span>Las listas</span>
+                        </p>
+                        <p className="text-lg font-medium text-secondary-200">
+                            De hoy 18 de agosto
+                        </p>
+                    </SuperTitle>
 
-            <div className="flex flex-col gap-y-4">
-                {data?.map((lista, index: any) => (
-                    <Link
-                        href={`/listas/${lista.id}`}
-                        className="text-secondary-100 bg-primary-100 py-2 px-3 cursor-pointer flex justify-between items-center rounded-sm"
-                        key={index}
-                    >
-                        <span>Juan vilcapoma </span>
-                        <span className="text-sm">S/. 200.00</span>
-                    </Link>
-                ))}
-            </div>
-        </div>
+                        <ComprobanteDePago />
+                    <div className="flex flex-col gap-y-4">
+                        {data?.map((lista, index: any) => (
+                            <Link
+                                href={`/listas/${lista.id}`}
+                                className="text-secondary-100 bg-primary-100 px-3 cursor-pointer flex justify-between items-center rounded-lg text-lg py-4"
+                                key={index}
+                            >
+                                <span className="capitalize">
+                                    {lista.nombreCliente}
+                                </span>
+                                <span>{moneyFormat(lista.montoTotal)}</span>
+                            </Link>
+                        ))}
+                    ComprobanteDePago</div>
+                </div>
+            )}
+        </>
     );
 }
 

@@ -1,29 +1,49 @@
-
-export interface ListaState  {
+export interface ListaState {
     nombreCliente: string;
     itemsList: ItemList[];
-    montoTotal: number;
-    edit: boolean
-};
+    montoTotal?: number;
+    edit?: boolean;
+    pagada?: boolean;
+    cargando?: boolean;
+}
+export interface Voice {
+    voz: string;
+    status: "pending" | "success" | "error";
+    codigo?: string;
+    calculado?: boolean;
+}
+export interface VoiceState {
+    voices: Voice[];
+    calculated: boolean;
+}
 
-export interface ItemList  {
-    cantidad: number;
-    medida: string;
-    nombreProducto: string;
+export interface ItemList {
+    nombre: string;
     precio: number;
-    costoTotal: number;
-    index: number
-};
-
+    cantidad: number;
+    montoItem: number;
+    medida: string;
+    voz: string;
+    status: "pending" | "success" | "error";
+    index?: number;
+    id?: string;
+    listaId?: string;
+    calculated?: boolean;
+    createdAt?: Date;
+    updatedAt?: Date;
+}
 
 export interface Lista {
     id?: string;
     numero?: number;
     items: ItemList[];
     nombreCliente: string;
+    pagado: boolean;
+    completado: boolean;
+    montoTotal?: number;
     createdAt?: Date;
     updatedAt?: Date;
-};
+}
 
 export interface Message {
     role: string;
@@ -42,6 +62,10 @@ export interface ResponseGPT {
     usage: Usage;
     choices: Choice[];
 }
+
+// export interface DataGPT {
+//     data: ResponseGPT;
+// }
 
 export interface Choice {
     message: Message;

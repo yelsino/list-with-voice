@@ -11,3 +11,10 @@
     border-left: 50px solid #f0ad4e;
     border-bottom: 50px solid #f0ad4e;
 }
+
+::-webkit-scrollbar {
+    display: none;
+  }
+
+
+/*  */

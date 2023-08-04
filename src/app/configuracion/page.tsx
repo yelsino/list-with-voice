@@ -1,24 +1,48 @@
-import React from 'react'
+import React from "react";
+import { Header } from "../components/Header";
+import Link from "next/link";
+import { IconConfig, IconHome, IconSave } from "../components/Icons";
+import { Puntos } from "../components/Puntos";
+import { SuperTitle } from "../components/SuperTitle";
+import { Loader } from "../components/Loader/Loader";
 
 function ConfiguracionPage() {
-  return (
-    <div>
-       <p className="text-xl font-black font-catamaran text-text1 leading-tight text-secondary-100 pb-3">
-                Configuración
-            </p>
-       <p className="font-catamaran text-text1 leading-tight text-secondary-200 pb-3">
+    return (
+        <div>
+            <Header
+                childrenLeft={
+                    <Link href="/">
+                        <IconHome />
+                    </Link>
+                }
+                childrenRight={
+                    <Link href="/listas" className="w-full h-full ">
+                        <Puntos />
+                    </Link>
+                }
+            />
+
+            <SuperTitle>
+                <p className="">
+                    <span>Que</span>
+                    <br /> <span>Configurar?</span>
+                </p>
+            </SuperTitle>
+
+            <p className="font-catamaran text-text1 leading-tight text-secondary-200 pb-3">
                 Comandos del asistente
             </p>
-      <ol className='text-secondary-100 flex flex-col gap-y-3'>
-        <li className=''>1.- Nueva Lista</li>
-        <li className=''>2.- Guardar lista</li>
-        <li className=''>3.- Ver listas</li>
-        <li className=''>4.- Renombrar lista</li>
-        <li className=''>5.- Ir a configuración</li>
-        <li className=''>6.- Ir a inicio</li>
-      </ol>
-    </div>
-  )
+
+            <div className="flex gap-5 flex-wrap">
+                {[1, 1, 1, 1, 1, 1, 1, 1, 1].map((e, i) => (
+                    <div key={i} className="text-secondary-100 text-xl bg-primary-100 p-3 rounded-lg">
+                        <IconSave estilo="h-8 w-8" />
+                        <p className="text-sm text-center">lista</p>
+                    </div>
+                ))}
+            </div>
+        </div>
+    );
 }
 
-export default ConfiguracionPage
+export default ConfiguracionPage;
