@@ -3,7 +3,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 const URLBASE = {
     // LOCAL: "http://localhost:3000/api/",
-     LOCAL: "https://list-with-voice-2k82l3dk4-yelsino.vercel.app/api/",
+     LOCAL: "https://list-with-voice.vercel.app/api/",
     GPT: "https://api.openai.com/v1/chat/completions",
 };
 
