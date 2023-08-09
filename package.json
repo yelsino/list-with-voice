@@ -27,6 +27,7 @@
     "eslint-config-next": "13.4.4",
     "file-saver": "^2.0.5",
     "flowbite": "^1.6.5",
+    "framer-motion": "^10.15.0",
     "html-to-image": "^1.11.11",
     "next": "13.4.4",
     "node-html-to-image": "^4.0.0",

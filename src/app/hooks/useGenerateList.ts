@@ -17,10 +17,10 @@ import { Voice } from "@/interfaces/list.interface";
 import {
     buildCommandRegex,
     convertResponseToItemList,
+    mapItemToList,
 } from "@/interfaces/mapper";
 import { useSpeechRecognition } from "react-speech-recognition";
-import toast, { Toaster } from 'react-hot-toast';
-
+import toast, { Toaster } from "react-hot-toast";
 
 interface Props {
     transcript: string;
@@ -40,38 +40,8 @@ function useGenerateList({ resetTranscript }: Props) {
     const { voices: voicesList, calculated } = useAppSelector(
         (state) => state.VoiceReducer
     );
- 
+
     const [pending, setPending] = useState(false);
-
-    const breakPhrases = [
-        "punto",
-        "mas",
-        "más",
-        "puntos",
-        "puntos",
-        "coma",
-        "\\+",
-    ];
-
-    function speakToArray(text: string) {
-        const regex = new RegExp(
-            `\\s*\\b(?:${breakPhrases.join("|")})\\b\\s*`,
-            "gi"
-        );
-        const convertSimbols = text.replace(/\+\s*/g, " más ");
-        const sentences = convertSimbols.split(regex); // Dividimos el texto en frases
-
-        const lastSentence = sentences[sentences.length - 1];
-        if (
-            !lastSentence.match(
-                new RegExp(`\\b(?:${breakPhrases.join("|")})\\b$`, "i")
-            )
-        ) {
-            sentences.pop();
-        }
-
-        return sentences.map((sentence) => sentence.trim());
-    }
 
     const commands = [
         {
@@ -98,15 +68,14 @@ function useGenerateList({ resetTranscript }: Props) {
 
         {
             command: buildCommandRegex(comando.finishList),
-            callback: async() => {
-
-                if(!nombreCliente) {
-                    toast.error('Indica el nombre del cliente', {
-                        icon: '👏',
+            callback: async () => {
+                if (!nombreCliente) {
+                    toast.error("Indica el nombre del cliente", {
+                        icon: "👏",
                     });
-                    return
-                } 
-                
+                    return;
+                }
+
                 const someItemFailed = voicesList.some(
                     (voice) =>
                         voice.status === "error" || voice.status === "pending"
@@ -114,7 +83,7 @@ function useGenerateList({ resetTranscript }: Props) {
 
                 if (someItemFailed) return;
 
-                dispatch(changeCargando(true))
+                dispatch(changeCargando(true));
                 const resp = await registrarListDB({
                     items: itemsList,
                     nombreCliente: nombreCliente,
@@ -122,44 +91,80 @@ function useGenerateList({ resetTranscript }: Props) {
                     pagado: pagada ?? false,
                 }).unwrap();
 
-                if(resp.id){
+                if (resp.id) {
                     push(`/listas/${resp.id}`);
                     resetTranscript();
                 }
-
             },
         },
-       
     ];
 
-    // toast('Good Job!', {
-    //     icon: '👏',
-    //   });
+    const breakPhrases = [
+        "punto",
+        "mas",
+        "más",
+        "puntos",
+        "puntos",
+        "coma",
+        "\\+",
+    ];
+
+    function speakToArray(text: string): string[] {
+        const regex = new RegExp(
+            `\\s*\\b(?:${breakPhrases.join("|")})\\b\\s*`,
+            "gi"
+        );
+
+        // "5 kg de tomate a 3 soles más 1kg de mango a 2.50"
+        const convertSimbols: string = text.replace(/\+\s*/g, " más ");
+
+        // ['5 kg de tomate a 3 soles', '']
+        const sentences = convertSimbols.split(regex); // Dividimos el texto en frases
+
+        // obtenemos la ultima frase
+        const lastSentence = sentences[sentences.length - 1];
+        // evaluamos si la ultima frase termina con una palabra de breakPhrases
+        if (
+            !lastSentence.match(
+                new RegExp(`\\b(?:${breakPhrases.join("|")})\\b$`, "i")
+            )
+        ) {
+            sentences.pop();
+        }
+
+        // ['5 kg de tomate a 3 soles']
+        return sentences.map((sentence) => sentence.trim());
+    }
 
     const { transcript } = useSpeechRecognition({
         commands: pathname === "/generar" ? commands : [],
     });
 
-    // todo: añadir loader a items of list
+    // simplemente tengo que configurar el voice para saber que ya se envio o no
     const sendVoiceGPT = async (voice: Voice) => {
         if (!voice.voz) return;
+        // todo: añadir loader a items of list
+        const index = itemsList.length;
+        const itemFetch = mapItemToList({ status: "pending", index });
+        dispatch(addItemToList(itemFetch));
         const response = await convertVoiceToItem({
             message: voice.voz,
         }).unwrap();
 
-        if (!response){
+        if (!response) {
             dispatch(updateVoice({ ...voice, status: "error" }));
             setPending(false);
-            return 
+            return;
         }
 
         const newItem = convertResponseToItemList({
-            itemsList,
             voice,
+            index,
             response,
         });
+        // const newVoice = upDateStatusVoice({voice, newItem})
         dispatch(addItemToList(newItem));
-        dispatch(updateVoice({ ...voice, status: "success" }));
+        dispatch(updateVoice({ ...voice, status: newItem.status }));
         setPending(false);
     };
 

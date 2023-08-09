@@ -15,7 +15,17 @@ export const listaSlice = createSlice({
     initialState,
     reducers: {
         addItemToList: (state, action: PayloadAction<ItemList>) => {
-            state.itemsList = [...state.itemsList, action.payload];
+            const { index } = action.payload;
+            const itemIndex = state.itemsList.findIndex(item => item.index === index);
+            if (itemIndex !== -1) {
+                // Si el índice ya existe, reemplaza el contenido
+                state.itemsList[itemIndex] = { index, ...action.payload };
+            } else {
+                // Si el índice no existe, agrega el nuevo elemento
+                // state.itemsList.push({ index, ...action.payload });
+                state.itemsList = [...state.itemsList, action.payload];
+            }
+            
         },
         nameLista: (state, action: PayloadAction<string>) => {
             state.nombreCliente = action.payload;
@@ -36,6 +46,21 @@ export const listaSlice = createSlice({
         },
         changeCargando: (state, action: PayloadAction<boolean>) => {
             state.cargando = action.payload;
+        },
+        deleteItem: (state, action: PayloadAction<ItemList>) => {
+            const filtrarItems = state.itemsList.filter(
+                (i) => i.index !== action.payload.index
+            );
+            state.itemsList = filtrarItems;
+        },
+        updateItem: (state, action: PayloadAction<ItemList>) => {
+            // buscar itema a actualizar
+            const itemIndex = state.itemsList.findIndex( item => item.index === action.payload.index);
+            // actualizar itemsList con el nuevo item
+            if (itemIndex !== -1) {
+                state.itemsList[itemIndex] = action.payload;
+            }
+
         }
     },
 });
@@ -47,6 +72,8 @@ export const {
     limpiarLista,
     listaPagada,
     changeCargando,
+    deleteItem,
+    updateItem
 } = listaSlice.actions;
 
 export default listaSlice.reducer;

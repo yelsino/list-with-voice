@@ -4,40 +4,32 @@ import { ItemList, ResponseGPT, Voice } from "./list.interface";
 interface Props {
     response: ResponseGPT;
     voice: Voice;
-    itemsList: ItemList[];
+    index: number;
 }
 
 export const convertResponseToItemList = ({
     response,
     voice,
-    itemsList,
+    index
 }: Props): ItemList => {
     const messageResult = response?.choices[0].message.content;
-    const responseInvalida = comando.badResponseGPT.some((phrase) =>
-        messageResult.includes(phrase)
-    );
-    const indexItem = itemsList.length + 1;
-    if (responseInvalida) {
-        return mapItemToList({ status: "error" });
-    }
-
     const itemJson = JSON.parse(messageResult);
 
     const itemList = mapItemToList({
         ...itemJson,
-        index: indexItem,
+        index: index,
         voz: voice.voz,
-        status: "success",
     });
 
     return itemList;
 };
 
-const mapItemToList = (item: any): ItemList => {
-    const montoItem =
-        item.precio && item.cantidad
-            ? item.cantidad * item.precio
-            : item.montoItem;
+export const mapItemToList = (item: any): ItemList => {
+    const precio = item.precio ?? 0;
+    const cantidad = item.cantidad ?? 0;
+    const monto = item.montoItem ?? 0;
+
+    const montoItem = precio && cantidad ? cantidad * precio : monto;
 
     return {
         nombre: item.nombre ?? "",
@@ -104,20 +96,20 @@ export const buildCommandRegex2 = (phrases: string[]) => {
 };
 
 export const formatNameTitle = (input: string) => {
-    const words = input.trim().split(' ');
+    const words = input.trim().split(" ");
     const totalWords = words.length;
-  
+
     if (totalWords === 3) {
         console.log(`${words[0]} \n${words[1]} ${words[2]}`);
-        
-      return `${words[0]} \n${words[1]} ${words[2]}`;
+
+        return `${words[0]} \n${words[1]} ${words[2]}`;
     }
-  
+
     if (totalWords === 4) {
-        console.log(`${words[0]} ${words[1]} \n${words.slice(2).join(' ')}`);
-        
-      return `${words[0]} ${words[1]} \n${words.slice(2).join(' ')}`;
+        console.log(`${words[0]} ${words[1]} \n${words.slice(2).join(" ")}`);
+
+        return `${words[0]} ${words[1]} \n${words.slice(2).join(" ")}`;
     }
-  
+
     return input;
 };

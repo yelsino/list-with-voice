@@ -6,16 +6,21 @@ export interface ListaState {
     pagada?: boolean;
     cargando?: boolean;
 }
+
+export type Status = "pending" | "success" | "error" | "updating";
+
 export interface Voice {
     voz: string;
-    status: "pending" | "success" | "error";
-    codigo?: string;
+    status: Status;
+    index?: number;
     calculado?: boolean;
 }
 export interface VoiceState {
     voices: Voice[];
     calculated: boolean;
+    voiceSelected: Voice | null
 }
+
 
 export interface ItemList {
     nombre: string;
@@ -24,7 +29,7 @@ export interface ItemList {
     montoItem: number;
     medida: string;
     voz: string;
-    status: "pending" | "success" | "error";
+    status: Status
     index?: number;
     id?: string;
     listaId?: string;

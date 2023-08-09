@@ -8,9 +8,14 @@ import { IconCalendar, IconHome } from "../components/Icons";
 import { SuperTitle } from "../components/SuperTitle";
 import { Loader } from "../components/Loader/Loader";
 import { ComprobanteDePago } from "../components/Comprobante/Comprobante";
+import { useAppSelector } from "@/redux/hooks";
 
 function ListasPage() {
     const { isLoading, isFetching, data, error } = useGetListasQuery(null);
+    const { itemsList, pagada, nombreCliente, cargando } = useAppSelector(
+        (state) => state.listaReducer
+    );
+
     return (
         <>
             {isLoading ? (
@@ -40,8 +45,8 @@ function ListasPage() {
                         </p>
                     </SuperTitle>
 
-                        <ComprobanteDePago />
                     <div className="flex flex-col gap-y-4">
+                        
                         {data?.map((lista, index: any) => (
                             <Link
                                 href={`/listas/${lista.id}`}
@@ -54,7 +59,7 @@ function ListasPage() {
                                 <span>{moneyFormat(lista.montoTotal)}</span>
                             </Link>
                         ))}
-                    ComprobanteDePago</div>
+                    </div>
                 </div>
             )}
         </>

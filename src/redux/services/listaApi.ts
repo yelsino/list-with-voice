@@ -2,8 +2,8 @@ import { GptRequest, Lista, ResponseGPT } from "@/interfaces/list.interface";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 const URLBASE = {
-    // LOCAL: "http://localhost:3000/api/",
-     LOCAL: "https://list-with-voice.vercel.app/api/",
+    LOCAL: "http://localhost:3000/api/",
+    //  LOCAL: "https://list-with-voice.vercel.app/api/",
     GPT: "https://api.openai.com/v1/chat/completions",
 };
 
@@ -57,9 +57,9 @@ export const listaApi = createApi({
                             
                             3. Si la instrucción contiene el nombre del producto y una palabra similar a "solvente" (por ejemplo, "solvente"), debes considerar este texto como mal escrito y debes intuir que se trata de una cantidad en soles y céntimos. Por ejemplo, "solvente" sería "1 sol con veinte centavos" (1.20).
                             
-                            4. Si la instrucción tiene información de varios productos, pero algunos detalles son vagos o no se pueden interpretar correctamente, se deben incluir los productos con información completa y omitir los productos ambiguos en la respuesta.
+                            4. Si la instrucción tiene información de varios productos, añade 'status': 'error' al objeto.
                             
-                            5. Si la instrucción es demasiado confusa o no se puede extraer información relevante, la respuesta debe ser un objeto vacío.
+                            5. Si la instrucción es demasiado confusa o no se puede extraer información relevante, la respuesta debe ser un objeto vacio con 1 sola clave 'status': 'error'.
                             
                             Aquí tienes algunos ejemplos mejorados para ilustrar el funcionamiento:
                             
@@ -73,7 +73,7 @@ export const listaApi = createApi({
                               Respuesta: "{ 'cantidad': 15, 'medida': 'kg', 'nombre': 'zanahorias', 'precio': 1.20, 'calculated': false }"
                             
                             - Instrucción: 'manzana'
-                              Respuesta: "{ 'cantidad': 0, 'medida': '', 'nombre': 'manzana', 'precio': 0, 'calculated': false }"
+                              Respuesta: "{ 'cantidad': 0, 'medida': '', 'nombre': 'manzana', 'precio': 0, 'calculated': false, 'status':'error' }"
                             
                             - Instrucción: '25 soles de manzana'
                               Respuesta: "{ 'nombre': 'manzana', 'montoItem': 25, 'calculated': true }"
@@ -82,7 +82,7 @@ export const listaApi = createApi({
                               Respuesta: "{ 'nombre': 'carne de res', 'montoItem': 20.1, 'calculated': true }"
                             
                             - Instrucción: '15 kg de zanahorias a un sol veinte 10 litros de leche a un sol 10 8 kg de arroz a un sol 50'
-                              Respuesta: "{}" (objeto vacío)
+                              Respuesta: "{'status':'error'}" (objeto vacío)
 
                             `,
                         },
@@ -99,6 +99,7 @@ export const listaApi = createApi({
                                 nombre: "cebolla",
                                 precio: 2.5,
                                 calculated: false,
+                                status: "success"
                             }),
                         },
                         {
@@ -114,6 +115,7 @@ export const listaApi = createApi({
                                 nombre: "aceite",
                                 precio: 3.2,
                                 calculated: false,
+                                status: "success"
                             }),
                         },
                         {
@@ -128,6 +130,7 @@ export const listaApi = createApi({
                                 nombre: "queso",
                                 precio: 6.5,
                                 calculated: false,
+                                status: "success"
                             }),
                         },
                         {
@@ -140,6 +143,7 @@ export const listaApi = createApi({
                                 nombre: "rocoto",
                                 montoItem: 13,
                                 calculated: true,
+                                status: "success"
                             }),
                         },
                         { role: "user", content: message },
