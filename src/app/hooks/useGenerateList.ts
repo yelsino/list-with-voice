@@ -143,8 +143,13 @@ function useGenerateList({ resetTranscript }: Props) {
     // simplemente tengo que configurar el voice para saber que ya se envio o no
     const sendVoiceGPT = async (voice: Voice) => {
         if (!voice.voz) return;
-        // todo: añadir loader a items of list
-        const index = itemsList.length;
+        
+        let index = itemsList.length +1;
+        const indexExistsInItems = itemsList.some(item => item.index === voice.index);
+        if(indexExistsInItems){
+            index = voice.index as number;
+        }
+
         const itemFetch = mapItemToList({ status: "pending", index });
         dispatch(addItemToList(itemFetch));
         const response = await convertVoiceToItem({
@@ -187,7 +192,14 @@ function useGenerateList({ resetTranscript }: Props) {
                 (voice) => voice.status === "pending"
             );
 
+            console.log("voicesList", voicesList);
+            console.log("hay pending?", voice);
+            console.log("pending", pending);
+            
+
             if (voice && !pending) {
+                console.log('entro al if de registro');
+                
                 setPending(true);
                 sendVoiceGPT(voice);
             }

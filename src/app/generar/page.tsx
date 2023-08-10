@@ -20,7 +20,7 @@ function GenerarPage() {
         (state) => state.listaReducer
     );
 
-    const { voices: voicesList, calculated } = useAppSelector(
+    const { voices: voicesList, calculated,voiceSelected } = useAppSelector(
         (state) => state.VoiceReducer
     );
 
@@ -59,6 +59,12 @@ function GenerarPage() {
                     >
                         IMPRIMIR ITEMS
                     </button>
+                    <button
+                        onClick={() => console.log(voiceSelected)}
+                        className="text-secondary-100"
+                    >
+                         SELECCIONADO
+                    </button>
 
                     <SuperTitle>
                         {nombreCliente ? (
@@ -82,10 +88,9 @@ function GenerarPage() {
 
                     <LayoutGroup>
                         <motion.div className="flex flex-col  h-[calc(100vh-320px)] pb-10 overflow-x-hidden overflow-y-scroll">
-                            {itemsList.map((item, index) => (
+                            {itemsList.map((item) => (
                                 <ItemLista
-                                    key={index}
-                                    index={index}
+                                    key={item.index}
                                     item={item}
                                     deteleItem={deteleItem}
                                 />

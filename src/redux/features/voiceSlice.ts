@@ -15,23 +15,31 @@ export const voiceSlice = createSlice({
             // si hay un voice seleccionado entonces actualizarlo
 
             // filtrar todas las voces que no esten en el payload
-            const missingVoices:string[] = action.payload.filter(
+            const missingVoices: string[] = action.payload.filter(
                 (text) => !state.voices.some((voice) => voice.voz === text)
             );
 
-            // if (state.voiceSelected) {
-       
-            //     const index = state.voiceSelected.index as number;
+            if (missingVoices.length === 0) return;
 
-            //     const newVoice: Voice = {
-            //         ...state.voiceSelected,
-            //         voz: action.payload[0],
-            //         status: "pending",
-            //         index: index,
-            //     };
-            //     state.voices[index] = newVoice;
-            //     return
-            // }
+            if (state.voiceSelected) {
+                const index = state.voiceSelected.index as number;
+
+                const newVoice: Voice = {
+                    voz: missingVoices[0],
+                    status: "pending",
+                    index: index,
+                };
+
+                const newVoices = state.voices.map((voice) => {
+                    if (voice.index === index) {
+                        return newVoice;
+                    }
+                    return voice;
+                });
+                state.voices = newVoices;
+                state.voiceSelected = null
+                return;
+            }
 
             // crear un array de voces con el status pending
             const newVoices: Voice[] = missingVoices.map((text) => ({
@@ -39,6 +47,8 @@ export const voiceSlice = createSlice({
                 status: "pending",
                 index: state.voices.length + 1,
             }));
+
+            console.log("newVoices", newVoices);
 
             state.voices = [...state.voices, ...newVoices];
         },
@@ -54,7 +64,7 @@ export const voiceSlice = createSlice({
             });
             console.log(state.voices);
         },
-        getVoice: (state, action: PayloadAction<Voice>) => {
+        getVoice: (state, action: PayloadAction<Voice | null>) => {
             state.voiceSelected = action.payload;
         },
     },
