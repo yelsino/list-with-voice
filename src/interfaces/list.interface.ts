@@ -1,6 +1,7 @@
 export interface ListaState {
     nombreCliente: string;
     itemsList: ItemList[];
+    itemList: ItemList | null;
     montoTotal?: number;
     edit?: boolean;
     pagada?: boolean;
@@ -14,9 +15,11 @@ export interface Voice {
     status: Status;
     index?: number;
     calculado?: boolean;
+    enviado?: boolean;
 }
 export interface VoiceState {
     voices: Voice[];
+    transcriptState: string;
     calculated: boolean;
     voiceSelected: Voice | null
 }

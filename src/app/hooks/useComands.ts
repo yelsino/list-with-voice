@@ -65,7 +65,11 @@ export function useComands({ listening, resetTranscript }: Props) {
         },
         {
             command: buildCommandRegex(comando.app.cleanvoice),
-            callback: () => resetTranscript(),
+            callback: () => {
+                console.log("limpiar voz");
+                
+                resetTranscript()
+            },
         },
     ];
 

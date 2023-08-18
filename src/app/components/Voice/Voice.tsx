@@ -9,17 +9,16 @@ import useGenerateList from "@/app/hooks/useGenerateList";
 import { buildCommandRegex } from "@/interfaces/mapper";
 import { comando } from "./comandos";
 import { IconMicrophone } from "../Icons";
-import toast from 'react-hot-toast';
+import toast from "react-hot-toast";
 
 function Voice() {
     const { push } = useRouter();
-
     const commands = [
         {
             command: "* limpiar",
             callback: () => {
-                console.log('*:', transcript);
-                resetTranscript()
+                console.log("*:", transcript);
+                resetTranscript();
             },
             matchInterim: true,
         },
@@ -27,10 +26,10 @@ function Voice() {
             command: "limpiar",
             callback: () => {
                 resetTranscript();
-                console.log('solo:', transcript);
-                
-                toast.success('Se limpió el texto', {
-                    icon: '🧹',
+                console.log("solo:", transcript);
+
+                toast.success("Se limpió el texto", {
+                    icon: "🧹",
                 });
             },
             matchInterim: true,
@@ -77,6 +76,8 @@ function Voice() {
         transcript,
         listening,
         resetTranscript,
+        finalTranscript,
+        interimTranscript,
         browserSupportsSpeechRecognition,
     } = useSpeechRecognition({ commands });
 
@@ -97,13 +98,13 @@ function Voice() {
         return;
     };
 
+   
+
     return (
-        <div>
-            <button
-                onClick={startListening}
-                type="button"
-                className="absolute bottom-12 left-1/2 transform -translate-x-1/2"
-            >
+        <div className="absolute bottom-12 left-1/2 transform -translate-x-1/2 translate-y-11 w-full flex justify-center bg-primary-200 py-5 sm:rounded-3xl  ">
+            {/* <p className="text-secondary-100">{transcript}</p> */}
+            <p className="text-secondary-100">{finalTranscript}</p>
+            <button onClick={startListening} type="button" className="">
                 <div
                     className={`${
                         listening

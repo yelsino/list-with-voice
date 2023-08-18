@@ -27,7 +27,7 @@ model ItemList {
   listaId    String   @db.ObjectId
   nombre     String
   precio     Float
-  cantidad   Int
+  cantidad   Float
   montoItem  Float
   medida     String
   voz        String

@@ -10,6 +10,7 @@ import { SuperTitle } from "./components/SuperTitle";
 export default function Home() {
     return (
         <>
+        
             <Header
                 childrenLeft={
                     <Link href='/configuracion'>

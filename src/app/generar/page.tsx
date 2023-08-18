@@ -12,6 +12,7 @@ import { deleteItem } from "@/redux/features/listaSlice";
 import { ItemLista } from "../components/Lista/ItemLista";
 import { LayoutGroup, motion } from "framer-motion";
 import { ItemList } from "@/interfaces/list.interface";
+import { useSpeechRecognition } from "react-speech-recognition";
 
 function GenerarPage() {
     const dispatch = useAppDispatch();
@@ -27,6 +28,7 @@ function GenerarPage() {
     const deteleItem = (item: ItemList) => {
         dispatch(deleteItem(item));
     };
+
 
     return (
         <>
@@ -63,7 +65,7 @@ function GenerarPage() {
                         onClick={() => console.log(voiceSelected)}
                         className="text-secondary-100"
                     >
-                         SELECCIONADO
+                         SELECCIONADO                       
                     </button>
 
                     <SuperTitle>
@@ -87,7 +89,7 @@ function GenerarPage() {
                 
 
                     <LayoutGroup>
-                        <motion.div className="flex flex-col  h-[calc(100vh-320px)] pb-10 overflow-x-hidden overflow-y-scroll">
+                        <motion.div className="flex flex-col  h-[calc(100vh-320px)] pb-10 overflow-hidden overflow-y-scroll">
                             {itemsList.map((item) => (
                                 <ItemLista
                                     key={item.index}
@@ -95,6 +97,7 @@ function GenerarPage() {
                                     deteleItem={deteleItem}
                                 />
                             ))}
+                          
                         </motion.div>
                     </LayoutGroup>
                 </div>

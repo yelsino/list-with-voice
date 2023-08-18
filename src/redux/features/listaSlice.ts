@@ -1,9 +1,11 @@
+import { ItemLista } from "@/app/components/Lista/ItemLista";
 import { ItemList, Lista, ListaState } from "@/interfaces/list.interface";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 const initialState: ListaState = {
     nombreCliente: "",
     itemsList: [],
+    itemList: null,
     montoTotal: 0,
     edit: true,
     pagada: false,
@@ -39,6 +41,8 @@ export const listaSlice = createSlice({
                 itemsList: [],
                 montoTotal: 0,
                 edit: true,
+                pagada: false,
+                itemList: null,
             };
         },
         listaPagada: (state, action: PayloadAction<boolean>) => {
@@ -55,12 +59,18 @@ export const listaSlice = createSlice({
         },
         updateItem: (state, action: PayloadAction<ItemList>) => {
             // buscar itema a actualizar
+            console.log(action.payload);
+            
             const itemIndex = state.itemsList.findIndex( item => item.index === action.payload.index);
+            
             // actualizar itemsList con el nuevo item
             if (itemIndex !== -1) {
                 state.itemsList[itemIndex] = action.payload;
             }
 
+        },
+        selectItem: (state, action: PayloadAction<ItemList | null>) => {
+            state.itemList = action.payload;
         }
     },
 });
@@ -73,7 +83,8 @@ export const {
     listaPagada,
     changeCargando,
     deleteItem,
-    updateItem
+    updateItem,
+    selectItem,
 } = listaSlice.actions;
 
 export default listaSlice.reducer;

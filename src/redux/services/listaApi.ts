@@ -51,38 +51,34 @@ export const listaApi = createApi({
                             
                             A continuación, se detallan las reglas mejoradas para la conversión:
                             
-                            1. Si la instrucción contiene información clara y precisa de cantidad, medida, nombre y precio del producto, la respuesta debe incluir todos estos datos La propiedad "calculated" debe establecerse en "false".
-                            
-                            2. Si la instrucción contiene únicamente el montoItem y el nombre del producto, la respuesta debe incluir estos datos, y la propiedad "calculated" debe establecerse en "true".
-                            
-                            3. Si la instrucción contiene el nombre del producto y una palabra similar a "solvente" (por ejemplo, "solvente"), debes considerar este texto como mal escrito y debes intuir que se trata de una cantidad en soles y céntimos. Por ejemplo, "solvente" sería "1 sol con veinte centavos" (1.20).
-                            
-                            4. Si la instrucción tiene información de varios productos, añade 'status': 'error' al objeto.
-                            
-                            5. Si la instrucción es demasiado confusa o no se puede extraer información relevante, la respuesta debe ser un objeto vacio con 1 sola clave 'status': 'error'.
-                            
-                            Aquí tienes algunos ejemplos mejorados para ilustrar el funcionamiento:
-                            
-                            - Instrucción: 'cinco kilos y medio de manzana son 2 soles'
-                              Respuesta: "{ 'cantidad': 5.5, 'medida': 'kg', 'nombre': 'manzana', 'precio': 2, 'calculated': false }"
-                              
-                            - Instrucción: 'un litro de aceite a 7 soles'
-                              Respuesta: "{ 'cantidad': 1, 'medida': 'kg', 'nombre': 'aceite', 'precio': 7, 'calculated': false }"
+                            1. Si la instrucción contiene información clara y precisa de cantidad, medida, nombre y precio del producto, la respuesta debe incluir todos estos datos y la propiedad "calculated" debe establecerse en "false". Por ejemplo:
 
-                              - Instrucción: '15 kg de zanahorias a un solvente'
-                              Respuesta: "{ 'cantidad': 15, 'medida': 'kg', 'nombre': 'zanahorias', 'precio': 1.20, 'calculated': false }"
-                            
-                            - Instrucción: 'manzana'
-                              Respuesta: "{ 'cantidad': 0, 'medida': '', 'nombre': 'manzana', 'precio': 0, 'calculated': false, 'status':'error' }"
-                            
-                            - Instrucción: '25 soles de manzana'
-                              Respuesta: "{ 'nombre': 'manzana', 'montoItem': 25, 'calculated': true }"
+                            Instrucción: 'cinco kilos y medio de manzana son 2 soles'
+                            Respuesta: "{ 'cantidad': 5.5, 'medida': 'kg', 'nombre': 'manzana', 'precio': 2, 'calculated': false }"
 
-                              - Instrucción: '20 soles 10 de carne de res'
-                              Respuesta: "{ 'nombre': 'carne de res', 'montoItem': 20.1, 'calculated': true }"
+                            Instrucción: 'un litro de aceite a 7 soles'
+                            Respuesta: "{ 'cantidad': 1, 'medida': 'kg', 'nombre': 'aceite', 'precio': 7, 'calculated': false }"
                             
-                            - Instrucción: '15 kg de zanahorias a un sol veinte 10 litros de leche a un sol 10 8 kg de arroz a un sol 50'
-                              Respuesta: "{'status':'error'}" (objeto vacío)
+                            2. Si la instrucción contiene únicamente el montoItem y el nombre del producto, la respuesta debe incluir estos datos, y la propiedad "calculated" debe establecerse en "true". Por ejemplo:
+
+                            Instrucción: '25 soles de manzana'
+                            Respuesta: "{ 'nombre': 'manzana', 'montoItem': 25, 'calculated': true }"
+
+                            Instrucción: '20 soles 10 de carne de res'
+                            Respuesta: "{ 'nombre': 'carne de res', 'montoItem': 20.1, 'calculated': true }"
+
+                            3. Va haber instrucciones con errores ortograficos y gramaticales o mal redactados a estos intenta decifrarlo con el idioma español Perú. Por ejemplo, "solvente" es un palabla mal pronunciada. su forma correcta seria -> "1 sol con veinte centavos" (1.20). Por ejemplo:
+
+                            Instrucción: '15 kg de zanahorias a un solvente'
+                            Respuesta: "{ 'cantidad': 15, 'medida': 'kg', 'nombre': 'zanahorias', 'precio': 1.20, 'calculated': false }"
+                            
+                            4. Si la instrucción tiene información de varios productos, es confuso, no se puede extraer informacion clara añade o  'status': 'error' al objeto y extrae al menos el nombre del producto. Por ejemplo:
+
+                            Instrucción: '15 kg de zanahorias a un sol veinte 10 litros de leche a un sol 10 8 kg de arroz a un sol 50'
+                            Respuesta: "{'status':'error', nombre: 'información confusa'}" 
+
+                            Instrucción: 'manzana hola. cuanto cuesta?'
+                            Respuesta: "{ 'nombre': 'manzana',  'status':'error' }"
 
                             `,
                         },
@@ -99,7 +95,7 @@ export const listaApi = createApi({
                                 nombre: "cebolla",
                                 precio: 2.5,
                                 calculated: false,
-                                status: "success"
+                                status: "success",
                             }),
                         },
                         {
@@ -115,7 +111,7 @@ export const listaApi = createApi({
                                 nombre: "aceite",
                                 precio: 3.2,
                                 calculated: false,
-                                status: "success"
+                                status: "success",
                             }),
                         },
                         {
@@ -130,7 +126,7 @@ export const listaApi = createApi({
                                 nombre: "queso",
                                 precio: 6.5,
                                 calculated: false,
-                                status: "success"
+                                status: "success",
                             }),
                         },
                         {
@@ -143,7 +139,7 @@ export const listaApi = createApi({
                                 nombre: "rocoto",
                                 montoItem: 13,
                                 calculated: true,
-                                status: "success"
+                                status: "success",
                             }),
                         },
                         { role: "user", content: message },
@@ -178,78 +174,4 @@ export const {
     useRegistrarListDBMutation,
 } = listaApi;
 
-// INTRUCCCION 1 FUNCIONALIDAD
 
-// messages: [
-//     {
-//         role: "system",
-//         content: `Eres un asistente inteligente que convierte descripciones de productos en un formato de objeto JSON; ejemplo
-//         Instruccion: 'cinco kilos  de manzana son 2 soles'
-//         Respuesta: "{ "cantidad": 5, "medida": "kg", "nombre": "manzana", "precio": 2, "montoItem": 10, "calculated": false }"
-
-//         Nota que el 'montoItem' se calculan de (cantidad * precio) y que la cadena se encierra entre comillas dobles ("). La respuesta solo debe ser la cadena JSON, sin ningún texto adicional.
-
-//         Los textos estan en español Perú. por ende si encuentras palabras como  o '1 sol 20' es porque 'sol' se refiere a la moneda de Perú que son los 'nuevos soles' y 'solvente' es un error de pronunciación que se refiere a '1 sol veinte'.
-
-//         Si solo proporcionan montoItem y nombre de producto entonces responde de esta forma.
-
-//         Instruccion: '25 soles de manzana'
-//         Respuesta: "{'nombre': 'manzana', 'montoItem': 25, 'calculated': true}"
-
-//         No importa lo descabellado o incoherente que suene el texto solo conviertelo
-
-//         Si la instruccion no es clara, intenta capturar algunos valores. ejemplo-> 'manzana' entonces devolverias -> '{ 'cantidad': 0, 'medida': '', 'nombre': 'manzana', 'precio': 0, 'montoItem': 0 }'
-
-//         Si la instruccion es demasiada extraña a los ejemplos indicados, entonces solo responde un objeto vacio;ejemplo
-
-//         Instruccion: '15 kg de zanahorias a un solvente 10 litros de leche a un sol 10 8 kg de arroz a un sol 5'
-//         Respuesta: "{}"
-
-//         `,
-//     },
-//     {
-//         role: "user",
-//         content:
-//             "cinco kilos y medio de cebolla son 2 soles cincuenta",
-//     },
-//     {
-//         role: "assistant",
-//         content: JSON.stringify({
-//             cantidad: 5.5,
-//             medida: "kg",
-//             nombre: "cebolla",
-//             precio: 2.5,
-//             montoItem: 13.75,
-//             calculated: false,
-//         }),
-//     },
-//     {
-//         role: "user",
-//         content:
-//             "tres litros y cuarto de aceite cuesta a 3 soles veinte",
-//     },
-//     {
-//         role: "assistant",
-//         content: JSON.stringify({
-//             cantidad: 3.25,
-//             medida: "l",
-//             nombre: "aceite",
-//             precio: 3.2,
-//             montoItem: 10.4,
-//             calculated: false,
-//         }),
-//     },
-//     {
-//         role: "user",
-//         content: "trece soles de rocoto",
-//     },
-//     {
-//         role: "assistant",
-//         content: JSON.stringify({
-//             nombre: "rocoto",
-//             montoItem: 13,
-//             calculated: true,
-//         }),
-//     },
-//     { role: "user", content: message },
-// ],

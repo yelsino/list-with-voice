@@ -1,13 +1,14 @@
-import { ItemList } from "@/interfaces/list.interface";
+import { ItemList, Voice } from "@/interfaces/list.interface";
 import { moneyFormat } from "@/interfaces/mapper";
 import { AnimatePresence, motion } from "framer-motion";
 import React, { useState } from "react";
 import { IconDelete, IconRefresh } from "../Icons";
 import { ItemLoader } from "../Loader/ItemLoader";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
-import { updateItem } from "@/redux/features/listaSlice";
+import { selectItem, updateItem } from "@/redux/features/listaSlice";
 import { SpeakLoader } from "../Loader/SpeakLoader";
-import { getVoice } from "@/redux/features/voiceSlice";
+import { getVoice, updateVoice } from "@/redux/features/voiceSlice";
+import { useSpeechRecognition } from "react-speech-recognition";
 
 interface Props {
     item: ItemList;
@@ -15,19 +16,32 @@ interface Props {
 }
 
 export const ItemLista = ({ item, deteleItem }: Props) => {
-    const { voiceSelected } = useAppSelector((state) => state.VoiceReducer);
+    const { resetTranscript } = useSpeechRecognition();
+
+    const { voiceSelected, voices } = useAppSelector(
+        (state) => state.VoiceReducer
+    );
+    const { itemList } = useAppSelector((state) => state.listaReducer);
+
     const dispatch = useAppDispatch();
     const [isOpen, setIsOpen] = useState(false);
     const toggleOpen = () => {
         setIsOpen(!isOpen);
         if (item.index === voiceSelected?.index) {
             dispatch(getVoice(null));
+            dispatch(selectItem(null));
         }
     };
     const updateItemList = (item: ItemList) => {
-        dispatch(getVoice(item));
+        resetTranscript();
+        const voice = voices.find((voice) => voice.index === item.index);
+        dispatch(getVoice(voice as Voice));
+        // dispatch(updateVoice({...voice, }));
+        dispatch(selectItem(item));
         dispatch(updateItem({ ...item, status: "updating" }));
     };
+
+
 
     return (
         <div
@@ -45,7 +59,10 @@ export const ItemLista = ({ item, deteleItem }: Props) => {
             ) : (
                 <div onClick={toggleOpen}>
                     {item.status === "updating" ? (
-                        <SpeakLoader />
+                        <div className="flex text-secondary-100">
+                            <SpeakLoader />{" "}
+                            <span className="translate-x-6">{item.voz}</span>
+                        </div>
                     ) : (
                         <TextList item={item} />
                     )}
@@ -69,20 +86,32 @@ export const ItemLista = ({ item, deteleItem }: Props) => {
                             exit={{ opacity: 0 }}
                             className="flex gap-x-3 justify-end "
                         >
-                            <button
-                                onClick={() => deteleItem(item)}
-                                className="flex gap-x-1  bg-orange-400 text-black rounded-lg p-1 font-bold  items-center justify-center"
-                            >
-                                <IconDelete />
-                                <span className="text-sm">quitar</span>
-                            </button>
-                            <button
-                                onClick={() => updateItemList(item)}
-                                className="flex gap-x-1  bg-secondary-100 text-black rounded-lg p-1 font-bold  items-center justify-center"
-                            >
-                                <IconRefresh />
-                                <span className="text-sm">renovar</span>
-                            </button>
+                            {item.status !== "updating" && (
+                                <button
+                                    onClick={() => deteleItem(item)}
+                                    className="flex gap-x-1  bg-orange-400 text-black rounded-lg p-1 font-bold  items-center justify-center"
+                                >
+                                    <IconDelete />
+                                    <span className="text-sm">quitar</span>
+                                </button>
+                            )}
+                            {item.status === "updating" ? (
+                                <button
+                                    onClick={() =>  dispatch(updateItem(itemList as ItemList))}
+                                    className="flex gap-x-1  bg-secondary-100 text-black rounded-lg p-1 font-bold  items-center justify-center"
+                                >
+                                    <IconRefresh />
+                                    <span className="text-sm">cancelar</span>
+                                </button>
+                            ) : (
+                                <button
+                                    onClick={() => updateItemList(item)}
+                                    className="flex gap-x-1  bg-secondary-100 text-black rounded-lg p-1 font-bold  items-center justify-center"
+                                >
+                                    <IconRefresh />
+                                    <span className="text-sm">renovar</span>
+                                </button>
+                            )}
                         </motion.div>
                     </motion.div>
                 )}
@@ -96,7 +125,7 @@ interface PropsText {
     // toggleOpen: () => void;
 }
 
-const TextList = ({ item}: PropsText) => {
+const TextList = ({ item }: PropsText) => {
     const dispatch = useAppDispatch();
     return (
         <motion.div
@@ -119,7 +148,7 @@ const TextList = ({ item}: PropsText) => {
                 {item.calculated ? (
                     <span>{item.nombre}</span>
                 ) : (
-                    <span>
+                    <span className="break-words">
                         {item.cantidad} {item.medida} {item.nombre}{" "}
                         <span className="text-sm">{item.precio} x und</span>
                     </span>

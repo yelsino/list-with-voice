@@ -4,12 +4,17 @@ import {
     useConvertVoiceToItemMutation,
     useRegistrarListDBMutation,
 } from "@/redux/services/listaApi";
-import { addVoicesToList, updateVoice } from "@/redux/features/voiceSlice";
+import {
+    addVoicesToList,
+    getVoice,
+    updateVoice,
+} from "@/redux/features/voiceSlice";
 import {
     addItemToList,
     changeCargando,
     listaPagada,
     nameLista,
+    selectItem,
 } from "@/redux/features/listaSlice";
 import { usePathname, useRouter } from "next/navigation";
 import { comando } from "../components/Voice/comandos";
@@ -23,11 +28,11 @@ import { useSpeechRecognition } from "react-speech-recognition";
 import toast, { Toaster } from "react-hot-toast";
 
 interface Props {
-    transcript: string;
     resetTranscript: () => void;
+    transcript: string;
 }
 
-function useGenerateList({ resetTranscript }: Props) {
+function useGenerateList({ resetTranscript, transcript }: Props) {
     const pathname = usePathname();
     const { push } = useRouter();
     const dispatch = useAppDispatch();
@@ -37,11 +42,7 @@ function useGenerateList({ resetTranscript }: Props) {
     const { itemsList, nombreCliente, pagada } = useAppSelector(
         (state) => state.listaReducer
     );
-    const { voices: voicesList, calculated } = useAppSelector(
-        (state) => state.VoiceReducer
-    );
-
-    const [pending, setPending] = useState(false);
+    const { voices } = useAppSelector((state) => state.VoiceReducer);
 
     const commands = [
         {
@@ -69,6 +70,8 @@ function useGenerateList({ resetTranscript }: Props) {
         {
             command: buildCommandRegex(comando.finishList),
             callback: async () => {
+                console.log("estoy en generar");
+
                 if (!nombreCliente) {
                     toast.error("Indica el nombre del cliente", {
                         icon: "👏",
@@ -76,10 +79,15 @@ function useGenerateList({ resetTranscript }: Props) {
                     return;
                 }
 
-                const someItemFailed = voicesList.some(
+                // const someItemFailed = voicesList.some(
+                //     (voice) =>
+                //         voice.status === "error" || voice.status === "pending"
+                // );
+                const someItemFailed = itemsList.some(
                     (voice) =>
                         voice.status === "error" || voice.status === "pending"
                 );
+                console.log(someItemFailed);
 
                 if (someItemFailed) return;
 
@@ -136,17 +144,23 @@ function useGenerateList({ resetTranscript }: Props) {
         return sentences.map((sentence) => sentence.trim());
     }
 
-    const { transcript } = useSpeechRecognition({
+    useSpeechRecognition({
         commands: pathname === "/generar" ? commands : [],
     });
 
     // simplemente tengo que configurar el voice para saber que ya se envio o no
+    // TODO : SE BUGEA AL MOMENTO DE ACTUALIZAR LOS ITEMS MAS QUE NADA SI ELIMINASS
     const sendVoiceGPT = async (voice: Voice) => {
         if (!voice.voz) return;
-        
-        let index = itemsList.length +1;
-        const indexExistsInItems = itemsList.some(item => item.index === voice.index);
-        if(indexExistsInItems){
+
+        let index = itemsList.length + 1;
+        const indexExistsInItems = itemsList.some(
+            (item) => item.index === voice.index
+        );
+
+        await resetTranscript();
+
+        if (indexExistsInItems) {
             index = voice.index as number;
         }
 
@@ -154,11 +168,12 @@ function useGenerateList({ resetTranscript }: Props) {
         dispatch(addItemToList(itemFetch));
         const response = await convertVoiceToItem({
             message: voice.voz,
-        }).unwrap();
+        })
+            .unwrap()
+            .finally(() => {});
 
         if (!response) {
-            dispatch(updateVoice({ ...voice, status: "error" }));
-            setPending(false);
+            dispatch(updateVoice({ ...voice, status: "error", enviado: true }));
             return;
         }
 
@@ -167,10 +182,11 @@ function useGenerateList({ resetTranscript }: Props) {
             index,
             response,
         });
-        // const newVoice = upDateStatusVoice({voice, newItem})
+
         dispatch(addItemToList(newItem));
-        dispatch(updateVoice({ ...voice, status: newItem.status }));
-        setPending(false);
+        dispatch(updateVoice({ ...voice, status: newItem.status, enviado: true }));
+        dispatch(getVoice(null));
+        dispatch(selectItem(null));
     };
 
     useEffect(() => {
@@ -186,26 +202,17 @@ function useGenerateList({ resetTranscript }: Props) {
     useEffect(() => {
         if (pathname !== "/generar") return;
 
-        if (voicesList.length > 0) {
-            // obtener el primer Voice que tenga status pending
-            const voice = voicesList.find(
-                (voice) => voice.status === "pending"
+        if (voices.length > 0) {
+            const voice = voices.find(
+                (voice) => voice.status === "pending" && !voice.enviado
             );
 
-            console.log("voicesList", voicesList);
-            console.log("hay pending?", voice);
-            console.log("pending", pending);
-            
-
-            if (voice && !pending) {
-                console.log('entro al if de registro');
-                
-                setPending(true);
+            if (voice) {
                 sendVoiceGPT(voice);
             }
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [voicesList, pathname, calculated]);
+    }, [voices, pathname]);
 }
 
 export default useGenerateList;

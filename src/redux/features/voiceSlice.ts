@@ -2,6 +2,7 @@ import { Voice, VoiceState } from "@/interfaces/list.interface";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 const initialState: VoiceState = {
+    transcriptState: "",
     voices: [],
     calculated: false,
     voiceSelected: null,
@@ -12,8 +13,6 @@ export const voiceSlice = createSlice({
     initialState,
     reducers: {
         addVoicesToList: (state, action: PayloadAction<string[]>) => {
-            // si hay un voice seleccionado entonces actualizarlo
-
             // filtrar todas las voces que no esten en el payload
             const missingVoices: string[] = action.payload.filter(
                 (text) => !state.voices.some((voice) => voice.voz === text)
@@ -21,12 +20,14 @@ export const voiceSlice = createSlice({
 
             if (missingVoices.length === 0) return;
 
+            // si hay un voice seleccionado entonces actualizarlo
             if (state.voiceSelected) {
                 const index = state.voiceSelected.index as number;
 
                 const newVoice: Voice = {
                     voz: missingVoices[0],
                     status: "pending",
+                    enviado: false,
                     index: index,
                 };
 
@@ -37,7 +38,7 @@ export const voiceSlice = createSlice({
                     return voice;
                 });
                 state.voices = newVoices;
-                state.voiceSelected = null
+                state.voiceSelected = null;
                 return;
             }
 
@@ -45,10 +46,9 @@ export const voiceSlice = createSlice({
             const newVoices: Voice[] = missingVoices.map((text) => ({
                 voz: text,
                 status: "pending",
+                enviado: false,
                 index: state.voices.length + 1,
             }));
-
-            console.log("newVoices", newVoices);
 
             state.voices = [...state.voices, ...newVoices];
         },
@@ -67,9 +67,21 @@ export const voiceSlice = createSlice({
         getVoice: (state, action: PayloadAction<Voice | null>) => {
             state.voiceSelected = action.payload;
         },
+        getTranscriptState: (state, action: PayloadAction<string>) => {
+            state.transcriptState = action.payload;
+        },
+        cleanTrasncriptState: (state) => {
+            state.transcriptState = "";
+        },
     },
 });
 
-export const { addVoicesToList, updateVoice, getVoice } = voiceSlice.actions;
+export const {
+    addVoicesToList,
+    updateVoice,
+    getVoice,
+    getTranscriptState,
+    cleanTrasncriptState,
+} = voiceSlice.actions;
 
 export default voiceSlice.reducer;
