@@ -17,7 +17,6 @@ function Voice() {
         {
             command: "* limpiar",
             callback: () => {
-                console.log("*:", transcript);
                 resetTranscript();
             },
             matchInterim: true,
@@ -26,8 +25,6 @@ function Voice() {
             command: "limpiar",
             callback: () => {
                 resetTranscript();
-                console.log("solo:", transcript);
-
                 toast.success("Se limpió el texto", {
                     icon: "🧹",
                 });
@@ -81,7 +78,7 @@ function Voice() {
         browserSupportsSpeechRecognition,
     } = useSpeechRecognition({ commands });
 
-    useGenerateList({ transcript, resetTranscript });
+    useGenerateList({ finalTranscript, resetTranscript });
 
     const startListening = async () => {
         if (listening) {
@@ -103,7 +100,8 @@ function Voice() {
     return (
         <div className="absolute bottom-12 left-1/2 transform -translate-x-1/2 translate-y-11 w-full flex justify-center bg-primary-200 py-5 sm:rounded-3xl  ">
             {/* <p className="text-secondary-100">{transcript}</p> */}
-            <p className="text-secondary-100">{finalTranscript}</p>
+            {/* <p className="text-secondary-100">{finalTranscript}</p> */}
+            <p className="text-secondary-100">{interimTranscript}</p>
             <button onClick={startListening} type="button" className="">
                 <div
                     className={`${

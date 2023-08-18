@@ -29,10 +29,10 @@ import toast, { Toaster } from "react-hot-toast";
 
 interface Props {
     resetTranscript: () => void;
-    transcript: string;
+    finalTranscript: string;
 }
 
-function useGenerateList({ resetTranscript, transcript }: Props) {
+function useGenerateList({ resetTranscript, finalTranscript }: Props) {
     const pathname = usePathname();
     const { push } = useRouter();
     const dispatch = useAppDispatch();
@@ -70,7 +70,6 @@ function useGenerateList({ resetTranscript, transcript }: Props) {
         {
             command: buildCommandRegex(comando.finishList),
             callback: async () => {
-                console.log("estoy en generar");
 
                 if (!nombreCliente) {
                     toast.error("Indica el nombre del cliente", {
@@ -79,19 +78,13 @@ function useGenerateList({ resetTranscript, transcript }: Props) {
                     return;
                 }
 
-                // const someItemFailed = voicesList.some(
-                //     (voice) =>
-                //         voice.status === "error" || voice.status === "pending"
-                // );
                 const someItemFailed = itemsList.some(
                     (voice) =>
                         voice.status === "error" || voice.status === "pending"
                 );
-                console.log(someItemFailed);
 
                 if (someItemFailed) return;
 
-                dispatch(changeCargando(true));
                 const resp = await registrarListDB({
                     items: itemsList,
                     nombreCliente: nombreCliente,
@@ -158,7 +151,7 @@ function useGenerateList({ resetTranscript, transcript }: Props) {
             (item) => item.index === voice.index
         );
 
-        await resetTranscript();
+        // await resetTranscript();
 
         if (indexExistsInItems) {
             index = voice.index as number;
@@ -173,10 +166,12 @@ function useGenerateList({ resetTranscript, transcript }: Props) {
             .finally(() => {});
 
         if (!response) {
+            console.log('hay error response');
+            
             dispatch(updateVoice({ ...voice, status: "error", enviado: true }));
             return;
         }
-
+        console.log('hay error response');
         const newItem = convertResponseToItemList({
             voice,
             index,
@@ -191,19 +186,24 @@ function useGenerateList({ resetTranscript, transcript }: Props) {
 
     useEffect(() => {
         if (pathname !== "/generar") return;
-        if (transcript.trim() === "") return;
+        if (finalTranscript.trim() === "") return;
 
-        const phrases = speakToArray(transcript.trim().toLowerCase());
+        const phrases = speakToArray(finalTranscript.trim().toLowerCase());
 
         dispatch(addVoicesToList(phrases));
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [transcript, pathname]);
+    }, [finalTranscript, pathname]);
 
     useEffect(() => {
         if (pathname !== "/generar") return;
 
         if (voices.length > 0) {
             const voice = voices.find(
+                (voice) => voice.status === "pending" && !voice.enviado
+            );
+
+            // obtener todas las voces que no esten enviadas
+            const voicesNotSend = voices.filter(
                 (voice) => voice.status === "pending" && !voice.enviado
             );
 

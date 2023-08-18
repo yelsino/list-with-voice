@@ -58,6 +58,7 @@ export const voiceSlice = createSlice({
                     return {
                         ...voice,
                         status: action.payload.status,
+                        enviado: action.payload.enviado,
                     };
                 }
                 return voice;
