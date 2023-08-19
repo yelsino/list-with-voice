@@ -13,9 +13,10 @@ import { useSpeechRecognition } from "react-speech-recognition";
 interface Props {
     item: ItemList;
     deteleItem: (item: ItemList) => void;
+    index: number;
 }
 
-export const ItemLista = ({ item, deteleItem }: Props) => {
+export const ItemLista = ({ item, deteleItem, index }: Props) => {
     const { resetTranscript } = useSpeechRecognition();
 
     const { voiceSelected, voices } = useAppSelector(
@@ -27,14 +28,14 @@ export const ItemLista = ({ item, deteleItem }: Props) => {
     const [isOpen, setIsOpen] = useState(false);
     const toggleOpen = () => {
         setIsOpen(!isOpen);
-        if (item.index === voiceSelected?.index) {
+        if (item.codigo === voiceSelected?.codigo) {
             dispatch(getVoice(null));
             dispatch(selectItem(null));
         }
     };
     const updateItemList = (item: ItemList) => {
         resetTranscript();
-        const voice = voices.find((voice) => voice.index === item.index);
+        const voice = voices.find((voice) => voice.codigo === item.codigo);
         dispatch(getVoice(voice as Voice));
         // dispatch(updateVoice({...voice, }));
         dispatch(selectItem(item));
@@ -52,7 +53,7 @@ export const ItemLista = ({ item, deteleItem }: Props) => {
             {item.status === "pending" ? (
                 <div className=" flex  gap-x-5 py-2 items-center">
                     <span className="text-secondary-200 text-xs">
-                        {item.index}.-{" "}
+                        {index + 1 }.-{" "}
                     </span>{" "}
                     <ItemLoader />
                 </div>
@@ -64,7 +65,7 @@ export const ItemLista = ({ item, deteleItem }: Props) => {
                             <span className="translate-x-6">{item.voz}</span>
                         </div>
                     ) : (
-                        <TextList item={item} />
+                        <TextList item={item} index={index} />
                     )}
                 </div>
             )}
@@ -122,10 +123,11 @@ export const ItemLista = ({ item, deteleItem }: Props) => {
 
 interface PropsText {
     item: ItemList;
+    index: number;
     // toggleOpen: () => void;
 }
 
-const TextList = ({ item }: PropsText) => {
+const TextList = ({ item, index }: PropsText) => {
     const dispatch = useAppDispatch();
     return (
         <motion.div
@@ -134,10 +136,10 @@ const TextList = ({ item }: PropsText) => {
             exit={{ opacity: 0 }}
             layout
             // onClick={toggleOpen}
-            id={String(item.index)}
+            id={String(item.codigo)}
             className="flex items-center gap-x-2 text-lg"
         >
-            <span className="text-secondary-200 text-xs">{item.index}.- </span>{" "}
+            <span className="text-secondary-200 text-xs">{index + 1}.- </span>{" "}
             <div
                 className={`w-full  flex justify-between ${
                     item.status === "error"

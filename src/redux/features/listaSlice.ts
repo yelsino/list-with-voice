@@ -1,6 +1,8 @@
 import { ItemLista } from "@/app/components/Lista/ItemLista";
 import { ItemList, Lista, ListaState } from "@/interfaces/list.interface";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { v4 as uuidv4 } from 'uuid';
+
 
 const initialState: ListaState = {
     nombreCliente: "",
@@ -17,11 +19,11 @@ export const listaSlice = createSlice({
     initialState,
     reducers: {
         addItemToList: (state, action: PayloadAction<ItemList>) => {
-            const { index } = action.payload;
-            const itemIndex = state.itemsList.findIndex(item => item.index === index);
+            const { codigo: index } = action.payload;
+            const itemIndex = state.itemsList.findIndex(item => item.codigo === index);
             if (itemIndex !== -1) {
                 // Si el índice ya existe, reemplaza el contenido
-                state.itemsList[itemIndex] = { index, ...action.payload };
+                state.itemsList[itemIndex] = { codigo: index, ...action.payload };
             } else {
                 // Si el índice no existe, agrega el nuevo elemento
                 // state.itemsList.push({ index, ...action.payload });
@@ -53,7 +55,7 @@ export const listaSlice = createSlice({
         },
         deleteItem: (state, action: PayloadAction<ItemList>) => {
             const filtrarItems = state.itemsList.filter(
-                (i) => i.index !== action.payload.index
+                (i) => i.codigo !== action.payload.codigo
             );
             state.itemsList = filtrarItems;
         },
@@ -61,7 +63,7 @@ export const listaSlice = createSlice({
             // buscar itema a actualizar
             console.log(action.payload);
             
-            const itemIndex = state.itemsList.findIndex( item => item.index === action.payload.index);
+            const itemIndex = state.itemsList.findIndex( item => item.codigo === action.payload.codigo);
             
             // actualizar itemsList con el nuevo item
             if (itemIndex !== -1) {

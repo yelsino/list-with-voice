@@ -3,23 +3,12 @@ import { ItemList, ResponseGPT, Voice } from "./list.interface";
 
 interface Props {
     response: ResponseGPT;
-    voice: Voice;
-    index: number;
 }
 
-export const convertResponseToItemList = ({
-    response,
-    voice,
-    index
-}: Props): ItemList => {
+export const responseToItemList = ({ response }: Props): ItemList => {
     const messageResult = response?.choices[0].message.content;
     const itemJson = JSON.parse(messageResult);
-
-    const itemList = mapItemToList({
-        ...itemJson,
-        index: index,
-        voz: voice.voz,
-    });
+    const itemList = mapItemToList(itemJson);
 
     return itemList;
 };
@@ -39,7 +28,7 @@ export const mapItemToList = (item: any): ItemList => {
         medida: item.medida ?? "",
         voz: item.voz ?? "",
         status: item.status,
-        index: item.index ?? 0,
+        codigo: item.codigo ?? 0,
         calculated: item.calculated ?? true,
         id: item.id ?? "",
     };

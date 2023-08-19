@@ -38,7 +38,7 @@ export const listaApi = createApi({
             }),
         }),
         convertVoiceToItem: builder.mutation<ResponseGPT, GptRequest>({
-            query: ({ message }) => ({
+            query: ({ message, codigo }) => ({
                 url: URLBASE.GPT,
                 method: "POST",
                 body: {
@@ -47,38 +47,40 @@ export const listaApi = createApi({
                         {
                             role: "system",
                             content: `
-                            Eres un asistente inteligente que convierte descripciones de productos en un formato de objeto JSON. Tu objetivo es extraer información relevante de las instrucciones proporcionadas en español peruano y generar una respuesta en formato JSON.
+                            Eres un asistente inteligente que transforma descripciones de productos en formato JSON. Tu objetivo es extraer información relevante de instrucciones en español peruano y generar una respuesta JSON. Debes analizar estos textos; si el texto no contiene números, no es un nombre de producto válido. 
                             
-                            A continuación, se detallan las reglas mejoradas para la conversión:
+                            Aquí hay reglas para la conversión, no son límites rígidos; debes ser inteligente y adaptarte para hacer una lista de compras adecuada:
                             
                             1. Si la instrucción contiene información clara y precisa de cantidad, medida, nombre y precio del producto, la respuesta debe incluir todos estos datos y la propiedad "calculated" debe establecerse en "false". Por ejemplo:
 
                             Instrucción: 'cinco kilos y medio de manzana son 2 soles'
-                            Respuesta: "{ 'cantidad': 5.5, 'medida': 'kg', 'nombre': 'manzana', 'precio': 2, 'calculated': false }"
+                            Respuesta: "{ 'cantidad': 5.5, 'medida': 'kg', 'nombre': 'manzana', 'precio': 2, 'calculated': false, 'codigo': '${codigo}' }"
 
                             Instrucción: 'un litro de aceite a 7 soles'
-                            Respuesta: "{ 'cantidad': 1, 'medida': 'kg', 'nombre': 'aceite', 'precio': 7, 'calculated': false }"
+                            Respuesta: "{ 'cantidad': 1, 'medida': 'kg', 'nombre': 'aceite', 'precio': 7, 'calculated': false, 'codigo': '${codigo}' }"
                             
                             2. Si la instrucción contiene únicamente el montoItem y el nombre del producto, la respuesta debe incluir estos datos, y la propiedad "calculated" debe establecerse en "true". Por ejemplo:
 
                             Instrucción: '25 soles de manzana'
-                            Respuesta: "{ 'nombre': 'manzana', 'montoItem': 25, 'calculated': true }"
+                            Respuesta: "{ 'nombre': 'manzana', 'montoItem': 25, 'calculated': true, 'codigo': '${codigo}' }"
 
                             Instrucción: '20 soles 10 de carne de res'
-                            Respuesta: "{ 'nombre': 'carne de res', 'montoItem': 20.1, 'calculated': true }"
+                            Respuesta: "{ 'nombre': 'carne de res', 'montoItem': 20.1, 'calculated': true, 'codigo': '${codigo}' }"
 
                             3. Va haber instrucciones con errores ortograficos y gramaticales o mal redactados a estos intenta decifrarlo con el idioma español Perú. Por ejemplo, "solvente" es un palabla mal pronunciada. su forma correcta seria -> "1 sol con veinte centavos" (1.20). Por ejemplo:
 
                             Instrucción: '15 kg de zanahorias a un solvente'
-                            Respuesta: "{ 'cantidad': 15, 'medida': 'kg', 'nombre': 'zanahorias', 'precio': 1.20, 'calculated': false }"
+                            Respuesta: "{ 'cantidad': 15, 'medida': 'kg', 'nombre': 'zanahorias', 'precio': 1.20, 'calculated': false, 'codigo': '${codigo}' }"
                             
                             4. Si la instrucción tiene información de varios productos, es confuso, no se puede extraer informacion clara añade o  'status': 'error' al objeto y extrae al menos el nombre del producto. Por ejemplo:
 
                             Instrucción: '15 kg de zanahorias a un sol veinte 10 litros de leche a un sol 10 8 kg de arroz a un sol 50'
-                            Respuesta: "{'status':'error', nombre: 'información confusa'}" 
+                            Respuesta: "{'status':'error', nombre: 'información confusa', 'codigo': '${codigo}'}" 
 
                             Instrucción: 'manzana hola. cuanto cuesta?'
-                            Respuesta: "{ 'nombre': 'manzana',  'status':'error' }"
+                            Respuesta: "{ 'nombre': 'manzana',  'status':'error', 'codigo': '${codigo}' }"
+
+                        
 
                             `,
                         },
@@ -96,6 +98,7 @@ export const listaApi = createApi({
                                 precio: 2.5,
                                 calculated: false,
                                 status: "success",
+                                codigo: codigo,
                             }),
                         },
                         {
@@ -112,6 +115,7 @@ export const listaApi = createApi({
                                 precio: 3.2,
                                 calculated: false,
                                 status: "success",
+                                codigo: codigo,
                             }),
                         },
                         {
@@ -127,6 +131,7 @@ export const listaApi = createApi({
                                 precio: 6.5,
                                 calculated: false,
                                 status: "success",
+                                codigo: codigo,
                             }),
                         },
                         {
@@ -140,11 +145,12 @@ export const listaApi = createApi({
                                 montoItem: 13,
                                 calculated: true,
                                 status: "success",
+                                codigo: codigo,
                             }),
                         },
                         { role: "user", content: message },
                     ],
-                    temperature: 1,
+                    temperature: 0.8,
                 },
                 headers: {
                     "Content-Type": "application/json",

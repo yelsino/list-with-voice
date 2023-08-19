@@ -13,7 +13,7 @@ export type Status = "pending" | "success" | "error" | "updating";
 export interface Voice {
     voz: string;
     status: Status;
-    index?: number;
+    codigo?: string;
     calculado?: boolean;
     enviado?: boolean;
 }
@@ -33,7 +33,7 @@ export interface ItemList {
     medida: string;
     voz: string;
     status: Status
-    index?: number;
+    codigo?: string;
     id?: string;
     listaId?: string;
     calculated?: boolean;
@@ -60,6 +60,7 @@ export interface Message {
 
 export interface GptRequest {
     message: string;
+    codigo?: string;
 }
 
 export interface ResponseGPT {

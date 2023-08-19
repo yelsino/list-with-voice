@@ -21,7 +21,7 @@ import { comando } from "../components/Voice/comandos";
 import { Voice } from "@/interfaces/list.interface";
 import {
     buildCommandRegex,
-    convertResponseToItemList,
+    responseToItemList,
     mapItemToList,
 } from "@/interfaces/mapper";
 import { useSpeechRecognition } from "react-speech-recognition";
@@ -70,7 +70,6 @@ function useGenerateList({ resetTranscript, finalTranscript }: Props) {
         {
             command: buildCommandRegex(comando.finishList),
             callback: async () => {
-
                 if (!nombreCliente) {
                     toast.error("Indica el nombre del cliente", {
                         icon: "👏",
@@ -141,47 +140,101 @@ function useGenerateList({ resetTranscript, finalTranscript }: Props) {
         commands: pathname === "/generar" ? commands : [],
     });
 
-    // simplemente tengo que configurar el voice para saber que ya se envio o no
-    // TODO : SE BUGEA AL MOMENTO DE ACTUALIZAR LOS ITEMS MAS QUE NADA SI ELIMINASS
-    const sendVoiceGPT = async (voice: Voice) => {
-        if (!voice.voz) return;
+    // const sendVoiceGPT = async (voice: Voice) => {
+    //     if (!voice.voz) return;
 
-        let index = itemsList.length + 1;
-        const indexExistsInItems = itemsList.some(
-            (item) => item.index === voice.index
-        );
+    //     let index = itemsList.length + 1;
+    //     const indexExistsInItems = itemsList.some(
+    //         (item) => item.codigo === voice.codigo
+    //     );
 
-        // await resetTranscript();
+    //     // await resetTranscript();
 
-        if (indexExistsInItems) {
-            index = voice.index as number;
-        }
+    //     if (indexExistsInItems) {
+    //         index = voice.codigo as string;
+    //     }
 
-        const itemFetch = mapItemToList({ status: "pending", index });
-        dispatch(addItemToList(itemFetch));
-        const response = await convertVoiceToItem({
-            message: voice.voz,
-        })
-            .unwrap()
-            .finally(() => {});
+    //     const itemFetch = mapItemToList({ status: "pending", index });
+    //     dispatch(addItemToList(itemFetch));
+    //     const response = await convertVoiceToItem({
+    //         message: voice.voz,
+    //     })
+    //         .unwrap()
+    //         .finally(() => {});
 
-        if (!response) {
-            console.log('hay error response');
-            
-            dispatch(updateVoice({ ...voice, status: "error", enviado: true }));
-            return;
-        }
-        console.log('hay error response');
-        const newItem = convertResponseToItemList({
-            voice,
-            index,
-            response,
+    //     if (!response) {
+    //         console.log("hay error response");
+
+    //         dispatch(updateVoice({ ...voice, status: "error", enviado: true }));
+    //         return;
+    //     }
+    //     console.log("hay error response");
+    //     const newItem = convertResponseToItemList({
+    //         voice,
+    //         index,
+    //         response,
+    //     });
+
+    //     dispatch(addItemToList(newItem));
+    //     dispatch(
+    //         updateVoice({ ...voice, status: newItem.status, enviado: true })
+    //     );
+    //     dispatch(getVoice(null));
+    //     dispatch(selectItem(null));
+    // };
+
+    const sendVoiceGPT2 = async (voicesNotSend: Voice[]) => {
+        let newItemsList = voicesNotSend.map((voice) => {
+            const itemFetch = mapItemToList({
+                status: "pending",
+                codigo: voice.codigo,
+                voz: voice.voz,
+            });
+
+            return dispatch(addItemToList(itemFetch)).payload;
         });
 
-        dispatch(addItemToList(newItem));
-        dispatch(updateVoice({ ...voice, status: newItem.status, enviado: true }));
-        dispatch(getVoice(null));
-        dispatch(selectItem(null));
+        const promises = newItemsList.map((item) => {
+            return () =>
+                convertVoiceToItem({
+                    message: item.voz,
+                    codigo: item.codigo,
+                }).unwrap();
+        });
+
+        const responses = await Promise.all(promises.map((p) => p()));
+
+        // validamos si hay error en alguna respuesta
+        const someError = responses.some((response) => !response);
+
+        if (someError) {
+        }
+
+        if (someError) {
+            voicesNotSend.forEach((voice) => {
+                dispatch(
+                    updateVoice({ ...voice, status: "error", enviado: true })
+                );
+            });
+            return;
+        }
+        responses.forEach((response) => {
+            const newItem = responseToItemList({ response });
+
+            // buscar codigo en voicesNotSend
+            const voice = voicesNotSend.find(
+                (voice) => voice.codigo === newItem.codigo
+            );
+
+            if (!voice) return;
+
+            dispatch(addItemToList({ ...newItem, voz: voice.voz }));
+            dispatch(
+                updateVoice({ ...voice, status: newItem.status, enviado: true })
+            );
+            dispatch(getVoice(null));
+            dispatch(selectItem(null));
+        });
     };
 
     useEffect(() => {
@@ -198,17 +251,17 @@ function useGenerateList({ resetTranscript, finalTranscript }: Props) {
         if (pathname !== "/generar") return;
 
         if (voices.length > 0) {
-            const voice = voices.find(
-                (voice) => voice.status === "pending" && !voice.enviado
-            );
+            // const voice = voices.find(
+            //     (voice) => voice.status === "pending" && !voice.enviado
+            // );
 
             // obtener todas las voces que no esten enviadas
             const voicesNotSend = voices.filter(
                 (voice) => voice.status === "pending" && !voice.enviado
             );
 
-            if (voice) {
-                sendVoiceGPT(voice);
+            if (voicesNotSend.length >= 1) {
+                sendVoiceGPT2(voicesNotSend);
             }
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps

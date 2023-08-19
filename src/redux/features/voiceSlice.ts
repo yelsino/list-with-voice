@@ -1,5 +1,6 @@
 import { Voice, VoiceState } from "@/interfaces/list.interface";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { v4 as uuidv4 } from 'uuid';
 
 const initialState: VoiceState = {
     transcriptState: "",
@@ -22,17 +23,17 @@ export const voiceSlice = createSlice({
 
             // si hay un voice seleccionado entonces actualizarlo
             if (state.voiceSelected) {
-                const index = state.voiceSelected.index as number;
+                const codigo = state.voiceSelected.codigo
 
                 const newVoice: Voice = {
                     voz: missingVoices[0],
                     status: "pending",
                     enviado: false,
-                    index: index,
+                    codigo: codigo,
                 };
 
                 const newVoices = state.voices.map((voice) => {
-                    if (voice.index === index) {
+                    if (voice.codigo === codigo) {
                         return newVoice;
                     }
                     return voice;
@@ -47,14 +48,14 @@ export const voiceSlice = createSlice({
                 voz: text,
                 status: "pending",
                 enviado: false,
-                index: state.voices.length + 1,
+                codigo: uuidv4(),
             }));
 
             state.voices = [...state.voices, ...newVoices];
         },
         updateVoice: (state, action: PayloadAction<Voice>) => {
             state.voices = state.voices.map((voice) => {
-                if (voice.index === action.payload.index) {
+                if (voice.codigo === action.payload.codigo) {
                     return {
                         ...voice,
                         status: action.payload.status,

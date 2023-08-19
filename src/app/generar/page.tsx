@@ -90,9 +90,10 @@ function GenerarPage() {
 
                     <LayoutGroup>
                         <motion.div className="flex flex-col  h-[calc(100vh-320px)] pb-10 overflow-hidden overflow-y-scroll">
-                            {itemsList.map((item) => (
+                            {itemsList.map((item, index) => (
                                 <ItemLista
-                                    key={item.index}
+                                    key={item.codigo}
+                                    index={index}
                                     item={item}
                                     deteleItem={deteleItem}
                                 />
