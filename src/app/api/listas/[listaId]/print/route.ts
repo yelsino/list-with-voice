@@ -17,30 +17,35 @@ interface IParams {
 
 export async function GET(request: Request, { params }: IParams) {
 
-    const { listaId } = params;
+    try {
+        const { listaId } = params;
     
-    const listaBD = await obtenerLista(listaId ?? "")
+        const listaBD = await obtenerLista(listaId ?? "")
+        
+        if(!listaBD) return NextResponse.json({error:'No se encontró la lista'})
     
-    if(!listaBD) return NextResponse.json({error:'No se encontró la lista'})
-
-    console.log(JSON.stringify(listaBD));
+        console.log(JSON.stringify(listaBD));
+        
+     
+        const content = await fs.promises.readFile("public/receipt.html", "utf8");
     
- 
-    const content = await fs.promises.readFile("public/receipt.html", "utf8");
-
-    const imageBuffer = await nodeHtmlToImage({
-        html: content,
-        output: undefined, // Do not write the image to a file
-        type: "jpeg",
-        content: listaToPrint(listaBD as Lista),
-    });
-
-    const readableStream: any = new Readable();
-    readableStream.push(imageBuffer);
-    readableStream.push(null);
-
-    const response = new NextResponse(readableStream);
-    response.headers.set("Content-Type", "image/jpeg");
-
-    return response;
+        const imageBuffer = await nodeHtmlToImage({
+            html: content,
+            output: undefined, // Do not write the image to a file
+            type: "jpeg",
+            content: listaToPrint(listaBD as Lista),
+        });
+    
+        const readableStream: any = new Readable();
+        readableStream.push(imageBuffer);
+        readableStream.push(null);
+    
+        const response = new NextResponse(readableStream);
+        response.headers.set("Content-Type", "image/jpeg");
+    
+        return response;
+    } catch (error) {
+        console.log("ERROR:: ", error);
+        
+    }
 }
