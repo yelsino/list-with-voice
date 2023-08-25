@@ -6,11 +6,13 @@ import Voice from "./components/Voice/Voice";
 import { Toaster } from "react-hot-toast";
 import { useSpeechRecognition } from "react-speech-recognition";
 import { useEffect } from "react";
+import { Metadata } from "next";
 const inter = Inter({ subsets: ["latin"] });
 
-export const metadata = {
+export const metadata:Metadata = {
     title: "Asistente de lista",
     description: "Crea e imprime tus listas",
+    manifest: '/manifest.webmanifest'
 };
 
 export default function RootLayout({

@@ -80,8 +80,7 @@ export const listaSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder.addCase(obtenerImagenLista.fulfilled, (state, action) => {
-            console.log("STATE:", state);
-            console.log("ACTION:", action);
+            
         });
     },
 });

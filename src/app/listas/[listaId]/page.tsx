@@ -39,25 +39,7 @@ function ListasIdPage({ params }: { params: IParams }) {
 
     const imprimirLista = () => {
         dispatch(obtenerImagenLista({ listaId: params.listaId }));
-        // toast.promise(
-        //  new Promise<void>((resolve, reject) => {
-        //   setTimeout(() => {
-        //       const success = true; // Simulamos que la operación fue exitosa
-      
-        //       if (success) {
-        //         dispatch(obtenerImagenLista({ listaId: "321321321" }));
-        //         resolve(); // La promesa se resuelve si la operación fue exitosa
-        //       } else {
-        //         reject(); // La promesa se rechaza si la operación falla
-        //       }
-        //     }, 1000); // Simulamos un retraso de 2 segundos
-        //  }),
-        //   {
-        //     loading: 'Saving...',
-        //     success: <b>Settings saved!</b>,
-        //     error: <b>Could not save.</b>,
-        //   }
-        // );
+       
     };
 
 

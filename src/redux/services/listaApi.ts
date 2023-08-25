@@ -200,9 +200,7 @@ export const listaApi = createApi({
                 },
             }),
         }),
-        imprimirLista: builder.query<any, {listaId: string}>({
-            query: (listaId) => `${URLBASE.LOCAL}/listas/${listaId}/print`
-        })
+       
     }),
 });
 
@@ -215,5 +213,4 @@ export const {
     useAddItemMutation,
     useUpdateItemMutation,
     useDeleteItemMutation,
-    useImprimirListaQuery
 } = listaApi;
