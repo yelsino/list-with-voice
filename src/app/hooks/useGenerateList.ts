@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import {
     useConvertVoiceToItemMutation,
@@ -11,7 +11,6 @@ import {
 } from "@/redux/features/voiceSlice";
 import {
     addItemToList,
-    changeCargando,
     listaPagada,
     nameLista,
     selectItem,
@@ -140,54 +139,11 @@ function useGenerateList({ resetTranscript, finalTranscript }: Props) {
         commands: pathname === "/generar" ? commands : [],
     });
 
-    // const sendVoiceGPT = async (voice: Voice) => {
-    //     if (!voice.voz) return;
-
-    //     let index = itemsList.length + 1;
-    //     const indexExistsInItems = itemsList.some(
-    //         (item) => item.codigo === voice.codigo
-    //     );
-
-    //     // await resetTranscript();
-
-    //     if (indexExistsInItems) {
-    //         index = voice.codigo as string;
-    //     }
-
-    //     const itemFetch = mapItemToList({ status: "pending", index });
-    //     dispatch(addItemToList(itemFetch));
-    //     const response = await convertVoiceToItem({
-    //         message: voice.voz,
-    //     })
-    //         .unwrap()
-    //         .finally(() => {});
-
-    //     if (!response) {
-    //         console.log("hay error response");
-
-    //         dispatch(updateVoice({ ...voice, status: "error", enviado: true }));
-    //         return;
-    //     }
-    //     console.log("hay error response");
-    //     const newItem = convertResponseToItemList({
-    //         voice,
-    //         index,
-    //         response,
-    //     });
-
-    //     dispatch(addItemToList(newItem));
-    //     dispatch(
-    //         updateVoice({ ...voice, status: newItem.status, enviado: true })
-    //     );
-    //     dispatch(getVoice(null));
-    //     dispatch(selectItem(null));
-    // };
-
     const sendVoiceGPT2 = async (voicesNotSend: Voice[]) => {
         let newItemsList = voicesNotSend.map((voice) => {
             const itemFetch = mapItemToList({
                 status: "pending",
-                codigo: voice.codigo,
+                id: voice.codigo,
                 voz: voice.voz,
             });
 
@@ -198,7 +154,7 @@ function useGenerateList({ resetTranscript, finalTranscript }: Props) {
             return () =>
                 convertVoiceToItem({
                     message: item.voz,
-                    codigo: item.codigo,
+                    codigo: item.id,
                 }).unwrap();
         });
 
@@ -207,8 +163,6 @@ function useGenerateList({ resetTranscript, finalTranscript }: Props) {
         // validamos si hay error en alguna respuesta
         const someError = responses.some((response) => !response);
 
-        if (someError) {
-        }
 
         if (someError) {
             voicesNotSend.forEach((voice) => {
@@ -218,12 +172,14 @@ function useGenerateList({ resetTranscript, finalTranscript }: Props) {
             });
             return;
         }
+        console.log(someError, 'someError');
+        
         responses.forEach((response) => {
             const newItem = responseToItemList({ response });
 
             // buscar codigo en voicesNotSend
             const voice = voicesNotSend.find(
-                (voice) => voice.codigo === newItem.codigo
+                (voice) => voice.codigo === newItem.id
             );
 
             if (!voice) return;
@@ -235,6 +191,8 @@ function useGenerateList({ resetTranscript, finalTranscript }: Props) {
             dispatch(getVoice(null));
             dispatch(selectItem(null));
         });
+
+        console.log('Fisnish');
     };
 
     useEffect(() => {
@@ -269,3 +227,46 @@ function useGenerateList({ resetTranscript, finalTranscript }: Props) {
 }
 
 export default useGenerateList;
+
+// const sendVoiceGPT = async (voice: Voice) => {
+//     if (!voice.voz) return;
+
+//     let index = itemsList.length + 1;
+//     const indexExistsInItems = itemsList.some(
+//         (item) => item.codigo === voice.codigo
+//     );
+
+//     // await resetTranscript();
+
+//     if (indexExistsInItems) {
+//         index = voice.codigo as string;
+//     }
+
+//     const itemFetch = mapItemToList({ status: "pending", index });
+//     dispatch(addItemToList(itemFetch));
+//     const response = await convertVoiceToItem({
+//         message: voice.voz,
+//     })
+//         .unwrap()
+//         .finally(() => {});
+
+//     if (!response) {
+//         console.log("hay error response");
+
+//         dispatch(updateVoice({ ...voice, status: "error", enviado: true }));
+//         return;
+//     }
+//     console.log("hay error response");
+//     const newItem = convertResponseToItemList({
+//         voice,
+//         index,
+//         response,
+//     });
+
+//     dispatch(addItemToList(newItem));
+//     dispatch(
+//         updateVoice({ ...voice, status: newItem.status, enviado: true })
+//     );
+//     dispatch(getVoice(null));
+//     dispatch(selectItem(null));
+// };

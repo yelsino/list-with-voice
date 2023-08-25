@@ -28,16 +28,15 @@ export const ItemLista = ({ item, deteleItem, index }: Props) => {
     const [isOpen, setIsOpen] = useState(false);
     const toggleOpen = () => {
         setIsOpen(!isOpen);
-        if (item.codigo === voiceSelected?.codigo) {
+        if (item.id === voiceSelected?.codigo) {
             dispatch(getVoice(null));
             dispatch(selectItem(null));
         }
     };
     const updateItemList = (item: ItemList) => {
         resetTranscript();
-        const voice = voices.find((voice) => voice.codigo === item.codigo);
+        const voice = voices.find((voice) => voice.codigo === item.id);
         dispatch(getVoice(voice as Voice));
-        // dispatch(updateVoice({...voice, }));
         dispatch(selectItem(item));
         dispatch(updateItem({ ...item, status: "updating" }));
     };
@@ -136,7 +135,7 @@ const TextList = ({ item, index }: PropsText) => {
             exit={{ opacity: 0 }}
             layout
             // onClick={toggleOpen}
-            id={String(item.codigo)}
+            id={String(item.id)}
             className="flex items-center gap-x-2 text-lg"
         >
             <span className="text-secondary-200 text-xs">{index + 1}.- </span>{" "}

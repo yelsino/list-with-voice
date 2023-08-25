@@ -26,6 +26,8 @@ export interface VoiceState {
 
 
 export interface ItemList {
+    id?: string;
+    listaId?: string;
     nombre: string;
     precio: number;
     cantidad: number;
@@ -33,9 +35,6 @@ export interface ItemList {
     medida: string;
     voz: string;
     status: Status
-    codigo?: string;
-    id?: string;
-    listaId?: string;
     calculated?: boolean;
     createdAt?: Date;
     updatedAt?: Date;

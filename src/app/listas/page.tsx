@@ -1,5 +1,4 @@
 "use client";
-import { useGetListasQuery } from "@/redux/services/listaApi";
 import Link from "next/link";
 import React from "react";
 import { moneyFormat } from "@/interfaces/mapper";
@@ -8,10 +7,15 @@ import { IconCalendar, IconHome } from "../components/Icons";
 import { SuperTitle } from "../components/SuperTitle";
 import { Loader } from "../components/Loader/Loader";
 import { ComprobanteDePago } from "../components/Comprobante/Comprobante";
-import { useAppSelector } from "@/redux/hooks";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { useGetListasQuery } from "@/redux/services/listaApi";
+import { obtenerImagenLista } from "@/redux/chunks/listaChunk";
 
 function ListasPage() {
     const { isLoading, isFetching, data, error } = useGetListasQuery(null);
+    const dispatch = useAppDispatch();
+
+   
     const { itemsList, pagada, nombreCliente, cargando } = useAppSelector(
         (state) => state.listaReducer
     );
@@ -44,7 +48,7 @@ function ListasPage() {
                             De hoy 18 de agosto
                         </p>
                     </SuperTitle>
-
+                       
                     <div className="flex flex-col gap-y-4">
                         
                         {data?.map((lista, index: any) => (
@@ -59,7 +63,7 @@ function ListasPage() {
                                 <span>{moneyFormat(lista.montoTotal)}</span>
                             </Link>
                         ))}
-                    </div>
+                    ComprobanteDePago</div>
                 </div>
             )}
         </>

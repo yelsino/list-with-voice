@@ -1,14 +1,17 @@
 import { NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
+import { ItemList } from "@/interfaces/list.interface";
 const prisma = new PrismaClient();
 
-interface IParams {
+interface GetParams {
     params: {
         listaId?: string;
+        item?: ItemList;
     };
 }
 
-export async function GET(request: Request, { params }: IParams) {
+// get lista por ID
+export async function GET(request: Request, { params }: GetParams) {
     const { listaId } = params;
 
     if (!listaId) {

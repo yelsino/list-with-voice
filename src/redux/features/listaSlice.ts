@@ -1,8 +1,6 @@
-import { ItemLista } from "@/app/components/Lista/ItemLista";
 import { ItemList, Lista, ListaState } from "@/interfaces/list.interface";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { v4 as uuidv4 } from 'uuid';
-
+import { obtenerImagenLista } from "../chunks/listaChunk";
 
 const initialState: ListaState = {
     nombreCliente: "",
@@ -14,22 +12,26 @@ const initialState: ListaState = {
     cargando: false,
 };
 
+
+
+
 export const listaSlice = createSlice({
     name: "lista",
     initialState,
     reducers: {
         addItemToList: (state, action: PayloadAction<ItemList>) => {
-            const { codigo: index } = action.payload;
-            const itemIndex = state.itemsList.findIndex(item => item.codigo === index);
+            const { id: index } = action.payload;
+            const itemIndex = state.itemsList.findIndex(
+                (item) => item.id === index
+            );
             if (itemIndex !== -1) {
                 // Si el índice ya existe, reemplaza el contenido
-                state.itemsList[itemIndex] = { codigo: index, ...action.payload };
+                state.itemsList[itemIndex] = { id: index, ...action.payload };
             } else {
                 // Si el índice no existe, agrega el nuevo elemento
                 // state.itemsList.push({ index, ...action.payload });
                 state.itemsList = [...state.itemsList, action.payload];
             }
-            
         },
         nameLista: (state, action: PayloadAction<string>) => {
             state.nombreCliente = action.payload;
@@ -55,25 +57,32 @@ export const listaSlice = createSlice({
         },
         deleteItem: (state, action: PayloadAction<ItemList>) => {
             const filtrarItems = state.itemsList.filter(
-                (i) => i.codigo !== action.payload.codigo
+                (i) => i.id !== action.payload.id
             );
             state.itemsList = filtrarItems;
         },
         updateItem: (state, action: PayloadAction<ItemList>) => {
             // buscar itema a actualizar
             console.log(action.payload);
-            
-            const itemIndex = state.itemsList.findIndex( item => item.codigo === action.payload.codigo);
-            
+
+            const itemIndex = state.itemsList.findIndex(
+                (item) => item.id === action.payload.id
+            );
+
             // actualizar itemsList con el nuevo item
             if (itemIndex !== -1) {
                 state.itemsList[itemIndex] = action.payload;
             }
-
         },
         selectItem: (state, action: PayloadAction<ItemList | null>) => {
             state.itemList = action.payload;
-        }
+        },
+    },
+    extraReducers: (builder) => {
+        builder.addCase(obtenerImagenLista.fulfilled, (state, action) => {
+            console.log("STATE:", state);
+            console.log("ACTION:", action);
+        });
     },
 });
 

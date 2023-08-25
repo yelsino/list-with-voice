@@ -1,6 +1,5 @@
 "use client";
 
-import { moneyFormat } from "@/interfaces/mapper";
 import { useAppSelector, useAppDispatch } from "@/redux/hooks";
 import React from "react";
 import { Header } from "../components/Header";
@@ -12,16 +11,18 @@ import { deleteItem } from "@/redux/features/listaSlice";
 import { ItemLista } from "../components/Lista/ItemLista";
 import { LayoutGroup, motion } from "framer-motion";
 import { ItemList } from "@/interfaces/list.interface";
-import { useSpeechRecognition } from "react-speech-recognition";
+import { toast } from "react-hot-toast";
+import { useRegistrarListDBMutation } from "@/redux/services/listaApi";
+import { useRouter } from "next/navigation";
 
 function GenerarPage() {
     const dispatch = useAppDispatch();
-
+    const { push } = useRouter();
+    const [registrarListDB] = useRegistrarListDBMutation();
     const { itemsList, pagada, nombreCliente, cargando } = useAppSelector(
         (state) => state.listaReducer
     );
-
-    const { voices: voicesList, calculated,voiceSelected } = useAppSelector(
+    const { voices, voiceSelected } = useAppSelector(
         (state) => state.VoiceReducer
     );
 
@@ -29,6 +30,31 @@ function GenerarPage() {
         dispatch(deleteItem(item));
     };
 
+    const registrarLista = async () => {
+        if (!nombreCliente) {
+            toast.error("Indica el nombre del cliente", {
+                icon: "👏",
+            });
+            return;
+        }
+
+        const someItemFailed = itemsList.some(
+            (voice) => voice.status === "error" || voice.status === "pending"
+        );
+
+        if (someItemFailed) return;
+
+        const resp = await registrarListDB({
+            items: itemsList,
+            nombreCliente: nombreCliente,
+            completado: false,
+            pagado: pagada ?? false,
+        }).unwrap();
+
+        if (resp.id) {
+            push(`/listas/${resp.id}`);
+        }
+    };
 
     return (
         <>
@@ -43,14 +69,14 @@ function GenerarPage() {
                             </Link>
                         }
                         childrenRight={
-                            <button>
+                            <button onClick={registrarLista}>
                                 <IconSave estilo="" />
                             </button>
                         }
                     />
 
-                    <button
-                        onClick={() => console.log(voicesList)}
+                    {/* <button
+                        onClick={() => console.log(voices)}
                         className="text-secondary-100"
                     >
                         IMPRIMIR VOICES
@@ -66,7 +92,7 @@ function GenerarPage() {
                         className="text-secondary-100"
                     >
                          SELECCIONADO                       
-                    </button>
+                    </button> */}
 
                     <SuperTitle>
                         {nombreCliente ? (
@@ -86,19 +112,16 @@ function GenerarPage() {
                         Productos
                     </p>
 
-                
-
                     <LayoutGroup>
-                        <motion.div className="flex flex-col  h-[calc(100vh-320px)] pb-10 overflow-hidden overflow-y-scroll">
+                        <motion.div className="flex flex-col  h-[calc(100vh-320px)] pb-20 overflow-hidden overflow-y-scroll">
                             {itemsList.map((item, index) => (
                                 <ItemLista
-                                    key={item.codigo}
+                                    key={item.id}
                                     index={index}
                                     item={item}
                                     deteleItem={deteleItem}
                                 />
                             ))}
-                          
                         </motion.div>
                     </LayoutGroup>
                 </div>

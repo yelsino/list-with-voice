@@ -10,6 +10,8 @@
     "postinstall": "prisma generate"
   },
   "dependencies": {
+    "@headlessui/react": "^1.7.17",
+    "@heroicons/react": "^2.0.18",
     "@prisma/client": "^4.15.0",
     "@reduxjs/toolkit": "^1.9.5",
     "@types/file-saver": "^2.0.5",

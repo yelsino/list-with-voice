@@ -1,4 +1,3 @@
-import { comando } from "@/app/components/Voice/comandos";
 import { ItemList, ResponseGPT, Voice } from "./list.interface";
 
 interface Props {
@@ -8,7 +7,10 @@ interface Props {
 export const responseToItemList = ({ response }: Props): ItemList => {
     const messageResult = response?.choices[0].message.content;
     const itemJson = JSON.parse(messageResult);
-    const itemList = mapItemToList(itemJson);
+    const itemList = mapItemToList({
+        ...itemJson,
+        id: itemJson.codigo
+    });
 
     return itemList;
 };
@@ -28,9 +30,8 @@ export const mapItemToList = (item: any): ItemList => {
         medida: item.medida ?? "",
         voz: item.voz ?? "",
         status: item.status,
-        codigo: item.codigo ?? 0,
+        id: item.id ?? 0,
         calculated: item.calculated ?? true,
-        id: item.id ?? "",
     };
 };
 

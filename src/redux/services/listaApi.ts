@@ -1,4 +1,9 @@
-import { GptRequest, Lista, ResponseGPT } from "@/interfaces/list.interface";
+import {
+    GptRequest,
+    ItemList,
+    Lista,
+    ResponseGPT,
+} from "@/interfaces/list.interface";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 const URLBASE = {
@@ -43,6 +48,7 @@ export const listaApi = createApi({
                 method: "POST",
                 body: {
                     model: "gpt-3.5-turbo",
+                    // model: "gpt-4",
                     messages: [
                         {
                             role: "system",
@@ -168,16 +174,46 @@ export const listaApi = createApi({
         getListaById: builder.query<Lista, { id: string }>({
             query: ({ id }) => `${URLBASE.LOCAL}/listas/${id}`,
         }),
+        addItem: builder.mutation<ItemList, ItemList>({
+            query: (item) => ({
+                method: "POST",
+                url: `${URLBASE.LOCAL}/listas/${item.listaId}/items`,
+                body: item,
+            }),
+        }),
+        updateItem: builder.mutation<ItemList, ItemList>({
+            query: (item) => ({
+                method: "PUT",
+                url: `${URLBASE.LOCAL}/listas/${item.listaId}/items`,
+                body: item,
+                params: {
+                    id: item.id,
+                },
+            }),
+        }),
+        deleteItem: builder.mutation<ItemList, ItemList>({
+            query: (item) => ({
+                method: "DELETE",
+                url: `${URLBASE.LOCAL}/listas/${item.listaId}/items`,
+                params: {
+                    id: item.id,
+                },
+            }),
+        }),
+        imprimirLista: builder.query<any, {listaId: string}>({
+            query: (listaId) => `${URLBASE.LOCAL}/listas/${listaId}/print`
+        })
     }),
 });
 
 export const {
     useGetListasQuery,
     useGetListaByIdQuery,
-    // useConvertItemCalculadoMutation,
     useConvertVoiceToItemMutation,
     useSendListaToGPTMutation,
     useRegistrarListDBMutation,
+    useAddItemMutation,
+    useUpdateItemMutation,
+    useDeleteItemMutation,
+    useImprimirListaQuery
 } = listaApi;
-
-

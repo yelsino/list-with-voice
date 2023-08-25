@@ -6,6 +6,11 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <meta name="color-scheme" content="light dark" />
     <meta name="supported-color-schemes" content="light dark" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
+
     <title></title>
     <style type="text/css" rel="stylesheet" media="all">
     /* Base ------------------------------ */
@@ -14,25 +19,20 @@
       
     p,h1,h2,h3 {
       color: black;
-      font-weight: bold;
+      
     }
     body{
       background-color: #f6f6f6;
-      font-size: 50px;
+      font-family: 'Roboto', sans-serif;
+      font-size: 40px;
     }
  
     </style>
-    <!--[if mso]>
-    <style type="text/css">
-      .f-fallback  {
-        font-family: Arial, sans-serif;
-      }
-    </style>
-  <![endif]-->
+   
   </head>
   <body>
-    <span class="preheader">This is a receipt for your recent purchase on {{ purchase_date }}. No payment is due with this receipt.{{name}}</span>
-    <table class="email-wrapper" width="100%" cellpadding="0" cellspacing="0" role="presentation">
+    
+    <table class="email-wrapper mt-10" width="100%" cellpadding="0" cellspacing="0" role="presentation">
       <tr>
         <td align="center">
           <table class="email-content" width="100%" cellpadding="0" cellspacing="0" role="presentation">
@@ -51,91 +51,44 @@
                   <tr>
                     <td class="content-cell">
                       <div class="f-fallback">
-                        <h1>Hi {{name}},</h1>
-                        <p>Thanks for using [Product Name]. This email is the receipt for your purchase. No payment is due.</p>
-                        <p>This purchase will appear as “[Credit Card Statement Name]” on your credit card statement for your {{credit_card_brand}} ending in {{credit_card_last_four}}. Need to <a href="{{billing_url}}">update your payment information</a>?</p>
+                        <h1 class="font-bold text-6xl ">NEGOCIO YOLA</h1>
+                        <hr class="mb-5">
+                        <p>Negocio de frutas y verduras</p>
+                        <p>Fecha: {{fecha}}</p>
                         <!-- Discount -->
-                        <table class="discount" align="center" width="100%" cellpadding="0" cellspacing="0" role="presentation">
-                          <tr>
-                            <td align="center">
-                              <h1 class="f-fallback discount_heading">10% off your next purchase!</h1>
-                              <p class="f-fallback discount_body">Thanks for your support! Here's a coupon for 10% off your next purchase if used by {{expiration_date}}.</p>
-                              <!-- Border based button
-           https://litmus.com/blog/a-guide-to-bulletproof-buttons-in-email-design -->
-                              <table width="100%" border="0" cellspacing="0" cellpadding="0" role="presentation">
-                                <tr>
-                                  <td align="center">
-                                    <a href="http://example.com" class="f-fallback button button--green" target="_blank">Use this discount now...</a>
-                                  </td>
-                                </tr>
-                              </table>
-                            </td>
-                          </tr>
-                        </table>
-                        <table class="purchase" width="100%" cellpadding="0" cellspacing="0" role="presentation">
-                          <tr>
-                            <td>
-                              <h3>{{receipt_id}}</h3></td>
-                            <td>
-                              <h3 class="align-right">{{date}}</h3></td>
-                          </tr>
+                       
+                        <table class="purchase text-black" width="100%" cellpadding="0" cellspacing="0" role="presentation">
+                         
                           <tr>
                             <td colspan="2">
                               <table class="purchase_content" width="100%" cellpadding="0" cellspacing="0">
                                 <tr>
                                   <th class="purchase_heading" align="left">
-                                    <p class="f-fallback">Description</p>
+                                    <p class="f-fallback">Descripción</p>
                                   </th>
                                   <th class="purchase_heading" align="right">
-                                    <p class="f-fallback">Amount</p>
+                                    <p class="f-fallback">Monto</p>
                                   </th>
                                 </tr>
-                                {{#each receipt_details}}
+                                {{#items}}
                                 <tr>
-                                  <td width="80%" class="purchase_item"><span class="f-fallback">{{description}}</span></td>
-                                  <td class="align-right" width="20%" class="purchase_item"><span class="f-fallback">{{amount}}</span></td>
+                                  <td width="80%" class="purchase_item"><span class="f-fallback">{{descripcion}}</span></td>
+                                  <td class="align-right" width="20%" class="purchase_item"><span class="f-fallback">{{monto}}</span></td>
                                 </tr>
-                                {{/each}}
+                                {{/items}}
                                 <tr>
                                   <td width="80%" class="purchase_footer" valign="middle">
                                     <p class="f-fallback purchase_total purchase_total--label">Total</p>
                                   </td>
                                   <td width="20%" class="purchase_footer" valign="middle">
-                                    <p class="f-fallback purchase_total">{{total}}</p>
+                                    <p class="f-fallback purchase_total">{{montoTotal}}</p>
                                   </td>
                                 </tr>
                               </table>
                             </td>
                           </tr>
                         </table>
-                        <p>If you have any questions about this receipt, simply reply to this email or reach out to our <a href="{{support_url}}">support team</a> for help.</p>
-                        <p>Cheers,
-                          <br>The [Product Name] team</p>
-                        <!-- Action -->
-                        <table class="body-action" align="center" width="100%" cellpadding="0" cellspacing="0" role="presentation">
-                          <tr>
-                            <td align="center">
-                              <!-- Border based button
-           https://litmus.com/blog/a-guide-to-bulletproof-buttons-in-email-design -->
-                              <table width="100%" border="0" cellspacing="0" cellpadding="0" role="presentation">
-                                <tr>
-                                  <td align="center">
-                                    <a href="{{action_url}}" class="f-fallback button button--blue" target="_blank">Download as PDF</a>
-                                  </td>
-                                </tr>
-                              </table>
-                            </td>
-                          </tr>
-                        </table>
-                        <!-- Sub copy -->
-                        <table class="body-sub" role="presentation">
-                          <tr>
-                            <td>
-                              <p class="f-fallback sub"><strong>Need a printable copy for your records?</strong> You can <a href="{{action_url}}">download a PDF version</a>.</p>
-                              <p class="f-fallback sub">Moved recently? Have a new credit card? You can easily <a href="{{billing_url}}">update your billing information</a>.</p>
-                            </td>
-                          </tr>
-                        </table>
+                       
                       </div>
                     </td>
                   </tr>
@@ -148,9 +101,9 @@
                   <tr>
                     <td class="content-cell" align="center">
                       <p class="f-fallback sub align-center">
-                        [Company Name, LLC]
-                        <br>1234 Street Rd.
-                        <br>Suite 1234
+                       GRACIAS POR SU VISITA
+                        <br>Jr primero noviembre.
+                        <br>frente al hospedaje
                       </p>
                     </td>
                   </tr>
