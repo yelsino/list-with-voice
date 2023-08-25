@@ -1,6 +1,7 @@
 import { ItemList, Lista, ListaState } from "@/interfaces/list.interface";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { obtenerImagenLista } from "../chunks/listaChunk";
+import { saveAs } from "file-saver";
 
 const initialState: ListaState = {
     nombreCliente: "",
@@ -79,25 +80,32 @@ export const listaSlice = createSlice({
         builder.addCase(obtenerImagenLista.fulfilled, (state, action) => {
             
             // action.payload == BLOB
-            const url = URL.createObjectURL(action.payload);
-            const link = document.createElement("a");
-            link.href = url;
-            link.download = "archivo.png";
-            document.body.append(link);
-            link.click();
+            // const url = URL.createObjectURL(action.payload);
+            // const link = document.createElement("a");
+            // link.href = url;
+            // link.download = "archivo.png";
+            // document.body.append(link);
+            // link.click();
 
-            setTimeout(() => {
-                URL.revokeObjectURL(url);
-                document.body.removeChild(link);
-            }, 2000); // Ajusta el tiempo según tus necesidades
+            // setTimeout(() => {
+            //     URL.revokeObjectURL(url);
+            //     document.body.removeChild(link);
+            // }, 2000);
     
+            // return state;
+
+
+
+            const url = URL.createObjectURL(action.payload);
+
+            // Utilizando FileSaver.js para descargar el archivo
+            saveAs(url, "archivo.png");
+      
+            URL.revokeObjectURL(url);
+      
             return state;
 
-            // URL.revokeObjectURL(url);
-            // document.body.removeChild(link);
-
-            // return ''
-            // setTimeout( function () { document.body.removeChild(link) },10 );
+            
         });
     },
 });
