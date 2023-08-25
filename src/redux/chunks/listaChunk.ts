@@ -47,10 +47,12 @@ export const obtenerImagenLista = createAsyncThunk(
 
         const link = document.createElement('a');
         link.href = url;
-        link.download = 'nombre_de_archivo.png'; // Asigna un nombre de archivo para la descarga
+        link.download = 'archivo.png'; // Asigna un nombre de archivo para la descarga
         document.body.append(link)
         link.click();
-        URL.revokeObjectURL(url);
+        // URL.revokeObjectURL(url);
         document.body.removeChild(link)
+
+        // setTimeout( function () { document.body.removeChild(link) },10 );
     }
 )
