@@ -99,7 +99,7 @@ export const listaSlice = createSlice({
             const url = URL.createObjectURL(action.payload);
 
             // Utilizando FileSaver.js para descargar el archivo
-            saveAs(url, "archivo.png");
+            saveAs(url, "archivo.jpeg");
       
             URL.revokeObjectURL(url);
       
