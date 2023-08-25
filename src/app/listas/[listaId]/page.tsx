@@ -65,6 +65,10 @@ function ListasIdPage({ params }: { params: IParams }) {
                         }
                     />
 
+                    <div className="text-secondary-100 bg-primary-100">
+                        <a href="http://localhost:3000/25bd4d7a-5ce2-4050-af50-2d24a52edc0b" download="archivo.png" >DESCARGAR</a>
+                    </div>
+
                     <div className="">
                         <SuperTitle>
                             <p className="text-4xl">

@@ -12,9 +12,6 @@ const initialState: ListaState = {
     cargando: false,
 };
 
-
-
-
 export const listaSlice = createSlice({
     name: "lista",
     initialState,
@@ -81,6 +78,26 @@ export const listaSlice = createSlice({
     extraReducers: (builder) => {
         builder.addCase(obtenerImagenLista.fulfilled, (state, action) => {
             
+            // action.payload == BLOB
+            const url = URL.createObjectURL(action.payload);
+            const link = document.createElement("a");
+            link.href = url;
+            link.download = "archivo.png";
+            document.body.append(link);
+            link.click();
+
+            setTimeout(() => {
+                URL.revokeObjectURL(url);
+                document.body.removeChild(link);
+            }, 2000); // Ajusta el tiempo según tus necesidades
+    
+            return state;
+
+            // URL.revokeObjectURL(url);
+            // document.body.removeChild(link);
+
+            // return ''
+            // setTimeout( function () { document.body.removeChild(link) },10 );
         });
     },
 });
