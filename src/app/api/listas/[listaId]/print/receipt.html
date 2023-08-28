@@ -1,0 +1,118 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="x-apple-disable-message-reformatting" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="supported-color-schemes" content="light dark" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
+
+    <title></title>
+    <style type="text/css" rel="stylesheet" media="all">
+    /* Base ------------------------------ */
+    
+    @import url("https://fonts.googleapis.com/css?family=Nunito+Sans:400,700&display=swap");
+      
+    p,h1,h2,h3 {
+      color: black;
+      
+    }
+    body{
+      background-color: #f6f6f6;
+      font-family: 'Roboto', sans-serif;
+      font-size: 45px;
+    }
+ 
+    </style>
+   
+  </head>
+  <body>
+    
+    <table class="email-wrapper mt-10" width="100%" cellpadding="0" cellspacing="0" role="presentation">
+      <tr>
+        <td align="center">
+          <table class="email-content " width="100%" cellpadding="0" cellspacing="0" role="presentation">
+            <tr>
+              <td class="email-masthead">
+                <a href="https://example.com" class="f-fallback email-masthead_name">
+                <!-- [Product Name] -->
+              </a>
+              </td>
+            </tr>
+            <!-- Email Body -->
+            <tr>
+              <td class="email-body" cellpadding="0" cellspacing="0">
+                <table class="email-body_inner " width="800" align="center" cellpadding="0" cellspacing="0" role="presentation">
+                  <!-- Body content -->
+                  <tr>
+                    <td class="content-cell">
+                      <div >
+                        <h1 class="font-bold text-6xl ">NEGOCIO YOLA</h1>
+                        <hr class="mb-5">
+                        <p>Negocio de frutas y verduras</p>
+                        <p>Fecha: {{fecha}}</p>
+                        <!-- Discount -->
+                       
+                        <table class="purchase text-black" width="100%" cellpadding="0" cellspacing="0" role="presentation">
+                         
+                          <tr>
+                            <td colspan="2">
+                              <table class="purchase_content" width="100%" cellpadding="0" cellspacing="0">
+                                <tr>
+                                  <th class="purchase_heading" align="left">
+                                    <p >Descripción</p>
+                                  </th>
+                                  <th class="purchase_heading" align="right">
+                                    <p >Monto</p>
+                                  </th>
+                                </tr>
+                                {{#items}}
+                                <tr>
+                                  <td width="80%" class=""><span >{{descripcion}}</span></td>
+                                  <td  width="20%" class=" text-end"><span >{{monto}}</span></td>
+                                </tr>
+                                {{/items}}
+                                <tr>
+                                  <td width="80%" class="purchase_footer" valign="middle">
+                                    <p class="f-fallback purchase_total purchase_total--label">Total</p>
+                                  </td>
+                                  <td width="20%" class="purchase_footer" valign="middle">
+                                    <p class="f-fallback purchase_total">{{montoTotal}}</p>
+                                  </td>
+                                </tr>
+                              </table>
+                            </td>
+                          </tr>
+                        </table>
+                       
+                      </div>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+            <tr >
+              <td class="pb-10 ">
+                <table class="email-footer" align="center" width="570" cellpadding="0" cellspacing="0" role="presentation">
+                  <tr>
+                    <td class="content-cell" align="center">
+                      <p class="f-fallback sub align-center">
+                       GRACIAS POR SU VISITA
+                        <br>Jr primero noviembre.
+                        <br>frente al hospedaje
+                      </p>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>
