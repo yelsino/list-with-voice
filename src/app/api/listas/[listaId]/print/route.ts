@@ -5,6 +5,9 @@ import { listaToPrint, obtenerLista } from "../../mapper/listas";
 import { Lista } from "@/interfaces/list.interface";
 import * as fs from "node:fs";
 import path from "path";
+import puppeteerCore from 'puppeteer-core';
+import chromium from 'chrome-aws-lambda'
+
 
 interface IParams {
     params: {
@@ -13,28 +16,35 @@ interface IParams {
 }
 
 export async function GET(request: Request, { params }: IParams) {
-
     try {
         const { listaId } = params;
-    
-        const listaBD = await obtenerLista(listaId ?? "")
-        if(!listaBD) return NextResponse.json({error:'No se encontró la lista'})
-    
+
+        const listaBD = await obtenerLista(listaId ?? "");
+        if (!listaBD)
+            return NextResponse.json({ error: "No se encontró la lista" });
+
         // console.log(JSON.stringify(listaBD));
-        
-        const templateHtml = await fetch('https://res.cloudinary.com/dwkfj5sxb/raw/upload/v1692990324/Templates/zv5f373tuh8j5ro5zga5.html')
+
+        const templateHtml = await fetch(
+            "https://res.cloudinary.com/dwkfj5sxb/raw/upload/v1692990324/Templates/zv5f373tuh8j5ro5zga5.html"
+        );
 
         let convertTemplate = await templateHtml.text();
-        console.log('convertTemplate:::: ', convertTemplate);
-        console.log('22222');
+        console.log("convertTemplate:::: ", convertTemplate);
+        console.log("22222");
         const imageBuffer = await nodeHtmlToImage({
             html: convertTemplate,
-            output: undefined, 
+            output: undefined,
             type: "jpeg",
             content: listaToPrint(listaBD as Lista),
+            puppeteer: puppeteerCore,
+            puppeteerArgs: {
+                args: chromium.args,
+                executablePath: await chromium.executablePath,
+            },
         });
-        console.log('44444');
-        
+        console.log("44444");
+
         const readableStream: any = new Readable();
         readableStream.push(imageBuffer);
         readableStream.push(null);
@@ -42,40 +52,38 @@ export async function GET(request: Request, { params }: IParams) {
         const response = new NextResponse(readableStream);
         console.log("response: ", response);
         // response.headers.set("Content-Type", "image/jpeg");
-    
+
         return response;
     } catch (error) {
         console.log("ERROR:: ", error);
     }
 }
 
-
 // export async function GET(request: Request, { params }: IParams) {
 
 //     const { listaId } = params;
-    
+
 //     const listaBD = await obtenerLista(listaId ?? "")
-    
+
 //     if(!listaBD) return NextResponse.json({error:'No se encontró la lista'})
 
 //     // console.log(JSON.stringify(listaBD));
 
-    
 //     const filePath = path.resolve(__dirname, '..', '..', '..','..', '..','..','..','public', 'receipt.html');
 //     console.log("filePath",filePath);
 
 //     fs.readdir(filePath, (err,files)=>{
 //         if(err) {
 //             console.log('error al leer');
-            
+
 //         }
 
 //         console.log(files);
-        
+
 //     })
-    
+
 //     // console.log('ruta completa:', rutaCompleta);
-    
+
 //     const content = await fs.promises.readFile(filePath, "utf8");
 
 //     const imageBuffer = await nodeHtmlToImage({
