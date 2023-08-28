@@ -65,9 +65,20 @@ export async function GET(request: Request, { params }: IParams) {
     if(!listaBD) return NextResponse.json({error:'No se encontró la lista'})
 
     // console.log(JSON.stringify(listaBD));
+
     
-    const filePath = path.resolve(__dirname, '..', '..', '..','..', '..','..','public', 'receipt.html');
+    const filePath = path.resolve(__dirname, '..', '..', '..','..', '..','..','..','public', 'receipt.html');
     console.log("filePath",filePath);
+
+    fs.readdir(filePath, (err,files)=>{
+        if(err) {
+            console.log('error al leer');
+            
+        }
+
+        console.log(files);
+        
+    })
     
     // console.log('ruta completa:', rutaCompleta);
     
