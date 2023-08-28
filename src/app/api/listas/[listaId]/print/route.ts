@@ -64,10 +64,13 @@ export async function GET(request: Request, { params }: IParams) {
     
     if(!listaBD) return NextResponse.json({error:'No se encontró la lista'})
 
-    console.log(JSON.stringify(listaBD));
+    // console.log(JSON.stringify(listaBD));
     
- 
-    const content = await fs.promises.readFile("public/receipt.html", "utf8");
+    // const rutaCompleta = path.join(__dirname, 'public/', 'receipt.html');
+    
+    // console.log('ruta completa:', rutaCompleta);
+    
+    const content = await fs.promises.readFile("./public/receipt.html", "utf8");
 
     const imageBuffer = await nodeHtmlToImage({
         html: content,
