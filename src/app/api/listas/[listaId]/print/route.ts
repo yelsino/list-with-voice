@@ -18,7 +18,6 @@ export async function GET(request: Request, { params }: IParams) {
         const { listaId } = params;
     
         const listaBD = await obtenerLista(listaId ?? "")
-        console.log('1');
         if(!listaBD) return NextResponse.json({error:'No se encontró la lista'})
     
         // console.log(JSON.stringify(listaBD));
@@ -26,7 +25,8 @@ export async function GET(request: Request, { params }: IParams) {
         const templateHtml = await fetch('https://res.cloudinary.com/dwkfj5sxb/raw/upload/v1692990324/Templates/zv5f373tuh8j5ro5zga5.html')
 
         let convertTemplate = await templateHtml.text();
-        
+        console.log('convertTemplate:::: ', convertTemplate);
+        console.log('22222');
         const imageBuffer = await nodeHtmlToImage({
             html: convertTemplate,
             output: undefined, 
