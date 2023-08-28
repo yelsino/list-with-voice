@@ -66,11 +66,12 @@ export async function GET(request: Request, { params }: IParams) {
 
     // console.log(JSON.stringify(listaBD));
     
-    // const rutaCompleta = path.join(__dirname, 'public/', 'receipt.html');
+    const filePath = path.resolve(__dirname, '..', '..', '..','..', '..','..','public', 'receipt.html');
+    console.log("filePath",filePath);
     
     // console.log('ruta completa:', rutaCompleta);
     
-    const content = await fs.promises.readFile("./public/receipt.html", "utf8");
+    const content = await fs.promises.readFile(filePath, "utf8");
 
     const imageBuffer = await nodeHtmlToImage({
         html: content,
