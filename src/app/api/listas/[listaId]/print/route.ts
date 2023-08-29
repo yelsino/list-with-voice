@@ -46,7 +46,7 @@ export async function GET(request: Request, { params }: IParams) {
 
         return response;
     } catch (error) {
-        console.log("ERROR:: ", error);
+        console.log("ERROR::  ", error);
         if(error){
             NextResponse.json(error)
         }
