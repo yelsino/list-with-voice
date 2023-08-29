@@ -3,7 +3,20 @@ import nodeHtmlToImage from "node-html-to-image";
 import { Readable } from "stream";
 import { listaToPrint, obtenerLista } from "../../mapper/listas";
 import { Lista } from "@/interfaces/list.interface";
+import chromium from 'chrome-aws-lambda'
+// ...
 
+async function launchBrowser() {
+  await chromium.puppeteer.launch({
+    args: chromium.args,
+    executablePath: await chromium.executablePath,
+    headless: chromium.headless,
+  });
+
+  // Resto de tu código para interactuar con Puppeteer y el navegador
+}
+
+launchBrowser();
 
 
 interface IParams {
