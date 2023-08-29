@@ -3,21 +3,7 @@ import nodeHtmlToImage from "node-html-to-image";
 import { Readable } from "stream";
 import { listaToPrint, obtenerLista } from "../../mapper/listas";
 import { Lista } from "@/interfaces/list.interface";
-import chromium from 'chrome-aws-lambda'
-// ...
-
-async function launchBrowser() {
-  await chromium.puppeteer.launch({
-    args: chromium.args,
-    executablePath: await chromium.executablePath,
-    headless: chromium.headless,
-  });
-
-  // Resto de tu código para interactuar con Puppeteer y el navegador
-}
-
-launchBrowser();
-
+import puppeteer from "puppeteer";
 
 interface IParams {
     params: {
@@ -34,33 +20,23 @@ export async function GET(request: Request, { params }: IParams) {
 
         // console.log(JSON.stringify(listaBD));
 
-        const templateHtml = await fetch(
-            "https://res.cloudinary.com/dwkfj5sxb/raw/upload/v1692990324/Templates/zv5f373tuh8j5ro5zga5.html"
-        );
+        const browser = await puppeteer.launch();
+        const page = await browser.newPage();
+        await page.goto("http://raddy.co.uk");
 
-        let convertTemplate = await templateHtml.text();
-        console.log("22222");
-        const imageBuffer = await nodeHtmlToImage({
-            html: '<html><body>Hello world!</body></html>',
-            output: undefined,
-            type: "jpeg",
-            // content: listaToPrint(listaBD as Lista),
-        });
-        console.log("44444");
+        page.setViewport({ width: 400, height: 2000, deviceScaleFactor: 1 });
 
-        const readableStream: any = new Readable();
-        readableStream.push(imageBuffer);
-        readableStream.push(null);
+        const imagen = await page.screenshot({ path: `img-${Date.now()}.png` });
+        await browser.close();
 
-        const response = new NextResponse(readableStream);
-        console.log("response: ", response);
-        // response.headers.set("Content-Type", "image/jpeg");
+        console.log("OBTUVISTE EL BUFFER");
+        console.log(imagen);
 
-        return response;
+        return NextResponse.json(imagen);
     } catch (error) {
         console.log("ERROR::  ", error);
-        if(error){
-            NextResponse.json(error)
+        if (error) {
+            NextResponse.json(error);
         }
     }
 }
