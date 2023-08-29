@@ -11,7 +11,6 @@ interface IParams {
         listaId?: string;
     };
 }
-
 export async function GET(request: Request, { params }: IParams) {
     try {
         const { listaId } = params;

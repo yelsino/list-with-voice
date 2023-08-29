@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "prisma generate && next build && cp -R public .next",
+    "build": "prisma generate && next build && cp -R public .next && cd node_modules/puppeteer && npm install",
     "start": "next start",
     "lint": "next lint",
     "postinstall": "prisma generate"

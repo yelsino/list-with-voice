@@ -5,6 +5,8 @@ import { generarItemListBD, montoTotalLista } from "./mapper/listas";
 // import { Lista } from "@/interfaces/list.interface";
 const prisma = new PrismaClient();
 
+// localhost/listas/
+// POST
 export async function POST(request: Request) {
     const body: Lista = await request.json();
 
