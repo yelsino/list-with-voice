@@ -3,10 +3,7 @@ import nodeHtmlToImage from "node-html-to-image";
 import { Readable } from "stream";
 import { listaToPrint, obtenerLista } from "../../mapper/listas";
 import { Lista } from "@/interfaces/list.interface";
-import * as fs from "node:fs";
-import path from "path";
-import puppeteerCore from 'puppeteer-core';
-import chromium from 'chrome-aws-lambda'
+
 
 
 interface IParams {
@@ -30,18 +27,12 @@ export async function GET(request: Request, { params }: IParams) {
         );
 
         let convertTemplate = await templateHtml.text();
-        console.log("convertTemplate:::: ", convertTemplate);
         console.log("22222");
         const imageBuffer = await nodeHtmlToImage({
-            html: convertTemplate,
+            html: '<html><body>Hello world!</body></html>',
             output: undefined,
             type: "jpeg",
-            content: listaToPrint(listaBD as Lista),
-            puppeteer: puppeteerCore,
-            puppeteerArgs: {
-                args: chromium.args,
-                executablePath: await chromium.executablePath,
-            },
+            // content: listaToPrint(listaBD as Lista),
         });
         console.log("44444");
 
