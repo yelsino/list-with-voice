@@ -4,6 +4,7 @@ import { Readable } from "stream";
 import { listaToPrint, obtenerLista } from "../../mapper/listas";
 import { Lista } from "@/interfaces/list.interface";
 import puppeteer from "puppeteer";
+import * as phantom from "phantom";
 
 interface IParams {
     params: {
@@ -19,20 +20,14 @@ export async function GET(request: Request, { params }: IParams) {
             return NextResponse.json({ error: "No se encontró la lista" });
 
         // console.log(JSON.stringify(listaBD));
+        const instance: any = await phantom.create();
+        const page: any = await instance.createPage();
+        const status: string = await page.open("https://phantomjs.org/screen-capture.html");
+        const content = await page.property('content');
+        console.log(content);
+        await instance.exit();
 
-        const browser = await puppeteer.launch();
-        const page = await browser.newPage();
-        await page.goto("http://raddy.co.uk");
-
-        page.setViewport({ width: 400, height: 2000, deviceScaleFactor: 1 });
-
-        const imagen = await page.screenshot({ path: `img-${Date.now()}.png` });
-        await browser.close();
-
-        console.log("OBTUVISTE EL BUFFER");
-        console.log(imagen);
-
-        return NextResponse.json(imagen);
+        return NextResponse.json({});
     } catch (error) {
         console.log("ERROR::  ", error);
         if (error) {
