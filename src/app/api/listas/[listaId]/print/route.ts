@@ -12,20 +12,20 @@ export async function GET(request: Request, { params }: IParams) {
     try {
         const { listaId } = params;
 
-        // const width = 800;
-        // const height = 600;
+        const width = 800;
+        const height = 600;
 
-        // const canvas = createCanvas(width, height);
-        // const ctx = canvas.getContext("2d");
+        const canvas = createCanvas(width, height);
+        const ctx = canvas.getContext("2d");
 
-        // // Dibujar un fondo
-        // ctx.fillStyle = "white"; // Color de fondo
-        // ctx.fillRect(0, 0, width, height);
+        // Dibujar un fondo
+        ctx.fillStyle = "white"; // Color de fondo
+        ctx.fillRect(0, 0, width, height);
 
-        // // Dibujar el título
-        // ctx.font = "bold 24px Arial";
-        // ctx.fillStyle = "black";
-        // ctx.fillText("Lista de Compras", 50, 50);
+        // Dibujar el título
+        ctx.font = "bold 24px Arial";
+        ctx.fillStyle = "black";
+        ctx.fillText("Lista de Compras", 50, 50);
 
         // // Dibujar los detalles
         // let y = 100;
