@@ -6,7 +6,6 @@ import { Header } from "../components/Header";
 import { IconCalendar, IconHome } from "../components/Icons";
 import { SuperTitle } from "../components/SuperTitle";
 import { Loader } from "../components/Loader/Loader";
-import { ComprobanteDePago } from "../components/Comprobante/Comprobante";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { useGetListasQuery } from "@/redux/services/listaApi";
 import { obtenerImagenLista } from "@/redux/chunks/listaChunk";
