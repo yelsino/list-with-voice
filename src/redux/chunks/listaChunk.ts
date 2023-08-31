@@ -1,48 +1,38 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-
-// export const obtenerImagenLista = createAsyncThunk(
-//     '',
-//     async ({listaId}: {listaId:string}) => {
-//         const response = await fetch(`/api/listas/${listaId}/print`,{
-//             method:'GET',
-//         });
-
-//         const blob = await response.blob();
-//         const url = URL.createObjectURL(blob);
-
-//         const link = document.createElement('a');
-//         link.href = url;
-//         link.download = 'nombre_de_archivo.png'; // Asigna un nombre de archivo para la descarga
-//         link.textContent = 'Haz clic aquí para descargar el archivo'; // Texto del enlace de descarga
-
-//         // Agrega el enlace al DOM
-//         document.body.appendChild(link);
-
-//         // Abre una nueva pestaña con el enlace de descarga
-//         link.target = '_blank';
-
-//         // Limpia la URL del objeto cuando el enlace se elimina del DOM
-//         link.addEventListener('DOMNodeRemoved', () => {
-//             URL.revokeObjectURL(url);
-//         });
-
-//         // Elimina el enlace del DOM después de que el usuario lo haya descargado
-//         link.addEventListener('click', () => {
-//             setTimeout(() => {
-//                 document.body.removeChild(link);
-//             }, 100);
-//         });
-//     }
-// )
+import { URLBASE } from "../services/listaApi";
+import { Lista } from "@/interfaces/list.interface";
 
 export const obtenerImagenLista = createAsyncThunk(
     '',
-    async ({listaId}: {listaId:string}):Promise<Blob> => {
-        const response = await fetch(`/api/listas/${listaId}/print`,{
-            method:'GET',
+    async (lista: Lista):Promise<Blob> => {
+        console.log('hice click');
+        
+        const response = await fetch(`${URLBASE.API_NEGOCIO}/reporte`,{
+            method:'POST',
+            body: JSON.stringify(lista),
         });
-
+        console.log("RESPONSE: ", response);
+        
         const blob = await response.blob();
+        console.log(blob);
+        
         return blob
     }
 )
+
+
+// export const obtenerImagenLista = createAsyncThunk(
+//     '',
+//     async ({listaId}: {listaId:string}):Promise<Blob> => {
+//         const response = await fetch(`/api/listas/${listaId}/print`,{
+//             method:'GET',
+//         });
+//         console.log(response);
+        
+//         const blob = await response.blob();
+
+//         return blob
+//     }
+// )
+
+

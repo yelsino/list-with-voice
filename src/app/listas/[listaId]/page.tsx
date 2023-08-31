@@ -38,7 +38,7 @@ function ListasIdPage({ params }: { params: IParams }) {
     };
 
     const imprimirLista = () => {
-        dispatch(obtenerImagenLista({ listaId: params.listaId }));
+        dispatch(obtenerImagenLista(data as any));
        
     };
 

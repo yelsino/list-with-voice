@@ -10,6 +10,8 @@ import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { useGetListasQuery } from "@/redux/services/listaApi";
 import { obtenerImagenLista } from "@/redux/chunks/listaChunk";
 
+
+
 function ListasPage() {
     const { isLoading, isFetching, data, error } = useGetListasQuery(null);
     const dispatch = useAppDispatch();
