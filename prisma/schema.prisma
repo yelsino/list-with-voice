@@ -9,6 +9,34 @@ generator client {
   provider = "prisma-client-js"
 }
 
+model Tienda {
+  id             String   @id @default(auto()) @map("_id") @db.ObjectId
+  usuario        Usuario  @relation(fields: [tiendaId], references: [id])
+  tiendaId       String   @db.ObjectId
+  nombreTienda   String
+  logo           String
+  ubicacion      String
+  numeroContacto String
+  email          String
+  referencia     String
+  urlTienda      String
+  codigoQr       Boolean  @default(false)
+  codigoBarra    Boolean  @default(false)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+model Usuario {
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  nombreUsuario String
+  password      String
+  nombres       String
+  apellidos     String
+  tiendas       Tienda[]
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
 model Lista {
   id            String     @id @default(auto()) @map("_id") @db.ObjectId
   numero        Int

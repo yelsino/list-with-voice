@@ -21,9 +21,35 @@ export interface VoiceState {
     voices: Voice[];
     transcriptState: string;
     calculated: boolean;
-    voiceSelected: Voice | null
+    voiceSelected: Voice | null;
 }
 
+export interface Tienda {
+    id: string;
+    nombreTienda: string;
+    logo: string;
+    ubicacion: string;
+    numeroContacto: string;
+    email: string;
+    referencia: string;
+    urlTienda: string;
+    codigoQr: string;
+    codigoBarra: string;
+    createdAt?: Date;
+    updatedAt?: Date;
+}
+
+export interface Usuario {
+    id?: string;
+    nombreUsuario: string;
+    password: string;
+    validPassword?: string
+    nombres?: string;
+    apellidos?: string;
+    tiendas?: Tienda[];
+    createdAt?: Date;
+    updatedAt?: Date;
+}
 
 export interface ItemList {
     id?: string;
@@ -34,7 +60,7 @@ export interface ItemList {
     montoItem: number;
     medida: string;
     voz: string;
-    status: Status
+    status: Status;
     calculated?: boolean;
     createdAt?: Date;
     updatedAt?: Date;

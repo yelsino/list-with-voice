@@ -98,7 +98,7 @@ function Voice() {
    
 
     return (
-        <div className="absolute bottom-12 left-1/2 transform -translate-x-1/2 translate-y-11 w-full flex justify-center bg-primary-200 py-5 sm:rounded-3xl  ">
+        <div className="absolute bottom-20 left-1/2 transform -translate-x-1/2 translate-y-11 w-full flex justify-center bg-primary-200 py-5 sm:rounded-3xl  ">
             {/* <p className="text-secondary-100">{transcript}</p> */}
             {/* <p className="text-secondary-100">{finalTranscript}</p> */}
             <p className="text-secondary-100">{interimTranscript}</p>

@@ -8,7 +8,6 @@ import { SuperTitle } from "../components/SuperTitle";
 import { Loader } from "../components/Loader/Loader";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { useGetListasQuery } from "@/redux/services/listaApi";
-import { obtenerImagenLista } from "@/redux/chunks/listaChunk";
 
 
 

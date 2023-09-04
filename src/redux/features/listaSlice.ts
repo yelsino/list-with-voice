@@ -1,7 +1,8 @@
-import { ItemList, Lista, ListaState } from "@/interfaces/list.interface";
+import { ItemList, Lista, ListaState, Usuario } from "@/interfaces/list.interface";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { obtenerImagenLista } from "../chunks/listaChunk";
+import { obtenerImagenLista, registrarUsuario } from "../chunks/listaChunk";
 import { saveAs } from "file-saver";
+import { signIn } from "next-auth/react";
 
 const initialState: ListaState = {
     nombreCliente: "",
@@ -78,35 +79,15 @@ export const listaSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder.addCase(obtenerImagenLista.fulfilled, (state, action) => {
-            
-            // action.payload == BLOB
-            // const url = URL.createObjectURL(action.payload);
-            // const link = document.createElement("a");
-            // link.href = url;
-            // link.download = "archivo.png";
-            // document.body.append(link);
-            // link.click();
-
-            // setTimeout(() => {
-            //     URL.revokeObjectURL(url);
-            //     document.body.removeChild(link);
-            // }, 2000);
-    
-            // return state;
-
-
-
             const url = URL.createObjectURL(action.payload);
 
-            // Utilizando FileSaver.js para descargar el archivo
             saveAs(url, "archivo.jpeg");
-      
-            URL.revokeObjectURL(url);
-      
-            return state;
 
-            
+            URL.revokeObjectURL(url);
+
+            return state;
         });
+        builder.addCase(registrarUsuario.fulfilled, (state) => (state));
     },
 });
 

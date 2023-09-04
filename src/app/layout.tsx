@@ -4,9 +4,8 @@ import { Inter } from "next/font/google";
 import ButtonBack from "./components/ButtonBack";
 import Voice from "./components/Voice/Voice";
 import { Toaster } from "react-hot-toast";
-import { useSpeechRecognition } from "react-speech-recognition";
-import { useEffect } from "react";
 import { Metadata } from "next";
+import ButtonRegister from "./components/ButtonRegister";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata:Metadata = {
@@ -35,6 +34,10 @@ export default function RootLayout({
                             {children}
                             <Voice />
                             <ButtonBack />
+                            <ButtonRegister/>
+                            <div>
+                                
+                            </div>
                         </Providers>
                         <Toaster toastOptions={{
                              style: {

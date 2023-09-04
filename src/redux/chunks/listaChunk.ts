@@ -1,38 +1,54 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { URLBASE } from "../services/listaApi";
-import { Lista } from "@/interfaces/list.interface";
+import { Lista, Usuario } from "@/interfaces/list.interface";
+import { fetchSinToken } from "../fetch";
+import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 export const obtenerImagenLista = createAsyncThunk(
-    '',
-    async (lista: Lista):Promise<Blob> => {
-        console.log('hice click');
-        
-        const response = await fetch(`${URLBASE.API_NEGOCIO}/reporte`,{
-            method:'POST',
+    "obtener_imagen",
+    async (lista: Lista): Promise<Blob> => {
+        console.log("hice click", lista);
+
+        const response = await fetch(`${URLBASE.API_NEGOCIO}/reporte`, {
+            method: "POST",
             body: JSON.stringify(lista),
+            headers: {
+                "Content-Type": "application/json",
+            },
         });
-        console.log("RESPONSE: ", response);
-        
+
         const blob = await response.blob();
-        console.log(blob);
-        
-        return blob
+        return blob;
     }
-)
+);
 
+interface ResFetch<T> {
+    message: string;
+    status: boolean;
+    data: T;
+}
 
-// export const obtenerImagenLista = createAsyncThunk(
-//     '',
-//     async ({listaId}: {listaId:string}):Promise<Blob> => {
-//         const response = await fetch(`/api/listas/${listaId}/print`,{
-//             method:'GET',
-//         });
-//         console.log(response);
+export const registrarUsuario = createAsyncThunk(
+    "registrar_usuario",
+    async (usuario: Usuario): Promise<ResFetch<Usuario | null>> => {
+
+        const { nombreUsuario, password, validPassword } = usuario;
+
+        if (!nombreUsuario || !password || !validPassword) {
+            return {
+                data: null,
+                message: "hay campos no validados",
+                status: false,
+            };
+        }
+
+        const response = await fetchSinToken<ResFetch<Usuario>>({
+            endpoint: `${URLBASE.LOCAL}/auth/signup`,
+            body: { nombreUsuario, password },
+            method: "POST",
+        });
         
-//         const blob = await response.blob();
-
-//         return blob
-//     }
-// )
-
-
+        return response;
+    }
+);
