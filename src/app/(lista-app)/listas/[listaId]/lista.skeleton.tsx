@@ -1,0 +1,63 @@
+"use client";
+import { Header } from "@/app/components/Header";
+import { IconHome, IconTool } from "@/app/components/Icons";
+import OptionsMenu from "@/app/components/Popover/Popover";
+import { SuperTitle } from "@/app/components/SuperTitle";
+import { dateFormat, moneyFormat } from "@/interfaces/mapper";
+
+import Link from "next/link";
+import React from "react";
+
+function ListasIdSkeleton() {
+    return (
+        <>
+            <div className="flex flex-col gap-y-4">
+                <Header
+                    childrenLeft={
+                        <Link href="/" className="text-2xl">
+                            <IconHome />
+                        </Link>
+                    }
+                    childrenRight={
+                        <button className="w-full h-full flex items-center justify-center">
+                                <IconTool />
+                            </button>
+                    }
+                />
+
+                <div className="">
+                    <SuperTitle>
+                        <p className="text-4xl">Cargando Lista</p>
+                        <p className="text-lg font-medium text-secondary-200">
+                            {dateFormat(new Date())}
+                        </p>
+                        <p className="text-lg font-medium text-secondary-200">
+                            Lista no pagada {" "}
+                            <span className="text-secondary-100">
+                                {moneyFormat(0)}
+                            </span>
+                        </p>
+                    </SuperTitle>
+                </div>
+
+                <div>
+                    <p className="text-secondary-100 font-semibold pb-2">
+                        PRODUCTOS
+                    </p>
+                    <div className="flex flex-col gap-y-4 h-[calc(100vh-320px)] pb-10 overflow-x-hidden overflow-y-scroll">
+                        {[1, 2, 3, 4, 5, 6, 7, 8].map((item, index) => (
+                            <div
+                                className="text-secondary-100 flex items-center gap-x-2 bg-primary-100 py-4 animate-pulse"
+                                key={index}
+                            >
+                               
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </div>
+        </>
+    );
+}
+
+export default ListasIdSkeleton;

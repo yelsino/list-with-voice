@@ -22,6 +22,7 @@ import { LayoutGroup, motion } from "framer-motion";
 import Link from "next/link";
 import React from "react";
 import { toast } from "react-hot-toast";
+import ListasIdSkeleton from "./lista.skeleton";
 
 interface IParams {
     listaId: string;
@@ -47,7 +48,7 @@ function ListasIdPage({ params }: { params: IParams }) {
     return (
         <>
             {isLoading ? (
-                <Loader texto="cagando lista..." />
+                <ListasIdSkeleton />
             ) : (
                 <div className="flex flex-col gap-y-4">
                     <Header
@@ -64,10 +65,6 @@ function ListasIdPage({ params }: { params: IParams }) {
                             </OptionsMenu>
                         }
                     />
-
-                    <div className="text-secondary-100 bg-primary-100">
-                        <a href="http://localhost:3000/25bd4d7a-5ce2-4050-af50-2d24a52edc0b" download="archivo.png" >DESCARGAR</a>
-                    </div>
 
                     <div className="">
                         <SuperTitle>

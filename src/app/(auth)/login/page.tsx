@@ -1,8 +1,8 @@
 "use client";
 import { useRouter } from "next/navigation";
-import { SuperTitle } from "../components/SuperTitle";
 import { FormEvent, useState } from "react";
 import { signIn } from "next-auth/react";
+import { SuperTitle } from "@/app/components/SuperTitle";
 
 function Signin() {
     const router = useRouter();
@@ -47,18 +47,18 @@ function Signin() {
                 className="flex flex-col gap-y-4 mt-3"
             >
                 <div>
-                    <p className="text-secondary-100">Nombre de usuario</p>
+                    <p className="text-secondary-200">Nombre de usuario</p>
                     <input
-                        className="bg-primary-100 py-5 px-3 w-full text-xl text-secondary-100 outline-none"
+                        className="bg-primary-100 py-5 px-3 w-full text-xl text-secondary-100 outline-none rounded-md"
                         type="text"
                         placeholder="ej: sunombre"
                         name="nombreUsuario"
                     />
                 </div>
                 <div>
-                    <p className="text-secondary-100">Contraseña</p>
+                    <p className="text-secondary-200">Contraseña</p>
                     <input
-                        className="bg-primary-100 py-5 px-3 w-full text-xl text-secondary-100 outline-none"
+                        className="bg-primary-100 py-5 px-3 w-full text-xl text-secondary-100 outline-none rounded-md"
                         type="password"
                         placeholder="********"
                         name="password"

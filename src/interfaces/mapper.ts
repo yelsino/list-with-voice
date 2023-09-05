@@ -62,8 +62,8 @@ export const dateFormat = (value: Date | string | undefined) => {
         day: "numeric", // Día del mes (ej: "8")
         month: "long", // Mes (ej: "octubre")
         year: "numeric", // Año (ej: "2023")
-        hour: "numeric", // Hora (ej: "14")
-        minute: "numeric", // Minuto (ej: "01")
+        // hour: "numeric", // Hora (ej: "14")
+        // minute: "numeric", // Minuto (ej: "01")
     });
 
     return formatter.format(date);

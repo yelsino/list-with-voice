@@ -41,7 +41,7 @@ export default function Home() {
 
             <Link
                 href="/generar"
-                className="text-secondary-100 flex  gap-x-2 cursor-pointer"
+                className="text-secondary-100 flex mt-3  gap-x-2 cursor-pointer"
             >
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -59,6 +59,7 @@ export default function Home() {
                 </svg>
                 Crear lista
             </Link>
+          
         </>
     );
 }

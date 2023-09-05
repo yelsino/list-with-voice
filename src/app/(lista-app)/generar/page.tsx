@@ -2,18 +2,18 @@
 
 import { useAppSelector, useAppDispatch } from "@/redux/hooks";
 import React from "react";
-import { Header } from "../components/Header";
-import { IconHome, IconSave } from "../components/Icons";
-import { SuperTitle } from "../components/SuperTitle";
 import Link from "next/link";
-import { Loader } from "../components/Loader/Loader";
 import { deleteItem } from "@/redux/features/listaSlice";
-import { ItemLista } from "../components/Lista/ItemLista";
 import { LayoutGroup, motion } from "framer-motion";
 import { ItemList } from "@/interfaces/list.interface";
 import { toast } from "react-hot-toast";
 import { useRegistrarListDBMutation } from "@/redux/services/listaApi";
 import { useRouter } from "next/navigation";
+import { Loader } from "@/app/components/Loader/Loader";
+import { Header } from "@/app/components/Header";
+import { IconHome, IconSave } from "@/app/components/Icons";
+import { SuperTitle } from "@/app/components/SuperTitle";
+import { ItemLista } from "@/app/components/Lista/ItemLista";
 
 function GenerarPage() {
     const dispatch = useAppDispatch();
@@ -75,25 +75,6 @@ function GenerarPage() {
                         }
                     />
 
-                    {/* <button
-                        onClick={() => console.log(voices)}
-                        className="text-secondary-100"
-                    >
-                        IMPRIMIR VOICES
-                    </button>
-                    <button
-                        onClick={() => console.log(itemsList)}
-                        className="text-secondary-100"
-                    >
-                        IMPRIMIR ITEMS
-                    </button>
-                    <button
-                        onClick={() => console.log(voiceSelected)}
-                        className="text-secondary-100"
-                    >
-                         SELECCIONADO                       
-                    </button> */}
-
                     <SuperTitle>
                         {nombreCliente ? (
                             <p className="text-2xl capitalize">
@@ -122,6 +103,13 @@ function GenerarPage() {
                                     deteleItem={deteleItem}
                                 />
                             ))}
+                            {
+                                itemsList.length === 0 && <div className="flex flex-col gap-y-3">
+                                    {[...Array(10)].map((e, i)=>(
+                                    <div className="bg-primary-100 py-5 rounded-lg animate-pulse" key={i}></div>
+                                ))}
+                                </div>
+                            }
                         </motion.div>
                     </LayoutGroup>
                 </div>

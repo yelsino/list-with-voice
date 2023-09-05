@@ -1,21 +1,18 @@
 "use client";
 import Link from "next/link";
 import React from "react";
-import { moneyFormat } from "@/interfaces/mapper";
-import { Header } from "../components/Header";
-import { IconCalendar, IconHome } from "../components/Icons";
-import { SuperTitle } from "../components/SuperTitle";
-import { Loader } from "../components/Loader/Loader";
+import { dateFormat, moneyFormat } from "@/interfaces/mapper";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { useGetListasQuery } from "@/redux/services/listaApi";
-
-
+import { Header } from "@/app/components/Header";
+import { IconCalendar, IconHome } from "@/app/components/Icons";
+import { SuperTitle } from "@/app/components/SuperTitle";
+import ListasSkeleton from "./listas.skeleton";
 
 function ListasPage() {
     const { isLoading, isFetching, data, error } = useGetListasQuery(null);
     const dispatch = useAppDispatch();
 
-   
     const { itemsList, pagada, nombreCliente, cargando } = useAppSelector(
         (state) => state.listaReducer
     );
@@ -23,8 +20,9 @@ function ListasPage() {
     return (
         <>
             {isLoading ? (
-                <Loader texto="cargando listas..." />
+                <ListasSkeleton />
             ) : (
+                // <Loader texto="cargando listas..." />
                 <div className="flex flex-col gap-y-3">
                     <Header
                         childrenLeft={
@@ -45,12 +43,11 @@ function ListasPage() {
                             <br /> <span>Las listas</span>
                         </p>
                         <p className="text-lg font-medium text-secondary-200">
-                            De hoy 18 de agosto
+                            {dateFormat(new Date())}
                         </p>
                     </SuperTitle>
-                       
+
                     <div className="flex flex-col gap-y-4">
-                        
                         {data?.map((lista, index: any) => (
                             <Link
                                 href={`/listas/${lista.id}`}
@@ -63,7 +60,7 @@ function ListasPage() {
                                 <span>{moneyFormat(lista.montoTotal)}</span>
                             </Link>
                         ))}
-                    ComprobanteDePago</div>
+                    </div>
                 </div>
             )}
         </>

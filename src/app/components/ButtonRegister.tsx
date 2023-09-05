@@ -6,7 +6,7 @@ function ButtonRegister() {
     const router = useRouter();
     const pathName = usePathname();
 
-    const validRutes = ["/login", "/configuracion", "/listas"];
+    const validRutes = ["/login", "/listas"];
 
     return (
         <>
