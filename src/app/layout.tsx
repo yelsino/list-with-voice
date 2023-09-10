@@ -21,7 +21,7 @@ export default function RootLayout({
 }) {
 
 
- 
+
 
 
     return (
@@ -29,7 +29,6 @@ export default function RootLayout({
             <body className={inter.className}>
                 <main className="h-screen flex  sm:pt-10  bg-primary-200 sm:bg-primary-100 selection:bg-secondary-100 selection:text-text-100">
                     <div className="max-w-sm mx-auto py-10 px-4  w-full  sm:h-[calc(100vh-100px)] sm:rounded-3xl flex flex-col gap-y-3 relative bg-primary bg-primary-200 ">
-                    
                         <Providers>
                             {children}
                             <Voice />

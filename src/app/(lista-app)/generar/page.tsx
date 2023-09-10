@@ -1,27 +1,35 @@
 "use client";
-
+import { useSession } from "next-auth/react";
 import { useAppSelector, useAppDispatch } from "@/redux/hooks";
 import React from "react";
 import Link from "next/link";
-import { deleteItem } from "@/redux/features/listaSlice";
+import { deleteItem, limpiarLista } from "@/redux/features/listaSlice";
 import { LayoutGroup, motion } from "framer-motion";
 import { ItemList } from "@/interfaces/list.interface";
 import { toast } from "react-hot-toast";
-import { useRegistrarListDBMutation } from "@/redux/services/listaApi";
+import {
+    useRegistrarListDBMutation,
+    useUpdateListMutation,
+} from "@/redux/services/listaApi";
 import { useRouter } from "next/navigation";
 import { Loader } from "@/app/components/Loader/Loader";
 import { Header } from "@/app/components/Header";
 import { IconHome, IconSave } from "@/app/components/Icons";
 import { SuperTitle } from "@/app/components/SuperTitle";
 import { ItemLista } from "@/app/components/Lista/ItemLista";
+import getCurrentUser from "@/actions/getCurrentUser";
+import { isMongoId, mapItemToList } from "@/interfaces/mapper";
 
 function GenerarPage() {
     const dispatch = useAppDispatch();
     const { push } = useRouter();
+
     const [registrarListDB] = useRegistrarListDBMutation();
+    const [updateListDB] = useUpdateListMutation();
     const { itemsList, pagada, nombreCliente, cargando } = useAppSelector(
         (state) => state.listaReducer
     );
+    const listaState = useAppSelector((state) => state.listaReducer);
     const { voices, voiceSelected } = useAppSelector(
         (state) => state.VoiceReducer
     );
@@ -30,7 +38,11 @@ function GenerarPage() {
         dispatch(deleteItem(item));
     };
 
-    const registrarLista = async () => {
+    const guardarLista = async () =>
+        listaState.edit ? actualizarLista() : crearListaNueva();
+
+    const crearListaNueva = async () => {
+        console.log("voy a registrar lista");
         if (!nombreCliente) {
             toast.error("Indica el nombre del cliente", {
                 icon: "👏",
@@ -44,16 +56,67 @@ function GenerarPage() {
 
         if (someItemFailed) return;
 
-        const resp = await registrarListDB({
-            items: itemsList,
-            nombreCliente: nombreCliente,
-            completado: false,
-            pagado: pagada ?? false,
-        }).unwrap();
+        toast
+            .promise(
+                registrarListDB({
+                    items: itemsList,
+                    nombreCliente: nombreCliente,
+                    completado: false,
+                    pagado: pagada ?? false,
+                }).unwrap(),
+                {
+                    loading: "Generando...",
+                    success: <b>Lista generada!</b>,
+                    error: <b>Error al generar lista.</b>,
+                }
+            )
+            .then((resp) => {
+                if (resp.id) {
+                    dispatch(limpiarLista());
+                    push(`/listas/${resp.id}`);
+                }
+            });
+    };
+    const actualizarLista = async () => {
+        console.log("voy a actualizar lsita");
 
-        if (resp.id) {
-            push(`/listas/${resp.id}`);
+        if (!nombreCliente) {
+            toast.error("Indica el nombre del cliente", {
+                icon: "👏",
+            });
+            return;
         }
+
+        const someItemFailed = itemsList.some(
+            (voice) => voice.status === "error" || voice.status === "pending"
+        );
+
+        if (someItemFailed) return;
+        
+        toast
+            .promise(
+                updateListDB({
+                    items: itemsList.map((i) => ({
+                        ...i,
+                        id: isMongoId(i.id) ? i.id : '111112222233333444445555'
+                    })), 
+                    nombreCliente: nombreCliente,
+                    completado: false,
+                    pagado: pagada ?? false,
+                    id: listaState.id, 
+                }).unwrap(),
+                {
+                    loading: "Actualizando...",
+                    success: <b>Lista actualizada!</b>,
+                    error: <b>Error al actualizar lista.</b>,
+                }
+            )
+            .then((resp) => {
+                if (resp.id) {
+                    dispatch(limpiarLista());
+                    push(`/listas/${resp.id}`);
+                }
+            });
     };
 
     return (
@@ -61,7 +124,7 @@ function GenerarPage() {
             {cargando ? (
                 <Loader texto="registrando..." />
             ) : (
-                <div className="flex flex-col gap-y-6 ">
+                <div className="flex flex-col gap-y-4 ">
                     <Header
                         childrenLeft={
                             <Link href="/" className="text-2xl">
@@ -69,7 +132,7 @@ function GenerarPage() {
                             </Link>
                         }
                         childrenRight={
-                            <button onClick={registrarLista}>
+                            <button onClick={guardarLista}>
                                 <IconSave estilo="" />
                             </button>
                         }
@@ -89,9 +152,21 @@ function GenerarPage() {
                         </p>
                     </SuperTitle>
 
-                    <p className="text-secondary-100 font-semibold text-lg ">
-                        Productos
-                    </p>
+                    <div>
+                        <p className="text-secondary-100 font-semibold text-lg ">
+                            Productos
+                        </p>
+                        {itemsList.length === 0 && (
+                            <p className="text-secondary-200">
+                                Aún no ha añadido ningun producto a la lista,
+                                ver lista de{" "}
+                                <span className="text-secondary-100">
+                                    comandos
+                                </span>{" "}
+                                de voz para empezar a registrar los productos
+                            </p>
+                        )}
+                    </div>
 
                     <LayoutGroup>
                         <motion.div className="flex flex-col  h-[calc(100vh-320px)] pb-20 overflow-hidden overflow-y-scroll">
@@ -103,13 +178,6 @@ function GenerarPage() {
                                     deteleItem={deteleItem}
                                 />
                             ))}
-                            {
-                                itemsList.length === 0 && <div className="flex flex-col gap-y-3">
-                                    {[...Array(10)].map((e, i)=>(
-                                    <div className="bg-primary-100 py-5 rounded-lg animate-pulse" key={i}></div>
-                                ))}
-                                </div>
-                            }
                         </motion.div>
                     </LayoutGroup>
                 </div>

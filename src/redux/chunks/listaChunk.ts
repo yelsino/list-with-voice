@@ -2,13 +2,10 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import { URLBASE } from "../services/listaApi";
 import { Lista, Usuario } from "@/interfaces/list.interface";
 import { fetchSinToken } from "../fetch";
-import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
 
 export const obtenerImagenLista = createAsyncThunk(
     "obtener_imagen",
     async (lista: Lista): Promise<Blob> => {
-        console.log("hice click", lista);
 
         const response = await fetch(`${URLBASE.API_NEGOCIO}/reporte`, {
             method: "POST",

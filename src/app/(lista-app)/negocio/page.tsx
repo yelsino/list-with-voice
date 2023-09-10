@@ -1,5 +1,6 @@
 "use client";
-import { SuperTitle } from "../components/SuperTitle";
+
+import { SuperTitle } from "@/app/components/SuperTitle";
 
 function Negocio() {
     return (

@@ -10,6 +10,7 @@ import { buildCommandRegex } from "@/interfaces/mapper";
 import { comando } from "./comandos";
 import { IconMicrophone } from "../Icons";
 import toast from "react-hot-toast";
+import { useAppSelector } from "@/redux/hooks";
 
 function Voice() {
     const { push } = useRouter();
@@ -95,12 +96,20 @@ function Voice() {
         return;
     };
 
-   
+    const listaState = useAppSelector((state) => state.listaReducer);
+
+    const voiceState = useAppSelector((state) => state.VoiceReducer);
 
     return (
         <div className="absolute bottom-20 left-1/2 transform -translate-x-1/2 translate-y-11 w-full flex justify-center bg-primary-200 py-5 sm:rounded-3xl  ">
             {/* <p className="text-secondary-100">{transcript}</p> */}
             {/* <p className="text-secondary-100">{finalTranscript}</p> */}
+            <pre className="text-secondary-100">
+                {JSON.stringify(voiceState.phases.map((v)=>v), null, 2)}
+            </pre>
+            <pre className="text-secondary-100">
+                {JSON.stringify(voiceState.voices.map((v)=>v.voz), null, 2)}
+            </pre>
             <p className="text-secondary-100">{interimTranscript}</p>
             <button onClick={startListening} type="button" className="">
                 <div
@@ -113,6 +122,7 @@ function Voice() {
                     <IconMicrophone />
                 </div>
             </button>
+          
         </div>
     );
 }

@@ -33,12 +33,15 @@ model Usuario {
   nombres       String
   apellidos     String
   tiendas       Tienda[]
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  listas        Lista[]
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 }
 
 model Lista {
   id            String     @id @default(auto()) @map("_id") @db.ObjectId
+  usuario       Usuario    @relation(fields: [usuarioId], references: [id])
+  usuarioId     String     @db.ObjectId
   numero        Int
   items         ItemList[]
   nombreCliente String

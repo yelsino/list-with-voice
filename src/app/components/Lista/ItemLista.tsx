@@ -39,6 +39,7 @@ export const ItemLista = ({ item, deteleItem, index }: Props) => {
         dispatch(getVoice(voice as Voice));
         dispatch(selectItem(item));
         dispatch(updateItem({ ...item, status: "updating" }));
+        setIsOpen(false)
     };
 
 

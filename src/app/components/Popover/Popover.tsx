@@ -3,40 +3,40 @@ import { ChevronDownIcon } from "@heroicons/react/20/solid";
 import { Fragment } from "react";
 import toast from "react-hot-toast";
 
-
 interface Props {
     children: React.ReactNode;
-    imprimirLista: () => void
+    imprimirLista: () => void;
+    actualizarLista: () => void;
 }
 
-export default function OptionsMenu({ children,imprimirLista }: Props) {
-
+export default function OptionsMenu({
+    children,
+    imprimirLista,
+    actualizarLista,
+}: Props) {
     const solutions = [
         {
             name: "Imprimir",
             description: "Recibir impreción tamaño ticket",
             href: "##",
             icon: IconOne,
+            onClick: () => imprimirLista(),
         },
         {
             name: "Actualizar",
             description: "Cambiar datos de la lista",
             href: "##",
             icon: IconTwo,
+            onClick: () => actualizarLista(),
         },
         {
             name: "Eliminar",
             description: "Eliminar lista de base de datos",
             href: "##",
             icon: IconThree,
+            onClick: () => actualizarLista(),
         },
     ];
-    const settings = {}; // Aquí define tus ajustes
-  
-
-  
-    const actualizarLista = () => {}
-    const eliminarLista = () => {}
 
     return (
         <Popover className="w-full h-full">
@@ -62,7 +62,7 @@ export default function OptionsMenu({ children,imprimirLista }: Props) {
                                             key={item.name}
                                             href={item.href}
                                             className="-m-3 flex items-center rounded-lg p-2 transition duration-150 ease-in-out hover:bg-primary-100 focus:outline-none focus-visible:ring focus-visible:ring-orange-500 focus-visible:ring-opacity-50"
-                                            onClick={imprimirLista}
+                                            onClick={item.onClick}
                                         >
                                             <div className="flex h-10 w-10 shrink-0 items-center justify-center text-white sm:h-12 sm:w-12">
                                                 <item.icon aria-hidden="true" />

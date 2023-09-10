@@ -1,15 +1,20 @@
-import { ItemList, Lista, ListaState, Usuario } from "@/interfaces/list.interface";
+import {
+    ItemList,
+    Lista,
+    ListaState,
+    Usuario,
+} from "@/interfaces/list.interface";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { obtenerImagenLista, registrarUsuario } from "../chunks/listaChunk";
 import { saveAs } from "file-saver";
-import { signIn } from "next-auth/react";
 
 const initialState: ListaState = {
+    id: "",
     nombreCliente: "",
     itemsList: [],
     itemList: null,
     montoTotal: 0,
-    edit: true,
+    edit: false,
     pagada: false,
     cargando: false,
 };
@@ -39,14 +44,7 @@ export const listaSlice = createSlice({
             state.montoTotal = action.payload;
         },
         limpiarLista: (state) => {
-            state = {
-                nombreCliente: "",
-                itemsList: [],
-                montoTotal: 0,
-                edit: true,
-                pagada: false,
-                itemList: null,
-            };
+            state = initialState;
         },
         listaPagada: (state, action: PayloadAction<boolean>) => {
             state.pagada = action.payload;
@@ -62,8 +60,6 @@ export const listaSlice = createSlice({
         },
         updateItem: (state, action: PayloadAction<ItemList>) => {
             // buscar itema a actualizar
-            console.log(action.payload);
-
             const itemIndex = state.itemsList.findIndex(
                 (item) => item.id === action.payload.id
             );
@@ -76,6 +72,17 @@ export const listaSlice = createSlice({
         selectItem: (state, action: PayloadAction<ItemList | null>) => {
             state.itemList = action.payload;
         },
+        updateLista: (state, action: PayloadAction<Lista>) => {
+            console.log("voy a actualziar");
+
+            const { items, nombreCliente, pagado, id } = action.payload;
+
+            state.nombreCliente = nombreCliente;
+            state.itemsList = items;
+            state.edit = true;
+            state.pagada = pagado;
+            state.id = id;
+        },
     },
     extraReducers: (builder) => {
         builder.addCase(obtenerImagenLista.fulfilled, (state, action) => {
@@ -87,7 +94,7 @@ export const listaSlice = createSlice({
 
             return state;
         });
-        builder.addCase(registrarUsuario.fulfilled, (state) => (state));
+        builder.addCase(registrarUsuario.fulfilled, (state) => state);
     },
 });
 
@@ -101,6 +108,7 @@ export const {
     deleteItem,
     updateItem,
     selectItem,
+    updateLista,
 } = listaSlice.actions;
 
 export default listaSlice.reducer;

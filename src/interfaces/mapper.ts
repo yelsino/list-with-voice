@@ -15,6 +15,12 @@ export const responseToItemList = ({ response }: Props): ItemList => {
     return itemList;
 };
 
+export function isMongoId(value: string | undefined | null): boolean {
+    if (!value) return false;
+    const mongoIdRegex = /^[0-9a-fA-F]{24}$/;
+    return mongoIdRegex.test(value);
+}
+
 export const mapItemToList = (item: any): ItemList => {
     const precio = item.precio ?? 0;
     const cantidad = item.cantidad ?? 0;
@@ -30,7 +36,7 @@ export const mapItemToList = (item: any): ItemList => {
         medida: item.medida ?? "",
         voz: item.voz ?? "",
         status: item.status,
-        id: item.id ?? 0,
+        id: item.id,
         calculated: item.calculated ?? true,
     };
 };

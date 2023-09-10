@@ -33,7 +33,6 @@ function Signup() {
                 password: formData.get("password") as string,
                 redirect: false,
             });
-            console.log(res);
             
             if (res?.ok) router.push("/");
         }

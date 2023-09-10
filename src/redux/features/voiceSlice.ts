@@ -5,6 +5,7 @@ import { v4 as uuidv4 } from 'uuid';
 const initialState: VoiceState = {
     transcriptState: "",
     voices: [],
+    phases: [],
     calculated: false,
     voiceSelected: null,
 };
@@ -52,6 +53,10 @@ export const voiceSlice = createSlice({
             }));
 
             state.voices = [...state.voices, ...newVoices];
+            state.phases = []
+        },
+        addPhase: (state, action:PayloadAction<string[]>) => {
+            state.phases = action.payload
         },
         updateVoice: (state, action: PayloadAction<Voice>) => {
             state.voices = state.voices.map((voice) => {
@@ -64,10 +69,12 @@ export const voiceSlice = createSlice({
                 }
                 return voice;
             });
-            console.log(state.voices);
         },
         getVoice: (state, action: PayloadAction<Voice | null>) => {
             state.voiceSelected = action.payload;
+        },
+        cleanVoices: (state) => {
+            state.voices = []
         },
         getTranscriptState: (state, action: PayloadAction<string>) => {
             state.transcriptState = action.payload;
@@ -84,6 +91,8 @@ export const {
     getVoice,
     getTranscriptState,
     cleanTrasncriptState,
+    cleanVoices,
+    addPhase
 } = voiceSlice.actions;
 
 export default voiceSlice.reducer;

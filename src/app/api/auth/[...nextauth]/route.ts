@@ -1,10 +1,10 @@
-import NextAuth from "next-auth";
+import NextAuth, {  NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
-const handler = NextAuth({
+export const authOptions: NextAuthOptions  = {
     providers: [
         CredentialsProvider({
             name: "Credentials",
@@ -19,8 +19,6 @@ const handler = NextAuth({
             },
             async authorize(credentials) {
                 // await connectDB();
-                console.log("CREDENTIALS: ", credentials);
-                
                 const userFound = await prisma.usuario.findFirst({
                     where: { nombreUsuario: credentials?.nombreUsuario },
                 });
@@ -34,8 +32,6 @@ const handler = NextAuth({
 
                 if (!passwordMatch) throw new Error("Invalid credentials");
 
-                console.log(userFound);
-
                 return userFound;
             },
         }),
@@ -46,6 +42,7 @@ const handler = NextAuth({
     session: {
         strategy: "jwt",
     },
+    // secret: process.env.NEXTAUTH_URL
     callbacks: {
         async jwt({ token, user }) {
             if (user) token.user = user;
@@ -56,6 +53,9 @@ const handler = NextAuth({
             return session;
         },
     },
-});
+};
 
-export { handler as GET, handler as POST };
+const handler  = NextAuth(authOptions)
+
+export { handler as GET, handler as POST }
+

@@ -202,6 +202,13 @@ export const listaApi = createApi({
                 },
             }),
         }),
+        updateList: builder.mutation<Lista, Lista>({
+            query: (lista) => ({
+                method: 'PUT',
+                url: `${URLBASE.LOCAL}/listas`,
+                body: JSON.stringify(lista)
+            })
+        })
     }),
 });
 
@@ -214,4 +221,5 @@ export const {
     useAddItemMutation,
     useUpdateItemMutation,
     useDeleteItemMutation,
+    useUpdateListMutation,
 } = listaApi;

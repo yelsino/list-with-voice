@@ -1,4 +1,7 @@
+import { ISODateString } from "next-auth";
+
 export interface ListaState {
+    id?: string;
     nombreCliente: string;
     itemsList: ItemList[];
     itemList: ItemList | null;
@@ -8,7 +11,7 @@ export interface ListaState {
     cargando?: boolean;
 }
 
-export type Status = "pending" | "success" | "error" | "updating";
+export type Status = "generado" | "pending" | "success" | "error" | "updating";
 
 export interface Voice {
     voz: string;
@@ -22,6 +25,7 @@ export interface VoiceState {
     transcriptState: string;
     calculated: boolean;
     voiceSelected: Voice | null;
+    phases: string[]
 }
 
 export interface Tienda {
@@ -42,14 +46,20 @@ export interface Tienda {
 export interface Usuario {
     id?: string;
     nombreUsuario: string;
-    password: string;
+    password?: string;
     validPassword?: string
     nombres?: string;
     apellidos?: string;
     tiendas?: Tienda[];
+    listas?: Lista[]
     createdAt?: Date;
     updatedAt?: Date;
 }
+
+export interface Sesion {
+    user?: Usuario
+    expires: ISODateString
+  }
 
 export interface ItemList {
     id?: string;
@@ -69,6 +79,7 @@ export interface ItemList {
 export interface Lista {
     id?: string;
     numero?: number;
+    usuarioId?: string;
     items: ItemList[];
     nombreCliente: string;
     pagado: boolean;

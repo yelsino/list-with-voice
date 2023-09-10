@@ -1,16 +1,19 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import {
     useConvertVoiceToItemMutation,
     useRegistrarListDBMutation,
 } from "@/redux/services/listaApi";
 import {
+    addPhase,
     addVoicesToList,
+    cleanVoices,
     getVoice,
     updateVoice,
 } from "@/redux/features/voiceSlice";
 import {
     addItemToList,
+    limpiarLista,
     listaPagada,
     nameLista,
     selectItem,
@@ -34,14 +37,16 @@ interface Props {
 function useGenerateList({ resetTranscript, finalTranscript }: Props) {
     const pathname = usePathname();
     const { push } = useRouter();
-    const dispatch = useAppDispatch();
+    const dispatch = useAppDispatch(); 
+
+    // const [frases,setFrases] = useState<string[]>([])
     const [convertVoiceToItem] = useConvertVoiceToItemMutation();
 
     const [registrarListDB] = useRegistrarListDBMutation();
     const { itemsList, nombreCliente, pagada } = useAppSelector(
         (state) => state.listaReducer
     );
-    const { voices } = useAppSelector((state) => state.VoiceReducer);
+    const { voices, phases } = useAppSelector((state) => state.VoiceReducer);
 
     const commands = [
         {
@@ -83,30 +88,31 @@ function useGenerateList({ resetTranscript, finalTranscript }: Props) {
 
                 if (someItemFailed) return;
 
-                const resp = await registrarListDB({
-                    items: itemsList,
-                    nombreCliente: nombreCliente,
-                    completado: false,
-                    pagado: pagada ?? false,
-                }).unwrap();
-
-                if (resp.id) {
-                    push(`/listas/${resp.id}`);
-                    resetTranscript();
-                }
+                toast
+                    .promise(
+                        registrarListDB({
+                            items: itemsList,
+                            nombreCliente: nombreCliente,
+                            completado: false,
+                            pagado: pagada ?? false,
+                        }).unwrap(),
+                        {
+                            loading: "Generando...",
+                            success: "Lista generada!",
+                            error: "Error al generar lista.",
+                        }
+                    )
+                    .then((resp) => {
+                        if (resp.id) {
+                            dispatch(limpiarLista());
+                            push(`/listas/${resp.id}`);
+                        }
+                    });
             },
         },
     ];
 
-    const breakPhrases = [
-        "punto",
-        "mas",
-        "más",
-        "puntos",
-        "puntos",
-        "coma",
-        "\\+",
-    ];
+    const breakPhrases = ["punto", "mas", "más", "coma", "\\+"];
 
     function speakToArray(text: string): string[] {
         const regex = new RegExp(
@@ -118,11 +124,14 @@ function useGenerateList({ resetTranscript, finalTranscript }: Props) {
         const convertSimbols: string = text.replace(/\+\s*/g, " más ");
 
         // ['5 kg de tomate a 3 soles', '']
-        const sentences = convertSimbols.split(regex); // Dividimos el texto en frases
-
+        const sentences = Array.from(new Set([...convertSimbols.split(regex)])); // Dividimos el texto en frases
+     
         // obtenemos la ultima frase
+        console.log("sentences", sentences);
         const lastSentence = sentences[sentences.length - 1];
         // evaluamos si la ultima frase termina con una palabra de breakPhrases
+        console.log("lastSentence", lastSentence);
+
         if (
             !lastSentence.match(
                 new RegExp(`\\b(?:${breakPhrases.join("|")})\\b$`, "i")
@@ -163,7 +172,6 @@ function useGenerateList({ resetTranscript, finalTranscript }: Props) {
         // validamos si hay error en alguna respuesta
         const someError = responses.some((response) => !response);
 
-
         if (someError) {
             voicesNotSend.forEach((voice) => {
                 dispatch(
@@ -172,8 +180,7 @@ function useGenerateList({ resetTranscript, finalTranscript }: Props) {
             });
             return;
         }
-        console.log(someError, 'someError');
-        
+
         responses.forEach((response) => {
             const newItem = responseToItemList({ response });
 
@@ -190,29 +197,36 @@ function useGenerateList({ resetTranscript, finalTranscript }: Props) {
             );
             dispatch(getVoice(null));
             dispatch(selectItem(null));
-        });
 
-        console.log('Fisnish');
+            // dispatch(cleanVoices())
+        });
     };
 
     useEffect(() => {
         if (pathname !== "/generar") return;
         if (finalTranscript.trim() === "") return;
 
-        const phrases = speakToArray(finalTranscript.trim().toLowerCase());
+        const newPhases = new Set([
+            ...phases,
+            ...speakToArray(finalTranscript.trim().toLowerCase()),
+        ]);
+        dispatch(addPhase(Array.from(newPhases)));
 
-        dispatch(addVoicesToList(phrases));
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [finalTranscript, pathname]);
 
     useEffect(() => {
         if (pathname !== "/generar") return;
+        if (finalTranscript.trim() === "") return;
+        if (phases.length > 0) {
+            dispatch(addVoicesToList(phases));
+        }
+    }, [phases]);
+
+    useEffect(() => {
+        if (pathname !== "/generar") return;
 
         if (voices.length > 0) {
-            // const voice = voices.find(
-            //     (voice) => voice.status === "pending" && !voice.enviado
-            // );
-
             // obtener todas las voces que no esten enviadas
             const voicesNotSend = voices.filter(
                 (voice) => voice.status === "pending" && !voice.enviado
@@ -227,46 +241,3 @@ function useGenerateList({ resetTranscript, finalTranscript }: Props) {
 }
 
 export default useGenerateList;
-
-// const sendVoiceGPT = async (voice: Voice) => {
-//     if (!voice.voz) return;
-
-//     let index = itemsList.length + 1;
-//     const indexExistsInItems = itemsList.some(
-//         (item) => item.codigo === voice.codigo
-//     );
-
-//     // await resetTranscript();
-
-//     if (indexExistsInItems) {
-//         index = voice.codigo as string;
-//     }
-
-//     const itemFetch = mapItemToList({ status: "pending", index });
-//     dispatch(addItemToList(itemFetch));
-//     const response = await convertVoiceToItem({
-//         message: voice.voz,
-//     })
-//         .unwrap()
-//         .finally(() => {});
-
-//     if (!response) {
-//         console.log("hay error response");
-
-//         dispatch(updateVoice({ ...voice, status: "error", enviado: true }));
-//         return;
-//     }
-//     console.log("hay error response");
-//     const newItem = convertResponseToItemList({
-//         voice,
-//         index,
-//         response,
-//     });
-
-//     dispatch(addItemToList(newItem));
-//     dispatch(
-//         updateVoice({ ...voice, status: newItem.status, enviado: true })
-//     );
-//     dispatch(getVoice(null));
-//     dispatch(selectItem(null));
-// };

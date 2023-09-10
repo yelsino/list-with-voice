@@ -12,7 +12,7 @@ import OptionsMenu from "@/app/components/Popover/Popover";
 import { SuperTitle } from "@/app/components/SuperTitle";
 import { formatText } from "@/interfaces/FormatReact";
 import { dateFormat, formatNameTitle, moneyFormat } from "@/interfaces/mapper";
-import { obtenerImagenLista } from "@/redux/chunks/listaChunk";
+import { obtenerImagenLista,  } from "@/redux/chunks/listaChunk";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import {
     useGetListaByIdQuery,
@@ -23,6 +23,9 @@ import Link from "next/link";
 import React from "react";
 import { toast } from "react-hot-toast";
 import ListasIdSkeleton from "./lista.skeleton";
+import { updateLista } from "@/redux/features/listaSlice";
+import { Lista } from "@/interfaces/list.interface";
+import { useRouter } from "next/navigation";
 
 interface IParams {
     listaId: string;
@@ -30,20 +33,17 @@ interface IParams {
 
 function ListasIdPage({ params }: { params: IParams }) {
 
+    const { push } = useRouter();
     const dispatch = useAppDispatch();
     const { isLoading, isFetching, data, error } = useGetListaByIdQuery({
         id: params.listaId,
     });
-    const deteleItem = (item: any) => {
-        // dispatch(deleteItem(item));
-    };
-
-    const imprimirLista = () => {
-        dispatch(obtenerImagenLista(data as any));
-       
-    };
 
 
+    const actualizarLista = () => {
+        dispatch(updateLista(data as Lista));
+        push(`/generar`);
+    }
 
     return (
         <>
@@ -58,10 +58,13 @@ function ListasIdPage({ params }: { params: IParams }) {
                             </Link>
                         }
                         childrenRight={
-                            <OptionsMenu imprimirLista={imprimirLista}>
-                                <button className="w-full h-full flex items-center justify-center">
+                            <OptionsMenu 
+                                imprimirLista={()=>dispatch(obtenerImagenLista(data as any))}
+                                actualizarLista={actualizarLista}
+                            >
+                                <div className="w-full h-full flex items-center justify-center">
                                     <IconTool />
-                                </button>
+                                </div>
                             </OptionsMenu>
                         }
                     />
