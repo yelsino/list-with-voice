@@ -23,57 +23,20 @@ export const listaSlice = createSlice({
     name: "lista",
     initialState,
     reducers: {
-        addItemsToList: (state, action: PayloadAction<ItemList[]>) => {
-
-            // filtrar todas las voces que no esten en el payload
-            const missingVoices: ItemList[] = action.payload.filter(
-                (item) => !state.itemsList.some((i) => i.voz === item.voz)
+        addItemToList: (state, action: PayloadAction<ItemList>) => {
+            const { id: index } = action.payload;
+            const itemIndex = state.itemsList.findIndex(
+                (item) => item.id === index
             );
-
-            state.itemsList = state.itemsList.concat(missingVoices);
-            
+            if (itemIndex !== -1) {
+                // Si el índice ya existe, reemplaza el contenido
+                state.itemsList[itemIndex] = { id: index, ...action.payload };
+            } else {
+                // Si el índice no existe, agrega el nuevo elemento
+                // state.itemsList.push({ index, ...action.payload });
+                state.itemsList = [...state.itemsList, action.payload];
+            }
         },
-        // addVoicesToList: (state, action: PayloadAction<string[]>) => {
-        //     // filtrar todas las voces que no esten en el payload
-        //     const missingVoices: string[] = action.payload.filter(
-        //         (text) => !state.voices.some((voice) => voice.voz === text)
-        //     );
-
-        //     if (missingVoices.length === 0) return;
-
-        //     // si hay un voice seleccionado entonces actualizarlo
-        //     if (state.voiceSelected) {
-        //         const codigo = state.voiceSelected.codigo
-
-        //         const newVoice: Voice = {
-        //             voz: missingVoices[0],
-        //             status: "pending",
-        //             enviado: false,
-        //             codigo: codigo,
-        //         };
-
-        //         const newVoices = state.voices.map((voice) => {
-        //             if (voice.codigo === codigo) {
-        //                 return newVoice;
-        //             }
-        //             return voice;
-        //         });
-        //         state.voices = newVoices;
-        //         state.voiceSelected = null;
-        //         return;
-        //     }
-
-        //     // crear un array de voces con el status pending
-        //     const newVoices: Voice[] = missingVoices.map((text) => ({
-        //         voz: text,
-        //         status: "pending",
-        //         enviado: false,
-        //         codigo: uuidv4(),
-        //     }));
-
-        //     state.voices = [...state.voices, ...newVoices];
-        //     state.phases = []
-        // },
         nameLista: (state, action: PayloadAction<string>) => {
             state.nombreCliente = action.payload;
         },
@@ -106,15 +69,6 @@ export const listaSlice = createSlice({
                 state.itemsList[itemIndex] = action.payload;
             }
         },
-        updateItems: (state, action: PayloadAction<ItemList[]>) => {
-          
-            const nuevosItems = state.itemsList.map((item)=>{
-                const existe = action.payload.find((p)=>item.id === p.id);
-                return existe ? existe : item;
-            })
-
-            state.itemsList = nuevosItems
-        },
         selectItem: (state, action: PayloadAction<ItemList | null>) => {
             state.itemList = action.payload;
         },
@@ -145,8 +99,7 @@ export const listaSlice = createSlice({
 });
 
 export const {
-    addItemsToList,
-    updateItems,
+    addItemToList,
     nameLista,
     sumarLista,
     limpiarLista,

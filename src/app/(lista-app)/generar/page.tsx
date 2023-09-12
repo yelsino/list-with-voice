@@ -17,8 +17,7 @@ import { Header } from "@/app/components/Header";
 import { IconHome, IconSave } from "@/app/components/Icons";
 import { SuperTitle } from "@/app/components/SuperTitle";
 import { ItemLista } from "@/app/components/Lista/ItemLista";
-import getCurrentUser from "@/actions/getCurrentUser";
-import { isMongoId, mapItemToList } from "@/interfaces/mapper";
+import { isMongoId } from "@/interfaces/mapper";
 
 function GenerarPage() {
     const dispatch = useAppDispatch();
@@ -30,13 +29,9 @@ function GenerarPage() {
         (state) => state.listaReducer
     );
     const listaState = useAppSelector((state) => state.listaReducer);
-    const { voices, voiceSelected } = useAppSelector(
-        (state) => state.VoiceReducer
-    );
 
-    const deteleItem = (item: ItemList) => {
-        dispatch(deleteItem(item));
-    };
+
+
 
     const guardarLista = async () =>
         listaState.edit ? actualizarLista() : crearListaNueva();
@@ -175,7 +170,7 @@ function GenerarPage() {
                                     key={item.id}
                                     index={index}
                                     item={item}
-                                    deteleItem={deteleItem}
+                                 
                                 />
                             ))}
                         </motion.div>

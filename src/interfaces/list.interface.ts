@@ -11,22 +11,12 @@ export interface ListaState {
     cargando?: boolean;
 }
 
-export type Status = "generado" | "pending" | "success" | "error" | "updating";
-
-export interface Voice {
-    voz: string;
-    status: Status;
-    codigo?: string;
-    calculado?: boolean;
-    enviado?: boolean;
-}
-export interface VoiceState {
-    voices: Voice[];
-    transcriptState: string;
-    calculated: boolean;
-    voiceSelected: Voice | null;
-    phases: string[]
-}
+export type Status = 
+    | "pending" 
+    | "sent" 
+    | "success" 
+    | "error" 
+    | "updating";
 
 export interface Tienda {
     id: string;
@@ -89,10 +79,7 @@ export interface Lista {
     updatedAt?: Date;
 }
 
-export interface Message {
-    role: string;
-    content: string;
-}
+
 
 export interface GptRequest {
     message: string;
@@ -108,14 +95,16 @@ export interface ResponseGPT {
     choices: Choice[];
 }
 
-// export interface DataGPT {
-//     data: ResponseGPT;
-// }
 
 export interface Choice {
     message: Message;
     finish_reason: string;
     index: number;
+}
+
+export interface Message {
+    role: string;
+    content: string;
 }
 
 export interface Usage {

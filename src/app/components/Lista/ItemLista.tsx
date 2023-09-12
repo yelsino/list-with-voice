@@ -1,48 +1,50 @@
-import { ItemList, Voice } from "@/interfaces/list.interface";
+import { ItemList } from "@/interfaces/list.interface";
 import { moneyFormat } from "@/interfaces/mapper";
 import { AnimatePresence, motion } from "framer-motion";
 import React, { useState } from "react";
 import { IconDelete, IconRefresh } from "../Icons";
 import { ItemLoader } from "../Loader/ItemLoader";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
-import { selectItem, updateItem } from "@/redux/features/listaSlice";
+import {
+    deleteItem,
+    selectItem,
+    updateItem,
+} from "@/redux/features/listaSlice";
 import { SpeakLoader } from "../Loader/SpeakLoader";
-import { getVoice, updateVoice } from "@/redux/features/voiceSlice";
 import { useSpeechRecognition } from "react-speech-recognition";
 
 interface Props {
     item: ItemList;
-    deteleItem: (item: ItemList) => void;
     index: number;
 }
 
-export const ItemLista = ({ item, deteleItem, index }: Props) => {
-    const { resetTranscript } = useSpeechRecognition();
-
-    const { voiceSelected, voices } = useAppSelector(
-        (state) => state.VoiceReducer
-    );
+export const ItemLista = ({ item, index }: Props) => {
     const { itemList } = useAppSelector((state) => state.listaReducer);
+
+    const { resetTranscript,finalTranscript } = useSpeechRecognition();
+    // const {
+    //     transcript,
+    //     listening,
+    //     resetTranscript,
+    //     finalTranscript,
+    //     interimTranscript,
+    //     browserSupportsSpeechRecognition,
+    // } = useSpeechRecognition({ commands });
 
     const dispatch = useAppDispatch();
     const [isOpen, setIsOpen] = useState(false);
     const toggleOpen = () => {
         setIsOpen(!isOpen);
-        if (item.id === voiceSelected?.codigo) {
-            dispatch(getVoice(null));
-            dispatch(selectItem(null));
-        }
-    };
-    const updateItemList = (item: ItemList) => {
-        resetTranscript();
-        const voice = voices.find((voice) => voice.codigo === item.id);
-        dispatch(getVoice(voice as Voice));
-        dispatch(selectItem(item));
-        dispatch(updateItem({ ...item, status: "updating" }));
-        setIsOpen(false)
     };
 
-
+    // const updateItemList = (item: ItemList) => {
+    //     resetTranscript();
+    //     const voice = voices.find((voice) => voice.codigo === item.id);
+    //     dispatch(getVoice(voice as Voice));
+    //     dispatch(selectItem(item));
+    //     dispatch(updateItem({ ...item, status: "updating" }));
+    //     setIsOpen(false)
+    // };
 
     return (
         <div
@@ -50,10 +52,10 @@ export const ItemLista = ({ item, deteleItem, index }: Props) => {
                 isOpen ? "bg-primary-100" : ""
             }`}
         >
-            {item.status === "pending" ? (
+            {item.status === "pending" || item.status === "sent" ? (
                 <div className=" flex  gap-x-5 py-2 items-center">
                     <span className="text-secondary-200 text-xs">
-                        {index + 1 }.-{" "}
+                        {index + 1}.-{" "}
                     </span>{" "}
                     <ItemLoader />
                 </div>
@@ -89,7 +91,10 @@ export const ItemLista = ({ item, deteleItem, index }: Props) => {
                         >
                             {item.status !== "updating" && (
                                 <button
-                                    onClick={() => deteleItem(item)}
+                                    onClick={() => {
+                                        resetTranscript();
+                                        dispatch(deleteItem(item));
+                                    }}
                                     className="flex gap-x-1  bg-orange-400 text-black rounded-lg p-1 font-bold  items-center justify-center"
                                 >
                                     <IconDelete />
@@ -98,7 +103,11 @@ export const ItemLista = ({ item, deteleItem, index }: Props) => {
                             )}
                             {item.status === "updating" ? (
                                 <button
-                                    onClick={() =>  dispatch(updateItem(itemList as ItemList))}
+                                    onClick={() =>
+                                        dispatch(
+                                            updateItem(itemList as ItemList)
+                                        )
+                                    }
                                     className="flex gap-x-1  bg-secondary-100 text-black rounded-lg p-1 font-bold  items-center justify-center"
                                 >
                                     <IconRefresh />
@@ -106,7 +115,7 @@ export const ItemLista = ({ item, deteleItem, index }: Props) => {
                                 </button>
                             ) : (
                                 <button
-                                    onClick={() => updateItemList(item)}
+                                    // onClick={() => updateItemList(item)}
                                     className="flex gap-x-1  bg-secondary-100 text-black rounded-lg p-1 font-bold  items-center justify-center"
                                 >
                                     <IconRefresh />

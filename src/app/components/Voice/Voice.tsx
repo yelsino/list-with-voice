@@ -11,6 +11,8 @@ import { comando } from "./comandos";
 import { IconMicrophone } from "../Icons";
 import toast from "react-hot-toast";
 import { useAppSelector } from "@/redux/hooks";
+import { useContext } from "react";
+import { useVoiceControl } from "@/context/voice.context";
 
 function Voice() {
     const { push } = useRouter();
@@ -70,6 +72,8 @@ function Voice() {
         },
     ];
 
+    // const { resetTranscript } = useVoiceControl();
+
     const {
         transcript,
         listening,
@@ -96,21 +100,19 @@ function Voice() {
         return;
     };
 
-    const listaState = useAppSelector((state) => state.listaReducer);
-
-    const voiceState = useAppSelector((state) => state.VoiceReducer);
+    // const listaState = useAppSelector((state) => state.listaReducer);
 
     return (
-        <div className="absolute bottom-20 left-1/2 transform -translate-x-1/2 translate-y-11 w-full flex justify-center bg-primary-200 py-5 sm:rounded-3xl  ">
+        <div className="absolute bottom-20 left-1/2 transform -translate-x-1/2 translate-y-11 w-full flex justify-center bg-primary-200 py-5 sm:rounded-3xl   flex-col">
             {/* <p className="text-secondary-100">{transcript}</p> */}
             {/* <p className="text-secondary-100">{finalTranscript}</p> */}
-            <pre className="text-secondary-100">
-                {JSON.stringify(voiceState.phases.map((v)=>v), null, 2)}
-            </pre>
-            <pre className="text-secondary-100">
-                {JSON.stringify(voiceState.voices.map((v)=>v.voz), null, 2)}
-            </pre>
-            <p className="text-secondary-100">{interimTranscript}</p>
+            <div className="">
+            {/* <button onClick={() => dispatch({ type: "INCREMENT" })}>increment: {state.count}</button> */}
+                <p className="text-secondary-100">FINA: {finalTranscript}</p>
+               
+            </div>
+            {/* <button className="text-secondary-100" onClick={()=>console.log(listaState.itemsList)
+                    }>PRINT</button> */}
             <button onClick={startListening} type="button" className="">
                 <div
                     className={`${
@@ -119,10 +121,10 @@ function Voice() {
                             : "bg-primary-100 border-primary-100"
                     } p-5 relative rounded-full flex justify-center items-center transition ease-in-out duration-500 border-4`}
                 >
+                    
                     <IconMicrophone />
                 </div>
             </button>
-          
         </div>
     );
 }

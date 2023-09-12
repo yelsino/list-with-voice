@@ -1,4 +1,5 @@
-import { ItemList, ResponseGPT, Voice } from "./list.interface";
+import { ItemList, ResponseGPT } from "./list.interface";
+import { v4 as uuid } from "uuid";
 
 interface Props {
     response: ResponseGPT;
@@ -9,7 +10,7 @@ export const responseToItemList = ({ response }: Props): ItemList => {
     const itemJson = JSON.parse(messageResult);
     const itemList = mapItemToList({
         ...itemJson,
-        id: itemJson.codigo
+        id: itemJson.codigo,
     });
 
     return itemList;
@@ -38,6 +39,20 @@ export const mapItemToList = (item: any): ItemList => {
         status: item.status,
         id: item.id,
         calculated: item.calculated ?? true,
+    };
+};
+
+export const stringToItem = (voice: string): ItemList => {
+    return {
+        nombre: "",
+        precio: 0,
+        cantidad: 0,
+        montoItem: 0,
+        medida: "",
+        voz: voice,
+        status: "pending",
+        id: uuid(),
+        calculated: false,
     };
 };
 
