@@ -1,4 +1,5 @@
 "use client";
+import "regenerator-runtime/runtime";
 import React, { createContext, useContext } from "react";
 import toast from "react-hot-toast";
 import { buildCommandRegex } from "@/interfaces/mapper";
