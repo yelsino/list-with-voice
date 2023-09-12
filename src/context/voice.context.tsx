@@ -1,5 +1,4 @@
-// VoiceControlContext.tsx
-'use client'
+"use client";
 import React, { createContext, useContext } from "react";
 import toast from "react-hot-toast";
 import { buildCommandRegex } from "@/interfaces/mapper";
