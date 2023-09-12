@@ -170,7 +170,6 @@ function GenerarPage() {
                                     key={item.id}
                                     index={index}
                                     item={item}
-                                 
                                 />
                             ))}
                         </motion.div>

@@ -90,7 +90,7 @@ function ListasIdPage({ params }: { params: IParams }) {
                         <p className="text-secondary-100 font-semibold pb-2">
                             PRODUCTOS
                         </p>
-                        <div className="flex flex-col gap-y-4 h-[calc(100vh-320px)] pb-10 overflow-x-hidden overflow-y-scroll">
+                        <div className="flex flex-col gap-y-4 h-[calc(100vh-320px)] pb-32 overflow-x-hidden overflow-y-scroll">
                             {data?.items.map((item, index) => (
                                 <div
                                     className="text-secondary-100 flex items-center gap-x-2"

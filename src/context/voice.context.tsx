@@ -1,16 +1,21 @@
 // VoiceControlContext.tsx
+'use client'
 import React, { createContext, useContext } from "react";
-import { useRouter } from "next/router";
 import toast from "react-hot-toast";
 import { buildCommandRegex } from "@/interfaces/mapper";
 import { comando } from "@/app/components/Voice/comandos";
-import { useSpeechRecognition } from "react-speech-recognition";
+import useGenerateList from "@/app/hooks/useGenerateList";
+import SpeechRecognition, {
+    useSpeechRecognition,
+} from "react-speech-recognition";
+import { useRouter } from "next/navigation";
 
 interface VoiceControlContextProps {
     transcript: string;
     listening: boolean;
     finalTranscript: string;
     interimTranscript: string;
+    startListening: () => Promise<void>
     resetTranscript: () => void;
     browserSupportsSpeechRecognition: boolean;
 }
@@ -74,14 +79,36 @@ export const VoiceControlProvider = ({ children }: Props) => {
         browserSupportsSpeechRecognition,
     } = useSpeechRecognition({ commands });
 
+
+    const startListening = async () => {
+        if (listening) {
+            await SpeechRecognition.stopListening();
+            await resetTranscript();
+            return;
+        }
+
+        await SpeechRecognition.startListening({
+            continuous: true,
+            language: "es-PE",
+        });
+
+        return;
+    };
+
     const context = {
-        resetTranscript,
         transcript,
         listening,
+        startListening,
+        resetTranscript,
         finalTranscript,
         interimTranscript,
         browserSupportsSpeechRecognition,
     };
+
+
+    useGenerateList({ finalTranscript, resetTranscript });
+
+
 
     return (
         <VoiceControlContext.Provider value={context}>

@@ -4,7 +4,7 @@ export interface ListaState {
     id?: string;
     nombreCliente: string;
     itemsList: ItemList[];
-    itemList: ItemList | null;
+    itemSelected: ItemList | null;
     montoTotal?: number;
     edit?: boolean;
     pagada?: boolean;

@@ -10,6 +10,7 @@ import {
     listaPagada,
     nameLista,
     selectItem,
+    updateItem,
     updateItems,
 } from "@/redux/features/listaSlice";
 import { usePathname, useRouter } from "next/navigation";
@@ -38,7 +39,7 @@ function useGenerateList({ resetTranscript, finalTranscript }: Props) {
 
     const [convertVoiceToItem] = useConvertVoiceToItemMutation();
 
-    const { itemsList, nombreCliente, pagada } = useAppSelector(
+    const { itemsList, nombreCliente, pagada, itemSelected } = useAppSelector(
         (state) => state.listaReducer
     );
 
@@ -131,6 +132,7 @@ function useGenerateList({ resetTranscript, finalTranscript }: Props) {
             });
 
         dispatch(updateItems(itemsNuevos));
+        if (itemSelected) dispatch(selectItem(null));
     };
 
     useEffect(() => {
@@ -139,9 +141,20 @@ function useGenerateList({ resetTranscript, finalTranscript }: Props) {
         const voices: string[] = speakToArray(finalTranscript);
         console.log(voices);
 
-        const items: ItemList[] = voices.map((voice) => stringToItem(voice));
+        if (!itemSelected) {
+            const items: ItemList[] = voices.map((voice) =>
+                stringToItem(voice)
+            );
+            dispatch(addItemsToList(items));
+        }
 
-        dispatch(addItemsToList(items));
+        if (itemSelected && voices.length > 0) {
+            const item = stringToItem(voices[0]);
+            dispatch(updateItem({ ...item, id: itemSelected.id }));
+        }
+
+        // update
+
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [finalTranscript]);
 

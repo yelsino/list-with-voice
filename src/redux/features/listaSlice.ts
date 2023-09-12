@@ -12,7 +12,7 @@ const initialState: ListaState = {
     id: "",
     nombreCliente: "",
     itemsList: [],
-    itemList: null,
+    itemSelected: null,
     montoTotal: 0,
     edit: false,
     pagada: false,
@@ -116,7 +116,7 @@ export const listaSlice = createSlice({
             state.itemsList = nuevosItems
         },
         selectItem: (state, action: PayloadAction<ItemList | null>) => {
-            state.itemList = action.payload;
+            state.itemSelected = action.payload;
         },
         updateLista: (state, action: PayloadAction<Lista>) => {
             console.log("voy a actualziar");

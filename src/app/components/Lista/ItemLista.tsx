@@ -11,7 +11,7 @@ import {
     updateItem,
 } from "@/redux/features/listaSlice";
 import { SpeakLoader } from "../Loader/SpeakLoader";
-import { useSpeechRecognition } from "react-speech-recognition";
+import { useVoiceControl } from "@/context/voice.context";
 
 interface Props {
     item: ItemList;
@@ -19,32 +19,25 @@ interface Props {
 }
 
 export const ItemLista = ({ item, index }: Props) => {
-    const { itemList } = useAppSelector((state) => state.listaReducer);
+    const { itemSelected: itemList } = useAppSelector((state) => state.listaReducer);
 
-    const { resetTranscript,finalTranscript } = useSpeechRecognition();
-    // const {
-    //     transcript,
-    //     listening,
-    //     resetTranscript,
-    //     finalTranscript,
-    //     interimTranscript,
-    //     browserSupportsSpeechRecognition,
-    // } = useSpeechRecognition({ commands });
+    const { resetTranscript } = useVoiceControl();
 
     const dispatch = useAppDispatch();
     const [isOpen, setIsOpen] = useState(false);
     const toggleOpen = () => {
+        resetTranscript();
         setIsOpen(!isOpen);
     };
 
-    // const updateItemList = (item: ItemList) => {
-    //     resetTranscript();
-    //     const voice = voices.find((voice) => voice.codigo === item.id);
-    //     dispatch(getVoice(voice as Voice));
-    //     dispatch(selectItem(item));
-    //     dispatch(updateItem({ ...item, status: "updating" }));
-    //     setIsOpen(false)
-    // };
+    const eliminarItem = () => {
+        dispatch(deleteItem(item));
+    };
+
+    const renovarItem = (item: ItemList) => {
+        dispatch(selectItem(item))
+        // dispatch(updateItem({...item,status:'pending'}))
+    };
 
     return (
         <div
@@ -53,7 +46,7 @@ export const ItemLista = ({ item, index }: Props) => {
             }`}
         >
             {item.status === "pending" || item.status === "sent" ? (
-                <div className=" flex  gap-x-5 py-2 items-center">
+                <div onClick={toggleOpen} className=" flex  gap-x-5 py-2 items-center">
                     <span className="text-secondary-200 text-xs">
                         {index + 1}.-{" "}
                     </span>{" "}
@@ -91,10 +84,7 @@ export const ItemLista = ({ item, index }: Props) => {
                         >
                             {item.status !== "updating" && (
                                 <button
-                                    onClick={() => {
-                                        resetTranscript();
-                                        dispatch(deleteItem(item));
-                                    }}
+                                    onClick={eliminarItem}
                                     className="flex gap-x-1  bg-orange-400 text-black rounded-lg p-1 font-bold  items-center justify-center"
                                 >
                                     <IconDelete />
@@ -103,11 +93,9 @@ export const ItemLista = ({ item, index }: Props) => {
                             )}
                             {item.status === "updating" ? (
                                 <button
-                                    onClick={() =>
-                                        dispatch(
-                                            updateItem(itemList as ItemList)
-                                        )
-                                    }
+                                    onClick={() => {
+                                        dispatch(updateItem(itemList as ItemList));
+                                    }}
                                     className="flex gap-x-1  bg-secondary-100 text-black rounded-lg p-1 font-bold  items-center justify-center"
                                 >
                                     <IconRefresh />
@@ -115,7 +103,7 @@ export const ItemLista = ({ item, index }: Props) => {
                                 </button>
                             ) : (
                                 <button
-                                    // onClick={() => updateItemList(item)}
+                                    onClick={() => renovarItem(item)}
                                     className="flex gap-x-1  bg-secondary-100 text-black rounded-lg p-1 font-bold  items-center justify-center"
                                 >
                                     <IconRefresh />
