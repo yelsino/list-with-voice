@@ -3,6 +3,7 @@ import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
 import { signIn } from "next-auth/react";
 import { SuperTitle } from "@/app/components/SuperTitle";
+import { toast } from "react-hot-toast";
 
 function Signin() {
     const router = useRouter();
@@ -11,15 +12,26 @@ function Signin() {
     const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const formData = new FormData(event.currentTarget);
-        const res = await signIn("credentials", {
-            nombreUsuario: formData.get("nombreUsuario"),
-            password: formData.get("password"),
-            redirect: false,
-        });
 
-        if (res?.error) setError(res.error as string);
-
-        if (res?.ok) return router.push("/");
+        toast
+            .promise(
+                signIn("credentials", {
+                    nombreUsuario: formData.get("nombreUsuario"),
+                    password: formData.get("password"),
+                    redirect: false,
+                }),
+                {
+                    loading: "Iniciando...",
+                    success: <b>Credenciales Correctos!</b>,
+                    error: <b>Error al iniciar.</b>,
+                }
+            )
+            .then((res) => {
+                console.log(res);
+                
+                if (res?.error) setError(res.error as string);
+                return router.push("/");
+            });
     };
 
     return (
@@ -40,7 +52,9 @@ function Signin() {
                 </div>
             </div>
             {/* inputs */}
-            {error && <div className="bg-red-500 text-white p-2 mb-2">{error}</div>}
+            {error && (
+                <div className="bg-red-500 text-white p-2 mb-2">{error}</div>
+            )}
             <form
                 onSubmit={handleSubmit}
                 autoComplete="new-password"
@@ -66,7 +80,10 @@ function Signin() {
                 </div>
 
                 <div className="flex justify-center mt-8">
-                    <button type="submit" className="bg-secondary-100 px-5 py-3 rounded-full font-bold">
+                    <button
+                        type="submit"
+                        className="bg-secondary-100 px-5 py-3 rounded-full font-bold"
+                    >
                         Iniciar
                     </button>
                 </div>

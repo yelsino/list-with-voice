@@ -31,7 +31,8 @@ export const authOptions: NextAuthOptions  = {
                 );
 
                 if (!passwordMatch) throw new Error("Invalid credentials");
-
+                    console.log("userFound: ", userFound);
+                    
                 return userFound;
             },
         }),
