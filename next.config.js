@@ -17,9 +17,9 @@ const withPWA = require('next-pwa')({
 
 
 const nextConfig = withPWA({
-    env: {
-        GPT_TOKEN: process.env.GPT_TOKEN
-    },
+    // env: {
+    //     GPT_TOKEN: process.env.GPT_TOKEN
+    // },
 })
 
 module.exports = nextConfig

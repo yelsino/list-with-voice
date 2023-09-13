@@ -6,19 +6,17 @@ import { Header } from "./components/Header";
 import { Puntos } from "./components/Puntos";
 import { SuperTitle } from "./components/SuperTitle";
 
-
 export default function Home() {
     return (
         <>
-        
             <Header
                 childrenLeft={
-                    <Link href='/configuracion'>
+                    <Link href="/configuracion">
                         <IconConfig />
                     </Link>
                 }
                 childrenRight={
-                    <Link href='/listas' className="w-full h-full ">
+                    <Link href="/listas" className="w-full h-full ">
                         <Puntos />
                     </Link>
                 }
@@ -59,7 +57,6 @@ export default function Home() {
                 </svg>
                 Crear lista
             </Link>
-          
         </>
     );
 }
