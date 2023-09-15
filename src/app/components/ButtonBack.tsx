@@ -8,9 +8,11 @@ function ButtonBack() {
 
     const validRutes = ["/generar", "/configuracion", "/listas", '/register'];
 
+    const shouldShowButton = validRutes.some((e) => pathName.startsWith(e));
+
     return (
         <>
-            {validRutes.some((e) => e === pathName) && (
+            {shouldShowButton && (
                 <button
                     onClick={() => router.back()}
                     className=" absolute bottom-0 right-0 text-fuchsia-500  p-4  sm:rounded-3xl cursor-pointer"

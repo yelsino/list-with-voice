@@ -7,6 +7,9 @@ import {
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { obtenerImagenLista, registrarUsuario } from "../chunks/listaChunk";
 import { saveAs } from "file-saver";
+import { DateValueType } from "react-tailwindcss-datepicker";
+import { format, subDays, startOfWeek, endOfWeek } from "date-fns";
+
 
 const initialState: ListaState = {
     id: "",
@@ -17,6 +20,12 @@ const initialState: ListaState = {
     edit: false,
     pagada: false,
     cargando: false,
+    startDate: format(
+        subDays(new Date(), 7),
+        "yyyy-MM-dd"
+    ),
+    endDate: format(new Date(), "yyyy-MM-dd"),
+    
 };
 
 export const listaSlice = createSlice({
@@ -33,47 +42,6 @@ export const listaSlice = createSlice({
             state.itemsList = state.itemsList.concat(missingVoices);
             
         },
-        // addVoicesToList: (state, action: PayloadAction<string[]>) => {
-        //     // filtrar todas las voces que no esten en el payload
-        //     const missingVoices: string[] = action.payload.filter(
-        //         (text) => !state.voices.some((voice) => voice.voz === text)
-        //     );
-
-        //     if (missingVoices.length === 0) return;
-
-        //     // si hay un voice seleccionado entonces actualizarlo
-        //     if (state.voiceSelected) {
-        //         const codigo = state.voiceSelected.codigo
-
-        //         const newVoice: Voice = {
-        //             voz: missingVoices[0],
-        //             status: "pending",
-        //             enviado: false,
-        //             codigo: codigo,
-        //         };
-
-        //         const newVoices = state.voices.map((voice) => {
-        //             if (voice.codigo === codigo) {
-        //                 return newVoice;
-        //             }
-        //             return voice;
-        //         });
-        //         state.voices = newVoices;
-        //         state.voiceSelected = null;
-        //         return;
-        //     }
-
-        //     // crear un array de voces con el status pending
-        //     const newVoices: Voice[] = missingVoices.map((text) => ({
-        //         voz: text,
-        //         status: "pending",
-        //         enviado: false,
-        //         codigo: uuidv4(),
-        //     }));
-
-        //     state.voices = [...state.voices, ...newVoices];
-        //     state.phases = []
-        // },
         nameLista: (state, action: PayloadAction<string>) => {
             state.nombreCliente = action.payload;
         },
@@ -129,6 +97,10 @@ export const listaSlice = createSlice({
             state.pagada = pagado;
             state.id = id;
         },
+        selectDate: (state, action:PayloadAction<DateValueType>)=>{
+            state.startDate = action.payload?.startDate
+            state.endDate = action.payload?.endDate
+        }
     },
     extraReducers: (builder) => {
         builder.addCase(obtenerImagenLista.fulfilled, (state, action) => {
@@ -156,6 +128,7 @@ export const {
     updateItem,
     selectItem,
     updateLista,
+    selectDate
 } = listaSlice.actions;
 
 export default listaSlice.reducer;

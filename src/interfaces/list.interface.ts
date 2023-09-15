@@ -1,4 +1,5 @@
 import { ISODateString } from "next-auth";
+import { DateType } from "react-tailwindcss-datepicker";
 
 export interface ListaState {
     id?: string;
@@ -9,6 +10,8 @@ export interface ListaState {
     edit?: boolean;
     pagada?: boolean;
     cargando?: boolean;
+    startDate?: DateType;
+    endDate?: DateType;
 }
 
 export type Status = 
@@ -77,6 +80,13 @@ export interface Lista {
     montoTotal?: number;
     createdAt?: Date;
     updatedAt?: Date;
+}
+
+export interface ListParams {
+    startDate: DateType
+    endDate: DateType
+    page: number
+    pageSize: number
 }
 
 

@@ -3,6 +3,7 @@ import { Header } from "@/app/components/Header";
 import {
     IconCalendar,
     IconHome,
+    IconLists,
     IconPrint,
     IconTool,
 } from "@/app/components/Icons";
@@ -33,11 +34,13 @@ interface IParams {
 
 function ListasIdPage({ params }: { params: IParams }) {
 
-    const { push } = useRouter();
-    const dispatch = useAppDispatch();
     const { isLoading, isFetching, data, error } = useGetListaByIdQuery({
         id: params.listaId,
     });
+
+    const { push } = useRouter();
+    const dispatch = useAppDispatch();
+ 
 
 
     const actualizarLista = () => {
@@ -53,8 +56,8 @@ function ListasIdPage({ params }: { params: IParams }) {
                 <div className="flex flex-col gap-y-4">
                     <Header
                         childrenLeft={
-                            <Link href="/" className="text-2xl">
-                                <IconHome />
+                            <Link href="/listas" className="text-2xl">
+                                <IconLists />
                             </Link>
                         }
                         childrenRight={

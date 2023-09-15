@@ -17,9 +17,12 @@ function ListasSkeleton() {
                         </Link>
                     }
                     childrenRight={
-                        <Link href="/" className="text-2xl">
-                            <IconCalendar />
-                        </Link>
+                        <Link
+                        href="/listas/selectdate"
+                        className="cursor-pointer"
+                    >
+                        <IconCalendar />
+                    </Link>
                     }
                 />
 
@@ -29,7 +32,7 @@ function ListasSkeleton() {
                         <br /> <span>Las listas</span>
                     </p>
                     <p className="text-lg font-medium text-secondary-200">
-                        {dateFormat(new Date())}
+                        Esta semana
                     </p>
                 </SuperTitle>
 

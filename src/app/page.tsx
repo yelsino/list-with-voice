@@ -28,7 +28,6 @@ export default function Home() {
                     <br /> <span>Lista Nueva?</span>
                 </p>
             </SuperTitle>
-
             {/* contenido */}
             <div className="flex flex-col gap-y-5">
                 <div className="font-poppins text-lg  text-secondary-200">

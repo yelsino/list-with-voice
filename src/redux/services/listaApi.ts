@@ -1,6 +1,7 @@
 import {
     GptRequest,
     ItemList,
+    ListParams,
     Lista,
     ResponseGPT,
 } from "@/interfaces/list.interface";
@@ -14,16 +15,29 @@ export const URLBASE = {
     GPT: "https://api.openai.com/v1/chat/completions",
 };
 
+interface Response<T>{
+    data: T
+    cantidad: number
+}
+
 export const listaApi = createApi({
     reducerPath: "listaApi",
     refetchOnFocus: true, // when the window is refocused, refetch the data
     baseQuery: fetchBaseQuery({
         baseUrl: "",
     }),
-
+    tagTypes: ["lists"],
     endpoints: (builder) => ({
-        getListas: builder.query<Lista[], null>({
-            query: () => `${URLBASE.LOCAL}/listas`,
+        getListas: builder.query<Response<Lista[]>, ListParams>({
+            query: (params) => ({
+                url: `${URLBASE.LOCAL}/listas`,
+                method: "GET",
+                params: params,
+                headers: {
+                    "Content-Type": "application/json",
+                }
+            }),
+            providesTags: ["lists"]
         }),
 
         sendListaToGPT: builder.mutation<null, GptRequest>({
@@ -175,6 +189,7 @@ export const listaApi = createApi({
         }),
         getListaById: builder.query<Lista, { id: string }>({
             query: ({ id }) => `${URLBASE.LOCAL}/listas/${id}`,
+            providesTags: ["lists"]
         }),
         addItem: builder.mutation<ItemList, ItemList>({
             query: (item) => ({
@@ -204,11 +219,12 @@ export const listaApi = createApi({
         }),
         updateList: builder.mutation<Lista, Lista>({
             query: (lista) => ({
-                method: 'PUT',
+                method: "PUT",
                 url: `${URLBASE.LOCAL}/listas`,
-                body: JSON.stringify(lista)
-            })
-        })
+                body: JSON.stringify(lista),
+            }),
+            invalidatesTags: ["lists"]
+        }),
     }),
 });
 

@@ -30,9 +30,6 @@ function GenerarPage() {
     );
     const listaState = useAppSelector((state) => state.listaReducer);
 
-
-
-
     const guardarLista = async () =>
         listaState.edit ? actualizarLista() : crearListaNueva();
 
@@ -87,18 +84,18 @@ function GenerarPage() {
         );
 
         if (someItemFailed) return;
-        
+
         toast
             .promise(
                 updateListDB({
                     items: itemsList.map((i) => ({
                         ...i,
-                        id: isMongoId(i.id) ? i.id : '111112222233333444445555'
-                    })), 
+                        id: isMongoId(i.id) ? i.id : "111112222233333444445555",
+                    })),
                     nombreCliente: nombreCliente,
                     completado: false,
                     pagado: pagada ?? false,
-                    id: listaState.id, 
+                    id: listaState.id,
                 }).unwrap(),
                 {
                     loading: "Actualizando...",
@@ -108,8 +105,8 @@ function GenerarPage() {
             )
             .then((resp) => {
                 if (resp.id) {
-                    dispatch(limpiarLista());
                     push(`/listas/${resp.id}`);
+                    dispatch(limpiarLista());
                 }
             });
     };
