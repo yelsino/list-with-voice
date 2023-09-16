@@ -4,22 +4,23 @@ import Datepicker, {
     DateValueType,
 } from "react-tailwindcss-datepicker";
 import { format, subDays, startOfWeek, endOfWeek } from "date-fns";
-import { selectDate } from "@/redux/features/listaSlice";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { useRouter, usePathname } from "next/navigation";
+import { udateSearchParams } from "@/redux/features/globalSlice";
 
 function SelectDate() {
     const router = useRouter();
     const dispatch = useAppDispatch();
-    const { startDate, endDate } = useAppSelector(
-        (state) => state.listaReducer
-    );
+    const { searchParams } = useAppSelector((state) => state.globalReducer);
 
     const handleOnChange = (values: DateValueType) => {
-        dispatch(selectDate(values));
-        // setTimeout(() => {
-        //     router.back();
-        // }, 800);
+        dispatch(
+            udateSearchParams({
+                ...searchParams,
+                startDate: values?.startDate as DateType,
+                endDate: values?.endDate as DateType,
+            })
+        );
     };
 
     return (
@@ -73,8 +74,8 @@ function SelectDate() {
                 } as any
             }
             value={{
-                startDate: startDate as DateType,
-                endDate: endDate as DateType,
+                startDate: searchParams.startDate as DateType,
+                endDate: searchParams.endDate as DateType,
             }}
             onChange={handleOnChange}
         />

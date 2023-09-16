@@ -1,7 +1,8 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { URLBASE } from "../services/listaApi";
-import { Lista, Usuario } from "@/interfaces/list.interface";
+import { Lista, } from "@/interfaces/list.interface";
 import { fetchSinToken } from "../fetch";
+import { Usuario } from "@/interfaces/user.interface";
 
 export const obtenerImagenLista = createAsyncThunk(
     "obtener_imagen",
@@ -40,7 +41,7 @@ export const registrarUsuario = createAsyncThunk(
             };
         }
 
-        const response = await fetchSinToken<ResFetch<Usuario>>({
+        const response =  await fetchSinToken<ResFetch<Usuario>>({
             endpoint: `${URLBASE.LOCAL}/auth/signup`,
             body: { nombreUsuario, password },
             method: "POST",

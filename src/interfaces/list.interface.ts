@@ -1,5 +1,6 @@
 import { ISODateString } from "next-auth";
 import { DateType } from "react-tailwindcss-datepicker";
+import { Usuario } from "./user.interface";
 
 export interface ListaState {
     id?: string;
@@ -14,45 +15,12 @@ export interface ListaState {
     endDate?: DateType;
 }
 
-export type Status = 
-    | "pending" 
-    | "sent" 
-    | "success" 
-    | "error" 
-    | "updating";
-
-export interface Tienda {
-    id: string;
-    nombreTienda: string;
-    logo: string;
-    ubicacion: string;
-    numeroContacto: string;
-    email: string;
-    referencia: string;
-    urlTienda: string;
-    codigoQr: string;
-    codigoBarra: string;
-    createdAt?: Date;
-    updatedAt?: Date;
-}
-
-export interface Usuario {
-    id?: string;
-    nombreUsuario: string;
-    password?: string;
-    validPassword?: string
-    nombres?: string;
-    apellidos?: string;
-    tiendas?: Tienda[];
-    listas?: Lista[]
-    createdAt?: Date;
-    updatedAt?: Date;
-}
+export type Status = "pending" | "sent" | "success" | "error" | "updating";
 
 export interface Sesion {
-    user?: Usuario
-    expires: ISODateString
-  }
+    user?: Usuario;
+    expires: ISODateString;
+}
 
 export interface ItemList {
     id?: string;
@@ -72,7 +40,7 @@ export interface ItemList {
 export interface Lista {
     id?: string;
     numero?: number;
-    usuarioId?: string;
+    clienteId?: string;
     items: ItemList[];
     nombreCliente: string;
     pagado: boolean;
@@ -81,14 +49,6 @@ export interface Lista {
     createdAt?: Date;
     updatedAt?: Date;
 }
-
-export interface ListParams {
-    startDate: DateType
-    endDate: DateType
-    page: number
-    pageSize: number
-}
-
 
 
 export interface GptRequest {
@@ -104,7 +64,6 @@ export interface ResponseGPT {
     usage: Usage;
     choices: Choice[];
 }
-
 
 export interface Choice {
     message: Message;
