@@ -2,7 +2,6 @@ import {
     ItemList,
     Lista,
     ListaState,
-    Usuario,
 } from "@/interfaces/list.interface";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { obtenerImagenLista, registrarUsuario } from "../chunks/listaChunk";

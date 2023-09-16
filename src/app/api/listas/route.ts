@@ -3,6 +3,10 @@ import { Prisma, PrismaClient } from "@prisma/client";
 import { Lista } from "@/interfaces/list.interface";
 import { generarItemListBD, montoTotalLista } from "./mapper/listas";
 import getCurrentUser from "@/actions/getCurrentUser";
+import {
+    createSearchParams,
+    dateStringToStringISO,
+} from "../utils/global.utils";
 // import { Lista } from "@/interfaces/list.interface";
 const prisma = new PrismaClient();
 
@@ -12,9 +16,9 @@ export async function POST(request: Request) {
     const body: Lista = await request.json();
 
     try {
-        const currentUser = await getCurrentUser();
+        // const currentUser = await getCurrentUser();
 
-        if (!currentUser) return NextResponse.error();
+        if (!body.clienteId) return NextResponse.error();
 
         const ordenLista = await prisma.lista.count();
 
@@ -35,7 +39,7 @@ export async function POST(request: Request) {
                 items: {
                     create: body.items.map((item) => generarItemListBD(item)),
                 },
-                usuarioId: currentUser?.id as any,
+                clienteId: body.clienteId,
             },
             include: {
                 items: true,
@@ -55,22 +59,24 @@ export async function GET(request: NextRequest) {
         return NextResponse.error();
     }
 
-    const startDate = request.nextUrl.searchParams.get("startDate");
-    const endDate = request.nextUrl.searchParams.get("endDate");
-    const page = request.nextUrl.searchParams.get("page");
-    const pageSize = request.nextUrl.searchParams.get("pageSize");
-    // Convierte la página y el tamaño de página en números
-    const pageNumber = parseInt(page || "1", 10);
-    const pageSizeNumber = parseInt(pageSize || "10", 10);
+    const { endDate, skip, startDate, take, textfilter } = createSearchParams(
+        request.nextUrl.searchParams
+    );
 
-    const skip = (pageNumber - 1) * pageSizeNumber;
-
-    // Construye el objeto de filtro
     const where: Prisma.ListaWhereInput = {
-        usuarioId: currentUser.id,
+        cliente: {
+            usuarioId: currentUser.id,
+        },
         createdAt: {
             lte: dateStringToStringISO(endDate, true), //menores a
             gte: dateStringToStringISO(startDate, false), //mayores a
+        },
+        OR: {
+            cliente: {
+                nombres: {
+                    contains: textfilter,
+                },
+            },
         },
     };
 
@@ -78,14 +84,14 @@ export async function GET(request: NextRequest) {
 
     const listas = await prisma.lista.findMany({
         where,
-        include: { items: true },
         skip,
-        take: pageSizeNumber,
+        take,
+        include: { items: true },
     });
 
     return NextResponse.json({
         data: listas,
-        cantidad: total
+        cantidad: total,
     });
 }
 
@@ -124,32 +130,4 @@ export async function PUT(request: Request) {
     });
 
     return NextResponse.json(listaActualizada);
-}
-
-function dateStringToStringISO(
-    input: string | null,
-    useEndTime: boolean = false
-): string | undefined {
-    // Verifica si el formato de entrada es válido (YYYY-MM-DD).
-    if (!input) return undefined;
-
-    const regex = /^\d{4}-\d{2}-\d{2}$/;
-    if (!regex.test(input)) {
-        return undefined;
-    }
-
-    try {
-        if (useEndTime) {
-            // Utiliza la última hora del día.
-            const fecha = new Date(input + "T23:59:59.999Z");
-            return fecha.toISOString();
-        } else {
-            // Utiliza la primera hora del día.
-            const fecha = new Date(input + "T00:00:00.000Z");
-            return fecha.toISOString();
-        }
-    } catch (error) {
-        console.error("Error al convertir la fecha:", error);
-        return undefined;
-    }
 }

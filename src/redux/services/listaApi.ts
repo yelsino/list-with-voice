@@ -1,7 +1,7 @@
+import { SearchParams } from "@/interfaces/global.interface";
 import {
     GptRequest,
     ItemList,
-    ListParams,
     Lista,
     ResponseGPT,
 } from "@/interfaces/list.interface";
@@ -28,7 +28,7 @@ export const listaApi = createApi({
     }),
     tagTypes: ["lists"],
     endpoints: (builder) => ({
-        getListas: builder.query<Response<Lista[]>, ListParams>({
+        getListas: builder.query<Response<Lista[]>, SearchParams>({
             query: (params) => ({
                 url: `${URLBASE.LOCAL}/listas`,
                 method: "GET",
@@ -39,7 +39,6 @@ export const listaApi = createApi({
             }),
             providesTags: ["lists"]
         }),
-
         sendListaToGPT: builder.mutation<null, GptRequest>({
             query: ({ message }) => ({
                 url: "gpt",

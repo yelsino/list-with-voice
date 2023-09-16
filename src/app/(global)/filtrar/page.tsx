@@ -1,12 +1,6 @@
 "use client";
 import { Header } from "@/app/components/Header";
-import {
-    IconCalendar,
-    IconDelete,
-    IconHome,
-    IconLists,
-    IconUsers,
-} from "@/app/components/Icons";
+
 import SelectDate from "@/app/components/SelectDate";
 import { SuperTitle } from "@/app/components/SuperTitle";
 import Link from "next/link";
@@ -14,11 +8,13 @@ import AutoComplete from "./AutoComplete";
 import { useAppDispatch } from "@/redux/hooks";
 import { selectDate } from "@/redux/features/listaSlice";
 import { useState } from "react";
+import { IconDelete, IconLists } from "@/app/components/Icons";
+import { useRouter } from "next/navigation";
 
-function ListasPage() {
+function FiltrarPage() {
     const dispatch = useAppDispatch();
     const [selected, setSelected] = useState<any>({})
-
+    const router = useRouter()
     const resetFiltros = () => {
         dispatch(selectDate({ endDate: null, startDate: null }));
         setSelected({})
@@ -29,7 +25,7 @@ function ListasPage() {
             <Header
                 childrenLeft={
                     <Link href="/listas" className="text-2xl">
-                        <IconLists />
+                        <IconLists estilo="" />
                     </Link>
                 }
                 childrenRight={
@@ -54,11 +50,11 @@ function ListasPage() {
                
             <AutoComplete selected={selected} setSelected={setSelected}   />
             <SelectDate />
-            <button className="bg-secondary-100 p-3 rounded-lg text-black font-semibold">
+            <button onClick={()=> router.back()} className="bg-secondary-100 p-3 rounded-lg text-black font-semibold">
                 Aplicar Filtro
             </button>
         </div>
     );
 }
 
-export default ListasPage;
+export default FiltrarPage;

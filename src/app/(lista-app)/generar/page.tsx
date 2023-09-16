@@ -55,6 +55,7 @@ function GenerarPage() {
                     nombreCliente: nombreCliente,
                     completado: false,
                     pagado: pagada ?? false,
+                    clienteId:"65054a98b07a6c2f8c267b38"
                 }).unwrap(),
                 {
                     loading: "Generando...",

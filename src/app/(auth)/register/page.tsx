@@ -8,6 +8,7 @@ import {
     obtenerImagenLista,
     registrarUsuario,
 } from "@/redux/chunks/listaChunk";
+import toast from "react-hot-toast";
 
 function Signup() {
     const [error, setError] = useState();
@@ -16,26 +17,32 @@ function Signup() {
 
     const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-
         const formData = new FormData(event.currentTarget);
 
-        const respuesta: any = await dispatch(
-            registrarUsuario({
-                nombreUsuario: formData.get("nombreUsuario") as string,
-                password: formData.get("password") as string,
-                validPassword: formData.get("validPassword") as string,
-            })
-        );
-            
-        if (respuesta.payload.status) {
-            const res = await signIn("credentials", {
-                nombreUsuario: respuesta.payload.data.nombreUsuario,
-                password: formData.get("password") as string,
-                redirect: false,
+        toast
+            .promise(
+                dispatch(
+                    registrarUsuario({
+                        nombreUsuario: formData.get("nombreUsuario") as string,
+                        password: formData.get("password") as string,
+                        validPassword: formData.get("validPassword") as string,
+                    })
+                ),
+                {
+                    loading: "Iniciando...",
+                    success: <b>Credenciales Correctos!</b>,
+                    error: <b>Error al iniciar.</b>,
+                }
+            )
+            .then((res: any) => {
+                signIn("credentials", {
+                    nombreUsuario: res.payload.data.nombreUsuario,
+                    password: formData.get("password") as string,
+                    redirect: false,
+                }).then((sing) => {
+                    if (sing?.ok) router.push("/");
+                });
             });
-            
-            if (res?.ok) router.push("/");
-        }
     };
 
     return (

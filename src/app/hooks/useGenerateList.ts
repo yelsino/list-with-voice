@@ -161,7 +161,7 @@ function useGenerateList({ resetTranscript, finalTranscript }: Props) {
     useEffect(() => {
         if (pathname !== "/generar") return;
         const itemsNoSend: ItemList[] = itemsList
-            .filter((item) => item.status === "pending")
+            .filter((item) => item.status === "pending") 
             .map((item) => ({ ...item, status: "sent" }));
 
         if (itemsNoSend.length > 0) {
