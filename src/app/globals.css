@@ -24,3 +24,9 @@
       -webkit-transition: "color 9999s ease-out, background-color 9999s ease-out";
       -webkit-transition-delay: 9999s;
   }
+
+  .miDiv {
+    overflow: hidden;
+    direction: rtl; /* Establece la dirección del texto de derecha a izquierda */
+    white-space: nowrap; /* Evita que el texto se divida en varias líneas */
+  }

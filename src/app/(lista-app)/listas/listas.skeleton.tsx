@@ -5,6 +5,7 @@ import { Header } from "@/app/components/Header";
 import { IconCalendar, IconHome } from "@/app/components/Icons";
 import { SuperTitle } from "@/app/components/SuperTitle";
 import { dateFormat } from "@/interfaces/mapper";
+import { formatText } from "@/interfaces/FormatReact";
 
 function ListasSkeleton() {
     return (
@@ -18,26 +19,22 @@ function ListasSkeleton() {
                     }
                     childrenRight={
                         <Link
-                        href="/listas/selectdate"
-                        className="cursor-pointer"
-                    >
-                        <IconCalendar />
-                    </Link>
+                            href="/listas/selectdate"
+                            className="cursor-pointer"
+                        >
+                            <IconCalendar />
+                        </Link>
                     }
                 />
 
-                <SuperTitle>
-                    <p className="text-4xl">
-                        <span>Todas</span>
-                        <br /> <span>Las listas</span>
-                    </p>
-                    <p className="text-lg font-medium text-secondary-200">
-                        Esta semana
+                <SuperTitle title={formatText("Todas Las listas")}>
+                    <p className="text-base font-medium text-secondary-200 break-words">
+                       Cargando listas...
                     </p>
                 </SuperTitle>
 
                 <div className="flex flex-col gap-y-4">
-                    {[1, 2, 3, 4, 5, 6,7,8].map((lista, index: any) => (
+                    {[1, 2, 3, 4, 5, 6, 7, 8].map((lista, index: any) => (
                         <div
                             className="text-secondary-100 bg-primary-100 px-3 cursor-pointer flex justify-between items-center rounded-lg text-lg py-7 animate-pulse"
                             key={index}

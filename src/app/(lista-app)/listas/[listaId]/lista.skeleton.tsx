@@ -3,6 +3,7 @@ import { Header } from "@/app/components/Header";
 import { IconHome, IconTool } from "@/app/components/Icons";
 import OptionsMenu from "@/app/components/Popover/Popover";
 import { SuperTitle } from "@/app/components/SuperTitle";
+import { formatText } from "@/interfaces/FormatReact";
 import { dateFormat, moneyFormat } from "@/interfaces/mapper";
 
 import Link from "next/link";
@@ -26,17 +27,10 @@ function ListasIdSkeleton() {
                 />
 
                 <div className="">
-                    <SuperTitle>
-                        <p className="text-4xl">Cargando Lista</p>
-                        <p className="text-lg font-medium text-secondary-200">
-                            {dateFormat(new Date())}
-                        </p>
-                        <p className="text-lg font-medium text-secondary-200">
-                            Lista no pagada {" "}
-                            <span className="text-secondary-100">
-                                {moneyFormat(0)}
-                            </span>
-                        </p>
+                <SuperTitle title={formatText("Cargando Lista")}>
+                        <div className="text-lg text-secondary-200">
+                            <p>Cargando...</p>
+                        </div>
                     </SuperTitle>
                 </div>
 

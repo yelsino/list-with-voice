@@ -13,21 +13,9 @@ import { Puntos } from "./components/Puntos";
 import { SuperTitle } from "./components/SuperTitle";
 import * as Realm from "realm-web";
 import { useEffect, useState } from "react";
+import { formatText } from "@/interfaces/FormatReact";
 
 export default function Home() {
-    const [dataSet, setDataSet] = useState([]);
-
-    // const getData = async () => {
-    //     const app = new Realm.App({ id: "<YOUR_APP_ID>" });
-    //     const credentials = Realm.Credentials.anonymous();
-    //     try {
-    //       const user = await app.logIn(credentials);
-    //       user.
-    //     } catch(err) {
-    //       console.error("Failed to log in", err);
-    //     }
-
-    // };
 
     const items = [
         {
@@ -52,10 +40,6 @@ export default function Home() {
         },
     ];
 
-    // useEffect(() => {
-    //     getData()
-    // }, []);
-
     return (
         <>
             <Header
@@ -72,11 +56,7 @@ export default function Home() {
             />
 
 
-            <SuperTitle>
-                <p className="">
-                    <span>Hola!</span>
-                    <br /> <span>Lista Nueva?</span>
-                </p>
+            <SuperTitle title={formatText("Hola! Lista nueva?")}>
             </SuperTitle>
             {/* contenido */}
             <div className="flex flex-col gap-y-5">
@@ -86,7 +66,7 @@ export default function Home() {
                 </div>
             </div>
 
-            <div className="flex gap-5 flex-wrap">
+            <div className="flex gap-5 flex-wrap mt-5">
                 {items.map((item, i) => (
                     <Link
                         href={item.url}

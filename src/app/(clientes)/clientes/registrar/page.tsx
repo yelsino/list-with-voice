@@ -3,6 +3,7 @@ import { Header } from "@/app/components/Header";
 import { IconDelete, IconLists, IconUsers } from "@/app/components/Icons";
 import InputString from "@/app/components/InputString";
 import { SuperTitle } from "@/app/components/SuperTitle";
+import { formatText } from "@/interfaces/FormatReact";
 import { useRegisterCostumerMutation } from "@/redux/services/clienteApi";
 import Link from "next/link";
 import { FormEvent, useRef } from "react";
@@ -58,11 +59,7 @@ function ClientesPage() {
                     </div>
                 }
             />
-            <SuperTitle>
-                <p className="text-4xl">
-                    <span>Registro</span>
-                    <br /> <span>De clientes</span>
-                </p>
+            <SuperTitle  title={formatText("Registro De clientes")}>
                 <p className="text-base font-medium text-secondary-200 break-words">
                     <span className="text-secondary-200">
                         Crea rapidamente clientes. utilizando los comandos de

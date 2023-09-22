@@ -8,6 +8,7 @@ import { SuperTitle } from "@/app/components/SuperTitle";
 import { useSession, signOut } from "next-auth/react";
 import { AnimatePresence, LayoutGroup, motion } from "framer-motion";
 import { comando } from "@/app/components/Voice/comandos";
+import { formatText } from "@/interfaces/FormatReact";
 
 function ConfiguracionPage() {
     return (
@@ -38,15 +39,18 @@ function ConfiguracionPage() {
                 }
             />
 
-            <SuperTitle>
-                <p className="">
-                    <span>Que</span>
-                    <br /> <span>Configurar?</span>
-                </p>
+            <SuperTitle
+                title={
+                    <span>
+                        Que <br /> Configurar{" "}
+                    </span>
+                }
+            >
+                {null}
             </SuperTitle>
 
             <p className="font-catamaran text-text1 leading-tight text-secondary-200 pb-3 text-lg">
-                Comandos del asistente
+                Todos los comandos de sistema tienen variantes pero realizan la misma acción.
             </p>
 
             <LayoutGroup>
@@ -67,9 +71,8 @@ function ConfiguracionPage() {
                                                             return (
                                                                 <div className="ml-6 text-secondary-200">
                                                                     <p>
-                                                                        {
-                                                                           "-"+ comando
-                                                                        }
+                                                                        {"-" +
+                                                                            comando}
                                                                     </p>
                                                                 </div>
                                                             );
@@ -95,9 +98,10 @@ const ItemsComando = ({ title, children, stilo }: any) => {
     const [isOpen, setIsOpen] = useState(false);
 
     return (
-        <div className={` 
+        <div
+            className={` 
             ${stilo && stilo} 
-            ${isOpen ?  'bg-primary-100 ' : ''} 
+            ${isOpen ? "bg-primary-100 " : ""} 
              p-2 rounded-md box-content
         `}
             onClick={(e) => {

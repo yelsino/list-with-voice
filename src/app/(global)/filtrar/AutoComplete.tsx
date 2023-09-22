@@ -2,9 +2,11 @@ import { Fragment, useEffect, useState } from "react";
 import { Combobox, Transition } from "@headlessui/react";
 import {
     CheckIcon,
-    XCircleIcon,
     UserCircleIcon,
 } from "@heroicons/react/20/solid";
+import {
+    XMarkIcon
+} from "@heroicons/react/24/outline";
 import { seleccionarCliente } from "@/redux/features/clienteSlice";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { Cliente } from "@/interfaces/client.interface";
@@ -83,7 +85,7 @@ export default function AutoComplete({}: Props) {
                             {searching ? (
                                 <CirculoLoader />
                             ) : (
-                                <XCircleIcon
+                                <XMarkIcon
                                     className="h-5 w-5 text-gray-400"
                                     aria-hidden="true"
                                 />

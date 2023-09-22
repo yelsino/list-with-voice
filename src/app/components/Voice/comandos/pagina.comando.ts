@@ -8,10 +8,7 @@ export const goconfig = [
 export const goInicio = [
     "ir a inicio",
     "volver a inicio",
-    "inicio",
-    "volver al inicio",
     "regresar al inicio",
-    "regresar",
 ];
 
 export const golistas = [

@@ -3,7 +3,7 @@ import { useSession } from "next-auth/react";
 import { useAppSelector, useAppDispatch } from "@/redux/hooks";
 import React, { useEffect } from "react";
 import Link from "next/link";
-import {  limpiarLista } from "@/redux/features/listaSlice";
+import { limpiarLista } from "@/redux/features/listaSlice";
 import { LayoutGroup, motion } from "framer-motion";
 import { toast } from "react-hot-toast";
 import {
@@ -20,6 +20,7 @@ import { isMongoId } from "@/interfaces/mapper";
 import { seleccionarCliente } from "@/redux/features/clienteSlice";
 import { useVoiceControl } from "@/context/voice.context";
 import { Cliente } from "@/interfaces/client.interface";
+import { formatText } from "@/interfaces/FormatReact";
 
 function GenerarPage() {
     const dispatch = useAppDispatch();
@@ -57,7 +58,7 @@ function GenerarPage() {
                     items: itemsList,
                     completado: false,
                     pagado: pagada ?? false,
-                    cliente: clienteState.cliente as Cliente
+                    cliente: clienteState.cliente as Cliente,
                 }).unwrap(),
                 {
                     loading: "Generando...",
@@ -114,18 +115,15 @@ function GenerarPage() {
             });
     };
 
-    useEffect(()=>{
-       
-        if(clienteState.clientes.length > 1){
-            push('generar/para')
+    useEffect(() => {
+        if (clienteState.clientes.length > 1) {
+            push("generar/para");
         }
-        if(clienteState.clientes.length === 1){
-            const cliente = clienteState.clientes[0]
-            dispatch(seleccionarCliente({...cliente,status: 'sent'}))
+        if (clienteState.clientes.length === 1) {
+            const cliente = clienteState.clientes[0];
+            dispatch(seleccionarCliente({ ...cliente, status: "sent" }));
         }
-    },[clienteState.clientes])
-
-
+    }, [clienteState.clientes]);
 
     return (
         <>
@@ -133,13 +131,6 @@ function GenerarPage() {
                 <Loader texto="registrando..." />
             ) : (
                 <div className="flex flex-col gap-y-4 ">
-                    {/* <button
-                        className="text-secondary-100"
-                        onClick={()=>console.log(clienteState.clientes)
-                        }
-                    >IMPRIMIR</button> */}
-                    {/* <p className="text-secondary-100">final: {finalTranscript}</p> */}
-                    {/* <pre className="text-secondary-100">{JSON.stringify(clienteState.cliente,null,2)}</pre> */}
                     <Header
                         childrenLeft={
                             <Link href="/" className="text-2xl">
@@ -153,17 +144,14 @@ function GenerarPage() {
                         }
                     />
 
-                    <SuperTitle>
-                        {clienteState.cliente ? (
-                            <p className="text-2xl capitalize">
-                                {clienteState.cliente.nombres}
-                            </p>
-                        ) : (
-                            <p className=" font-bold text-2xl">Lista para:</p>
+                    <SuperTitle
+                        title={formatText(
+                            clienteState?.cliente?.nombres ?? "Lista para:"
                         )}
-
+                    >
                         <p className="text-secondary-200 text-lg font-semibold">
-                            Pagada: {pagada ? "Si" : "No"}
+                            Pagada: {pagada ? "Si" : "No"} - Adelanto:{" "}
+                            {pagada ? "Si" : "No"}
                         </p>
                     </SuperTitle>
 
@@ -172,14 +160,32 @@ function GenerarPage() {
                             Productos
                         </p>
                         {itemsList.length === 0 && (
-                            <p className="text-secondary-200">
-                                Aún no ha añadido ningun producto a la lista,
-                                ver lista de{" "}
-                                <Link href="/configuracion" className="text-secondary-100">
-                                    comandos
-                                </Link>{" "}
-                                de voz para empezar a registrar los productos
-                            </p>
+                            <div className="flex flex-col gap-y-3">
+                                <p className="text-secondary-200">
+                                    Aún no ha añadido ningun producto a la
+                                    lista, ver lista de{" "}
+                                    <Link
+                                        href="/configuracion"
+                                        className="text-secondary-100"
+                                    >
+                                        comandos
+                                    </Link>{" "}
+                                    de voz para empezar a registrar los
+                                    productos
+                                </p>
+
+                                <div>
+                                    <p className="text-secondary-100 text-lg font-semibold">
+                                        Añadir items
+                                    </p>
+                                    <p className="text-secondary-200">
+                                        Forma 1: 20 soles de tomates
+                                    </p>
+                                    <p className="text-secondary-200">
+                                        Forma 2: 10 kilos de tomate a 2 soles
+                                    </p>
+                                </div>
+                            </div>
                         )}
                     </div>
 
