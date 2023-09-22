@@ -50,7 +50,8 @@ function ConfiguracionPage() {
             </SuperTitle>
 
             <p className="font-catamaran text-text1 leading-tight text-secondary-200 pb-3 text-lg">
-                Todos los comandos de sistema tienen variantes pero realizan la misma acción.
+                Todos los comandos de sistema tienen variantes pero realizan la
+                misma acción.
             </p>
 
             <LayoutGroup>
@@ -58,7 +59,10 @@ function ConfiguracionPage() {
                     {Object.entries(comando).map(
                         ([key, subcomandos], index) => {
                             return (
-                                <ItemsComando key={index} title={`> Comandos de ${key}`}>
+                                <ItemsComando
+                                    key={index}
+                                    title={`> Comandos de ${key}`}
+                                >
                                     {Object.entries(subcomandos).map(
                                         ([key2, subcomandos2], index2) => {
                                             return (
@@ -68,11 +72,15 @@ function ConfiguracionPage() {
                                                     stilo="ml-6"
                                                 >
                                                     {subcomandos2.map(
-                                                        (comando: any,index3) => {
+                                                        (
+                                                            comando: any,
+                                                            index3
+                                                        ) => {
                                                             return (
-                                                                <div 
+                                                                <div
                                                                     key={index3}
-                                                                    className="ml-6 text-secondary-200">
+                                                                    className="ml-6 text-secondary-200"
+                                                                >
                                                                     <p>
                                                                         {"-" +
                                                                             comando}
