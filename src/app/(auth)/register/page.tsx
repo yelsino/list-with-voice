@@ -1,9 +1,9 @@
 "use client";
 import { useRouter } from "next/navigation";
 import { SuperTitle } from "../../components/SuperTitle";
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { signIn } from "next-auth/react";
-import { useAppDispatch } from "@/redux/hooks";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import {
     obtenerImagenLista,
     registrarUsuario,
@@ -14,6 +14,9 @@ function Signup() {
     const [error, setError] = useState();
     const router = useRouter();
     const dispatch = useAppDispatch();
+    const { clientes } = useAppSelector(
+        (state) => state.clienteReducer
+    );
 
     const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -35,6 +38,8 @@ function Signup() {
                 }
             )
             .then((res: any) => {
+                console.log("RES: ", res);
+                
                 signIn("credentials", {
                     nombreUsuario: res.payload.data.nombreUsuario,
                     password: formData.get("password") as string,
@@ -44,6 +49,8 @@ function Signup() {
                 });
             });
     };
+
+   
 
     return (
         <>

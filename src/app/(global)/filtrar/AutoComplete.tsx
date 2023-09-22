@@ -1,51 +1,94 @@
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { Combobox, Transition } from "@headlessui/react";
-import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/20/solid";
+import {
+    CheckIcon,
+    XCircleIcon,
+    UserCircleIcon,
+} from "@heroicons/react/20/solid";
+import { seleccionarCliente } from "@/redux/features/clienteSlice";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { Cliente } from "@/interfaces/client.interface";
+import { obtenerClientes } from "@/redux/chunks/clienteChunck";
+import { CirculoLoader } from "@/app/components/Loader/CirculoLoader";
 
-const people = [
-    { id: 1, name: "Wade Cooper" },
-    { id: 2, name: "Arlene Mccoy" },
-    { id: 3, name: "Devon Webb" },
-    { id: 4, name: "Tom Cook" },
-    { id: 5, name: "Tanya Fox" },
-    { id: 6, name: "Hellen Schmidt" },
-];
+interface Props {}
 
-interface Props {
-    selected: any;
-    setSelected: any;
-}
+export default function AutoComplete({}: Props) {
+    const dispatch = useAppDispatch();
+    const { cliente, clientes } = useAppSelector(
+        (state) => state.clienteReducer
+    );
+    seleccionarCliente;
 
-export default function AutoComplete({ selected, setSelected }: Props) {
     const [query, setQuery] = useState("");
+    const [searching, setSearching] = useState(false);
 
     const filteredPeople =
         query === ""
-            ? people
-            : people.filter((person) =>
-                  person.name
+            ? clientes
+            : clientes.filter((cliente) =>
+                  cliente.nombres
                       .toLowerCase()
                       .replace(/\s+/g, "")
+                      .trim()
                       .includes(query.toLowerCase().replace(/\s+/g, ""))
-              );
+              ) ?? [];
+
+    const handleChange = (cliente: Cliente) => {
+        dispatch(seleccionarCliente(cliente));
+    };
+
+    useEffect(() => {
+        let timer: any;
+
+        // if (query.length >= 3) {
+        clearTimeout(timer);
+        setSearching(true);
+        timer = setTimeout(() => {
+            dispatch(
+                obtenerClientes({
+                    startDate: null,
+                    endDate: null,
+                    page: 1,
+                    pageSize: 20,
+                    texto: query,
+                })
+            ).finally(() => {
+                setSearching(false);
+            });
+        }, 2000);
+        // }
+
+        return () => clearTimeout(timer);
+    }, [query]);
 
     return (
         <div className="z-30">
-            <Combobox value={selected} onChange={setSelected}>
+            <Combobox value={cliente} onChange={handleChange}>
                 <div className="relative mt-1">
-                    <div className="relative w-full cursor-default overflow-hidden rounded-lg bg-primary-100 text-left shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-teal-300 sm:text-sm">
+                    <div className="relative w-full cursor-default overflow-hidden rounded-lg bg-primary-100 text-left shadow-md focus:outline-none ">
                         <Combobox.Input
-                            className="w-full border-none py-3 pl-3 pr-10 text-lg leading-5 text-secondary-100 focus:ring-0 bg-primary-100 placeholder:text-secondary-200"
-                            displayValue={(person: any) => person.name}
+                            className="w-full border-none py-4 pl-3 pr-10 text-lg leading-5 text-secondary-100  bg-primary-100 placeholder:text-secondary-200"
+                            displayValue={(person: any) => person?.nombres}
                             onChange={(event) => setQuery(event.target.value)}
                             placeholder="Seleccior usuario"
                         />
-                        <Combobox.Button className="absolute inset-y-0 right-0 flex items-center pr-2">
-                            <ChevronUpDownIcon
-                                className="h-5 w-5 text-gray-400"
-                                aria-hidden="true"
-                            />
-                        </Combobox.Button>
+                        <button
+                            onClick={() => {
+                                setQuery("");
+                                dispatch(seleccionarCliente(null));
+                            }}
+                            className="absolute inset-y-0 right-0 flex items-center pr-2"
+                        >
+                            {searching ? (
+                                <CirculoLoader />
+                            ) : (
+                                <XCircleIcon
+                                    className="h-5 w-5 text-gray-400"
+                                    aria-hidden="true"
+                                />
+                            )}
+                        </button>
                     </div>
                     <Transition
                         as={Fragment}
@@ -64,7 +107,7 @@ export default function AutoComplete({ selected, setSelected }: Props) {
                                     <Combobox.Option
                                         key={person.id}
                                         className={({ active }) =>
-                                            `relative cursor-default select-none py-2 pl-10 pr-4 ${
+                                            `relative cursor-default select-none py-3 px-5 ${
                                                 active
                                                     ? "bg-secondary-200 text-white"
                                                     : "text-secondary-100"
@@ -74,15 +117,17 @@ export default function AutoComplete({ selected, setSelected }: Props) {
                                     >
                                         {({ selected, active }) => (
                                             <>
-                                                <span
-                                                    className={`block truncate ${
-                                                        selected
-                                                            ? "font-medium"
-                                                            : "font-normal"
-                                                    }`}
-                                                >
-                                                    {person.name}
-                                                </span>
+                                                <div className="flex gap-x-3">
+                                                    <UserCircleIcon
+                                                        width={28}
+                                                        height={28}
+                                                    />
+                                                    <span
+                                                        className={`block truncate `}
+                                                    >
+                                                        {person.nombres}
+                                                    </span>
+                                                </div>
                                                 {selected ? (
                                                     <span
                                                         className={`absolute inset-y-0 left-0 flex items-center pl-3 ${

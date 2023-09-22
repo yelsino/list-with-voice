@@ -1,11 +1,10 @@
 "use client";
 import { useSession } from "next-auth/react";
 import { useAppSelector, useAppDispatch } from "@/redux/hooks";
-import React from "react";
+import React, { useEffect } from "react";
 import Link from "next/link";
-import { deleteItem, limpiarLista } from "@/redux/features/listaSlice";
+import {  limpiarLista } from "@/redux/features/listaSlice";
 import { LayoutGroup, motion } from "framer-motion";
-import { ItemList } from "@/interfaces/list.interface";
 import { toast } from "react-hot-toast";
 import {
     useRegistrarListDBMutation,
@@ -18,6 +17,9 @@ import { IconHome, IconSave } from "@/app/components/Icons";
 import { SuperTitle } from "@/app/components/SuperTitle";
 import { ItemLista } from "@/app/components/Lista/ItemLista";
 import { isMongoId } from "@/interfaces/mapper";
+import { seleccionarCliente } from "@/redux/features/clienteSlice";
+import { useVoiceControl } from "@/context/voice.context";
+import { Cliente } from "@/interfaces/client.interface";
 
 function GenerarPage() {
     const dispatch = useAppDispatch();
@@ -25,18 +27,19 @@ function GenerarPage() {
 
     const [registrarListDB] = useRegistrarListDBMutation();
     const [updateListDB] = useUpdateListMutation();
-    const { itemsList, pagada, nombreCliente, cargando } = useAppSelector(
+    const { itemsList, pagada, cargando } = useAppSelector(
         (state) => state.listaReducer
     );
     const listaState = useAppSelector((state) => state.listaReducer);
+    const clienteState = useAppSelector((state) => state.clienteReducer);
+    const { startListening, listening, finalTranscript } = useVoiceControl();
 
     const guardarLista = async () =>
         listaState.edit ? actualizarLista() : crearListaNueva();
 
     const crearListaNueva = async () => {
-        console.log("voy a registrar lista");
-        if (!nombreCliente) {
-            toast.error("Indica el nombre del cliente", {
+        if (!clienteState.cliente) {
+            toast.error("Indica al cliente", {
                 icon: "👏",
             });
             return;
@@ -52,10 +55,9 @@ function GenerarPage() {
             .promise(
                 registrarListDB({
                     items: itemsList,
-                    nombreCliente: nombreCliente,
                     completado: false,
                     pagado: pagada ?? false,
-                    clienteId:"65054a98b07a6c2f8c267b38"
+                    cliente: clienteState.cliente as Cliente
                 }).unwrap(),
                 {
                     loading: "Generando...",
@@ -73,8 +75,8 @@ function GenerarPage() {
     const actualizarLista = async () => {
         console.log("voy a actualizar lsita");
 
-        if (!nombreCliente) {
-            toast.error("Indica el nombre del cliente", {
+        if (!clienteState.cliente) {
+            toast.error("Indica al cliente", {
                 icon: "👏",
             });
             return;
@@ -93,7 +95,7 @@ function GenerarPage() {
                         ...i,
                         id: isMongoId(i.id) ? i.id : "111112222233333444445555",
                     })),
-                    nombreCliente: nombreCliente,
+                    cliente: clienteState.cliente as Cliente,
                     completado: false,
                     pagado: pagada ?? false,
                     id: listaState.id,
@@ -112,12 +114,32 @@ function GenerarPage() {
             });
     };
 
+    useEffect(()=>{
+       
+        if(clienteState.clientes.length > 1){
+            push('generar/para')
+        }
+        if(clienteState.clientes.length === 1){
+            const cliente = clienteState.clientes[0]
+            dispatch(seleccionarCliente({...cliente,status: 'sent'}))
+        }
+    },[clienteState.clientes])
+
+
+
     return (
         <>
             {cargando ? (
                 <Loader texto="registrando..." />
             ) : (
                 <div className="flex flex-col gap-y-4 ">
+                    {/* <button
+                        className="text-secondary-100"
+                        onClick={()=>console.log(clienteState.clientes)
+                        }
+                    >IMPRIMIR</button> */}
+                    {/* <p className="text-secondary-100">final: {finalTranscript}</p> */}
+                    {/* <pre className="text-secondary-100">{JSON.stringify(clienteState.cliente,null,2)}</pre> */}
                     <Header
                         childrenLeft={
                             <Link href="/" className="text-2xl">
@@ -132,9 +154,9 @@ function GenerarPage() {
                     />
 
                     <SuperTitle>
-                        {nombreCliente ? (
+                        {clienteState.cliente ? (
                             <p className="text-2xl capitalize">
-                                {nombreCliente}
+                                {clienteState.cliente.nombres}
                             </p>
                         ) : (
                             <p className=" font-bold text-2xl">Lista para:</p>
@@ -153,9 +175,9 @@ function GenerarPage() {
                             <p className="text-secondary-200">
                                 Aún no ha añadido ningun producto a la lista,
                                 ver lista de{" "}
-                                <span className="text-secondary-100">
+                                <Link href="/configuracion" className="text-secondary-100">
                                     comandos
-                                </span>{" "}
+                                </Link>{" "}
                                 de voz para empezar a registrar los productos
                             </p>
                         )}

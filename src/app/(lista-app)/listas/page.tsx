@@ -2,82 +2,32 @@
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { dateFormat, moneyFormat } from "@/interfaces/mapper";
-import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { useAppSelector } from "@/redux/hooks";
 import { useGetListasQuery } from "@/redux/services/listaApi";
 import { Header } from "@/app/components/Header";
 import { IconCalendar, IconHome } from "@/app/components/Icons";
 import { SuperTitle } from "@/app/components/SuperTitle";
 import ListasSkeleton from "./listas.skeleton";
-import SelectDate from "@/app/components/SelectDate";
 import { DateType } from "react-tailwindcss-datepicker";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { Lista } from "@/interfaces/list.interface";
-import dayjs from "dayjs";
+import { generarTextoFecha } from "@/app/utils/front.global.utils";
+import { formatText } from "@/interfaces/FormatReact";
 
 function ListasPage() {
-    const { startDate, endDate } = useAppSelector(
-        (state) => state.listaReducer
-    );
+    const { searchParams } = useAppSelector((state) => state.globalReducer);
+    const { cliente } = useAppSelector((state) => state.clienteReducer);
 
     const [pageNumber, setPageNumber] = useState(1);
     const [dataAcumulada, setDataAcumulada] = useState<Lista[]>([]);
 
-    const { isLoading, isFetching, data, error } = useGetListasQuery({
-        startDate: startDate as DateType,
-        endDate: endDate as DateType,
+    const { data, isFetching, isLoading } = useGetListasQuery({
+        startDate: searchParams.startDate as DateType,
+        endDate: searchParams.endDate as DateType,
         page: pageNumber,
         pageSize: 10,
+        texto: cliente?.nombres ?? "",
     });
-
-    function generarTextoFecha(startDateStr: any, endDateStr: any) {
-        // Convertir las cadenas de texto en objetos dayjs
-        const startDate = dayjs(startDateStr);
-        const endDate = dayjs(endDateStr);
-
-        const today = dayjs();
-        const diffDays = endDate.diff(startDate, "day");
-
-        if (today.isSame(startDate, "day") && today.isSame(endDate, "day")) {
-            return "De hoy";
-        } else if (
-            diffDays === 2 ||
-            (diffDays === 3 && today.isSame(endDate, "day"))
-        ) {
-            return "De los últimos 3 días";
-        } else if (
-            diffDays === 6 ||
-            (diffDays === 7 && today.isSame(endDate, "day"))
-        ) {
-            return "De los últimos 7 días";
-        } else if (
-            today.isSame(startDate, "week") &&
-            today.isSame(endDate, "week")
-        ) {
-            return "De esta semana";
-        } else if (
-            startDate.isSame(today.startOf("month"), "day") &&
-            endDate.isSame(today.endOf("month"), "day")
-        ) {
-            return "De este mes";
-        } else if (
-            startDate.isSame(today.startOf("month"), "day") &&
-            endDate.isSame(today.subtract(1, "day"))
-        ) {
-            return "De este mes";
-        } else if (
-            startDate.isSame(
-                today.subtract(1, "month").startOf("month"),
-                "day"
-            ) &&
-            endDate.isSame(today.subtract(1, "month").endOf("month"), "day")
-        ) {
-            return "Del mes pasado";
-        } else {
-            return `${startDate.format("DD-MM-YYYY")} a ${endDate.format(
-                "DD-MM-YYYY"
-            )}`;
-        }
-    }
 
     useEffect(() => {
         if (data) {
@@ -92,7 +42,6 @@ function ListasPage() {
             {isLoading ? (
                 <ListasSkeleton />
             ) : (
-                // <Loader texto="cargando listas..." />
                 <div className="flex flex-col gap-y-3">
                     <Header
                         childrenLeft={
@@ -101,21 +50,17 @@ function ListasPage() {
                             </Link>
                         }
                         childrenRight={
-                            <Link
-                                href="/listas/selectdate"
-                                className="cursor-pointer"
-                            >
+                            <Link href="/filtrar" className="cursor-pointer">
                                 <IconCalendar />
                             </Link>
                         }
                     />
-                    <SuperTitle>
-                        <p className="text-4xl">
-                            <span>Todas</span>
-                            <br /> <span>Las listas</span>
-                        </p>
+                    <SuperTitle title={formatText("Todas Las listas")}>
                         <p className="text-base font-medium text-secondary-200 break-words">
-                           {generarTextoFecha(startDate, endDate)}{" "}
+                            {generarTextoFecha(
+                                searchParams.startDate,
+                                searchParams.endDate
+                            )}{" "}
                             <span className="text-secondary-100">
                                 {data?.cantidad ?? 0} items
                             </span>
@@ -123,48 +68,9 @@ function ListasPage() {
                     </SuperTitle>
 
                     <div
-                        // className="flex flex-col gap-y-4 overflow-y-scroll pb-20"
                         id="scrollableDiv"
                         className="h-[calc(100vh-320px)] overflow-y-scroll"
                     >
-                        <InfiniteScroll
-                            dataLength={data?.cantidad ?? 0}
-                            next={() => setPageNumber(pageNumber + 1)} // Incrementa el número de página
-                            hasMore={
-                                dataAcumulada.length < (data?.cantidad ?? 0)
-                            } // Verifica si hay más datos disponibles
-                            loader={
-                                <h4 className="text-secondary-200">
-                                    Cargando...
-                                </h4>
-                            }
-                            scrollableTarget="scrollableDiv"
-                            className="flex flex-col gap-y-3 pb-20"
-                            // endMessage={<p>NO HAY MAS DATA</p>}
-                        >
-                            {dataAcumulada?.map((lista, index: any) => (
-                                <Link
-                                    href={`/listas/${lista.id}`}
-                                    className="text-secondary-100 bg-primary-100 px-3 cursor-pointer flex  rounded-lg  py-4"
-                                    key={index}
-                                >
-                                    <div className="w-full ">
-                                        <div className="flex justify-between text-lg">
-                                            <span className="capitalize">
-                                                {lista.nombreCliente}
-                                            </span>
-                                            <span>
-                                                {moneyFormat(lista.montoTotal)}
-                                            </span>
-                                        </div>
-                                        <p className="text-secondary-200 text-sm">
-                                            {dateFormat(lista.createdAt)}
-                                        </p>
-                                    </div>
-                                </Link>
-                            ))}
-                        </InfiniteScroll>
-
                         {dataAcumulada?.length === 0 && (
                             <Link
                                 href="/generar"
@@ -187,6 +93,40 @@ function ListasPage() {
                                 Crear lista
                             </Link>
                         )}
+                        <InfiniteScroll
+                            dataLength={data?.cantidad ?? 0}
+                            next={() => setPageNumber(pageNumber + 1)}
+                            hasMore={isFetching}
+                            loader={
+                                <h4 className="text-secondary-200">
+                                    Cargando...
+                                </h4>
+                            }
+                            scrollableTarget="scrollableDiv"
+                            className="flex flex-col gap-y-3 pb-20"
+                        >
+                            {dataAcumulada?.map((lista, index: any) => (
+                                <Link
+                                    href={`/listas/${lista.id}`}
+                                    className="text-secondary-100 bg-primary-100 px-3 cursor-pointer flex  rounded-lg  py-4"
+                                    key={index}
+                                >
+                                    <div className="w-full ">
+                                        <div className="flex justify-between text-lg">
+                                            <span className="capitalize">
+                                                {lista.cliente.nombres}
+                                            </span>
+                                            <span>
+                                                {moneyFormat(lista.montoTotal)}
+                                            </span>
+                                        </div>
+                                        <p className="text-secondary-200 text-sm">
+                                            {dateFormat(lista.createdAt)}
+                                        </p>
+                                    </div>
+                                </Link>
+                            ))}
+                        </InfiniteScroll>
                     </div>
                 </div>
             )}

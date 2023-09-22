@@ -13,7 +13,7 @@ import OptionsMenu from "@/app/components/Popover/Popover";
 import { SuperTitle } from "@/app/components/SuperTitle";
 import { formatText } from "@/interfaces/FormatReact";
 import { dateFormat, formatNameTitle, moneyFormat } from "@/interfaces/mapper";
-import { obtenerImagenLista,  } from "@/redux/chunks/listaChunk";
+import { obtenerImagenLista } from "@/redux/chunks/listaChunk";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import {
     useGetListaByIdQuery,
@@ -27,26 +27,26 @@ import ListasIdSkeleton from "./lista.skeleton";
 import { updateLista } from "@/redux/features/listaSlice";
 import { Lista } from "@/interfaces/list.interface";
 import { useRouter } from "next/navigation";
+import { seleccionarCliente } from "@/redux/features/clienteSlice";
+import { Cliente } from "@/interfaces/client.interface";
 
 interface IParams {
     listaId: string;
 }
 
 function ListasIdPage({ params }: { params: IParams }) {
-
     const { isLoading, isFetching, data, error } = useGetListaByIdQuery({
         id: params.listaId,
     });
 
     const { push } = useRouter();
     const dispatch = useAppDispatch();
- 
-
 
     const actualizarLista = () => {
         dispatch(updateLista(data as Lista));
+        dispatch(seleccionarCliente(data?.cliente as Cliente));
         push(`/generar`);
-    }
+    };
 
     return (
         <>
@@ -57,12 +57,14 @@ function ListasIdPage({ params }: { params: IParams }) {
                     <Header
                         childrenLeft={
                             <Link href="/listas" className="text-2xl">
-                                <IconLists />
+                                <IconLists estilo="" />
                             </Link>
                         }
                         childrenRight={
-                            <OptionsMenu 
-                                imprimirLista={()=>dispatch(obtenerImagenLista(data as any))}
+                            <OptionsMenu
+                                imprimirLista={() =>
+                                    dispatch(obtenerImagenLista(data as any))
+                                }
                                 actualizarLista={actualizarLista}
                             >
                                 <div className="w-full h-full flex items-center justify-center">
@@ -72,26 +74,20 @@ function ListasIdPage({ params }: { params: IParams }) {
                         }
                     />
 
-                    <div className="">
-                        <SuperTitle>
-                            <p className="text-4xl">
-                                {formatText(data?.nombreCliente ?? "")}
-                            </p>
-                            <p className="text-lg font-medium text-secondary-200">
-                                {dateFormat(data?.createdAt)}
-                            </p>
-                            <p className="text-lg font-medium text-secondary-200">
-                                Lista {data?.pagado ? "pagada" : "no pagada"}{" "}
-                                <span className="text-secondary-100">
-                                    {moneyFormat(data?.montoTotal)}
-                                </span>
-                            </p>
-                        </SuperTitle>
-                    </div>
+                    <SuperTitle title={formatText(data?.cliente.nombres ?? "")}>
+                        <div className="text-lg text-secondary-200">
+                            <p className="capitalize">{dateFormat(data?.createdAt)}</p>
+                            <p>Lista pagada: No</p>
+                            <p>Adelanto: S/. 100.00</p>
+                        </div>
+                    </SuperTitle>
 
                     <div>
-                        <p className="text-secondary-100 font-semibold pb-2">
-                            PRODUCTOS
+                        <p className="font-semibold pb-2 text-secondary-200 uppercase">
+                            <span className="text-secondary-100">
+                                S/. 64.00 {" "}
+                            </span>
+                            10 Productos{" "}
                         </p>
                         <div className="flex flex-col gap-y-4 h-[calc(100vh-320px)] pb-32 overflow-x-hidden overflow-y-scroll">
                             {data?.items.map((item, index) => (

@@ -25,7 +25,11 @@ export async function GET(request: Request, { params }: GetParams) {
                 id: clienteId,
             },
             include: {
-                listas: true
+                listas: {
+                    include:{
+                        items:true
+                    }
+                }
             }
           
         });

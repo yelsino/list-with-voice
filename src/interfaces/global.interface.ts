@@ -17,5 +17,6 @@ export interface ResponseParams<T> {
     status?: boolean;
     message?: string;
     metodo?: string;
+    cantidad: number;
     data: T;
 }

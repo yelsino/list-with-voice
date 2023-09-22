@@ -27,11 +27,10 @@ export default function RootLayout({
                     <div className="max-w-sm mx-auto py-10 px-4  w-full  sm:h-[calc(100vh-100px)] sm:rounded-3xl flex flex-col gap-y-3 relative bg-primary bg-primary-200 ">
                         <Providers>
                             <VoiceControlProvider>
-                                {children}
+                                <div className="flex flex-col">{children}</div>
                                 <Voice />
                                 <ButtonBack />
                                 <ButtonRegister />
-                                <div></div>
                             </VoiceControlProvider>
                         </Providers>
 

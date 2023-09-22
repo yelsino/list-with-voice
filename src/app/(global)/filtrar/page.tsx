@@ -6,18 +6,20 @@ import { SuperTitle } from "@/app/components/SuperTitle";
 import Link from "next/link";
 import AutoComplete from "./AutoComplete";
 import { useAppDispatch } from "@/redux/hooks";
-import { selectDate } from "@/redux/features/listaSlice";
 import { useState } from "react";
 import { IconDelete, IconLists } from "@/app/components/Icons";
 import { useRouter } from "next/navigation";
+import { cleanSearchParams } from "@/redux/features/globalSlice";
+import { seleccionarCliente } from "@/redux/features/clienteSlice";
+import { formatText } from "@/interfaces/FormatReact";
 
 function FiltrarPage() {
     const dispatch = useAppDispatch();
-    const [selected, setSelected] = useState<any>({})
+    // const [selected, setSelected] = useState<Cliente | null>(null)
     const router = useRouter()
     const resetFiltros = () => {
-        dispatch(selectDate({ endDate: null, startDate: null }));
-        setSelected({})
+        dispatch(cleanSearchParams());
+        dispatch(seleccionarCliente(null))
     };
 
     return (
@@ -34,11 +36,7 @@ function FiltrarPage() {
                     </div>
                 }
             />
-            <SuperTitle>
-                <p className="text-4xl">
-                    <span>Filtros</span>
-                    <br /> <span>De busqueda</span>
-                </p>
+            <SuperTitle  title={formatText("Filtros De busqueda")}>
                 <p className="text-base font-medium text-secondary-200 break-words">
                     <span className="text-secondary-200">
                         Tambien te puede interesar ver los comandos de filtros
@@ -48,7 +46,7 @@ function FiltrarPage() {
                 </p>
             </SuperTitle>
                
-            <AutoComplete selected={selected} setSelected={setSelected}   />
+            <AutoComplete />
             <SelectDate />
             <button onClick={()=> router.back()} className="bg-secondary-100 p-3 rounded-lg text-black font-semibold">
                 Aplicar Filtro

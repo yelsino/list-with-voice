@@ -21,11 +21,15 @@ export const globalSlice = createSlice({
             state.searchParams = action.payload;
         },
         cleanSearchParams: (state) => {
-            state.searchParams = initialState.searchParams;
+            state.searchParams = {
+                ...initialState.searchParams,
+                startDate: null,
+                endDate: null,
+            };
         },
     },
 });
 
-export const { udateSearchParams,cleanSearchParams  } = globalSlice.actions;
+export const { udateSearchParams, cleanSearchParams } = globalSlice.actions;
 
 export default globalSlice.reducer;

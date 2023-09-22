@@ -1,18 +1,18 @@
 import { ISODateString } from "next-auth";
 import { DateType } from "react-tailwindcss-datepicker";
 import { Usuario } from "./user.interface";
+import { Cliente } from "./client.interface";
 
 export interface ListaState {
     id?: string;
-    nombreCliente: string;
     itemsList: ItemList[];
     itemSelected: ItemList | null;
     montoTotal?: number;
     edit?: boolean;
     pagada?: boolean;
     cargando?: boolean;
-    startDate?: DateType;
-    endDate?: DateType;
+    // startDate?: DateType;
+    // endDate?: DateType;
 }
 
 export type Status = "pending" | "sent" | "success" | "error" | "updating";
@@ -42,7 +42,7 @@ export interface Lista {
     numero?: number;
     clienteId?: string;
     items: ItemList[];
-    nombreCliente: string;
+    cliente: Cliente; 
     pagado: boolean;
     completado: boolean;
     montoTotal?: number;

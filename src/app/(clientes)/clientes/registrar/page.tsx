@@ -66,7 +66,7 @@ function ClientesPage() {
                 <p className="text-base font-medium text-secondary-200 break-words">
                     <span className="text-secondary-200">
                         Crea rapidamente clientes. utilizando los comandos de
-                        voz, <span className="text-secondary-100">click</span>{" "}
+                        voz, <Link href="/configuracion" className="text-secondary-100">click</Link>{" "}
                         aqui para ver los comandos
                     </span>
                 </p>

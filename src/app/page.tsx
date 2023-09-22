@@ -1,36 +1,60 @@
 "use client";
 import "regenerator-runtime/runtime";
 import Link from "next/link";
-import { IconAddUser, IconConfig, IconLists, IconSave, IconUsers } from "./components/Icons";
+import {
+    IconAddUser,
+    IconConfig,
+    IconLists,
+    IconSave,
+    IconUsers,
+} from "./components/Icons";
 import { Header } from "./components/Header";
 import { Puntos } from "./components/Puntos";
 import { SuperTitle } from "./components/SuperTitle";
+import * as Realm from "realm-web";
+import { useEffect, useState } from "react";
 
 export default function Home() {
+    const [dataSet, setDataSet] = useState([]);
+
+    // const getData = async () => {
+    //     const app = new Realm.App({ id: "<YOUR_APP_ID>" });
+    //     const credentials = Realm.Credentials.anonymous();
+    //     try {
+    //       const user = await app.logIn(credentials);
+    //       user.
+    //     } catch(err) {
+    //       console.error("Failed to log in", err);
+    //     }
+
+    // };
 
     const items = [
         {
-            title: 'crear lista',
-            url: '/generar',
-            icon: <IconSave estilo=""/>
+            title: "crear lista",
+            url: "/generar",
+            icon: <IconSave estilo="" />,
         },
         {
-            title: 'ver listas',
-            url: '/listas',
-            icon: <IconLists estilo=""/>
+            title: "ver listas",
+            url: "/listas",
+            icon: <IconLists estilo="" />,
         },
         {
-            title: 'crear cliente',
-            url: '/clientes/registrar',
-            icon: <IconAddUser/>
+            title: "crear cliente",
+            url: "/clientes/registrar",
+            icon: <IconAddUser />,
         },
         {
-            title: 'ver clientes',
-            url: '/clientes',
-            icon: <IconUsers estilo=""/>
+            title: "ver clientes",
+            url: "/clientes",
+            icon: <IconUsers estilo="" />,
         },
-        
-    ]
+    ];
+
+    // useEffect(() => {
+    //     getData()
+    // }, []);
 
     return (
         <>
@@ -41,11 +65,12 @@ export default function Home() {
                     </Link>
                 }
                 childrenRight={
-                    <Link href="/listas" className="w-full h-full ">
-                        <Puntos />
+                    <Link href="/listas">
+                        <IconLists estilo="" />
                     </Link>
                 }
             />
+
 
             <SuperTitle>
                 <p className="">
@@ -61,50 +86,10 @@ export default function Home() {
                 </div>
             </div>
 
-            {/* <Link
-                href="/generar"
-                className="text-secondary-100 flex mt-3  gap-x-2 cursor-pointer"
-            >
-                <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth={1.5}
-                    stroke="currentColor"
-                    className="w-6 h-6 "
-                >
-                    <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m3.75 9v6m3-3H9m1.5-12H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"
-                    />
-                </svg>
-                Crear lista
-            </Link>
-            <Link
-                href="/generar"
-                className="text-secondary-100 flex mt-3  gap-x-2 cursor-pointer"
-            >
-                <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth={1.5}
-                    stroke="currentColor"
-                    className="w-6 h-6 "
-                >
-                    <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m3.75 9v6m3-3H9m1.5-12H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"
-                    />
-                </svg>
-                Crear lista
-            </Link> */}
-
             <div className="flex gap-5 flex-wrap">
                 {items.map((item, i) => (
-                    <Link href={item.url}
+                    <Link
+                        href={item.url}
                         key={i}
                         className="text-secondary-100 text-xl bg-primary-100 p-3 rounded-lg flex flex-col justify-center items-center w-24 cursor-pointer"
                     >

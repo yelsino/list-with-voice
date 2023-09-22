@@ -27,7 +27,8 @@ export async function GET(request: Request, { params }: GetParams) {
                 id: listaId,
             },
             include: {
-                items: true, // Incluimos los items relacionados en la respuesta
+                items: true, 
+                cliente: true,
             },
         });
 

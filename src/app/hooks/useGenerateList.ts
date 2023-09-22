@@ -1,14 +1,9 @@
 import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
-import {
-    useConvertVoiceToItemMutation,
-    useRegistrarListDBMutation,
-} from "@/redux/services/listaApi";
+import { useConvertVoiceToItemMutation } from "@/redux/services/listaApi";
 import {
     addItemsToList,
-    limpiarLista,
     listaPagada,
-    nameLista,
     selectItem,
     updateItem,
     updateItems,
@@ -18,30 +13,37 @@ import { comando } from "../components/Voice/comandos";
 import {
     buildCommandRegex,
     responseToItemList,
-    mapItemToList,
     stringToItem,
 } from "@/interfaces/mapper";
 import { useSpeechRecognition } from "react-speech-recognition";
-import toast, { Toaster } from "react-hot-toast";
 import { ItemList } from "@/interfaces/list.interface";
+import { obtenerClientes } from "@/redux/chunks/clienteChunck";
+import toast from "react-hot-toast";
+import { seleccionarCliente } from "@/redux/features/clienteSlice";
+import { Cliente } from "@/interfaces/client.interface";
 
 interface Props {
     resetTranscript: () => void;
     finalTranscript: string;
+    interimTranscript: string;
 }
 
 const breakPhrases = ["punto", "mas", "más", "coma", "\\+"];
 
-function useGenerateList({ resetTranscript, finalTranscript }: Props) {
+function useGenerateList({
+    resetTranscript,
+    finalTranscript,
+    interimTranscript,
+}: Props) {
     const pathname = usePathname();
-    const { push } = useRouter();
     const dispatch = useAppDispatch();
 
     const [convertVoiceToItem] = useConvertVoiceToItemMutation();
 
-    const { itemsList, nombreCliente, pagada, itemSelected } = useAppSelector(
+    const { itemsList, itemSelected } = useAppSelector(
         (state) => state.listaReducer
     );
+    const clienteState = useAppSelector((state) => state.clienteReducer);
 
     const commands = [
         {
@@ -60,13 +62,19 @@ function useGenerateList({ resetTranscript, finalTranscript }: Props) {
         },
         {
             command: "lista para *",
-            callback: (algo: any) => {
-                dispatch(nameLista(algo));
+            callback: (texto: string) => {
+                dispatch(
+                    seleccionarCliente({
+                        celular: "",
+                        nombres: texto,
+                        status: "pending",
+                    })
+                );
             },
             matchInterim: true,
         },
         {
-            command: buildCommandRegex(comando.finishList),
+            command: buildCommandRegex(comando.lista.cerrar),
             callback: async () => {},
         },
     ];
@@ -153,15 +161,13 @@ function useGenerateList({ resetTranscript, finalTranscript }: Props) {
             dispatch(updateItem({ ...item, id: itemSelected.id }));
         }
 
-        // update
-
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [finalTranscript]);
 
     useEffect(() => {
         if (pathname !== "/generar") return;
         const itemsNoSend: ItemList[] = itemsList
-            .filter((item) => item.status === "pending") 
+            .filter((item) => item.status === "pending")
             .map((item) => ({ ...item, status: "sent" }));
 
         if (itemsNoSend.length > 0) {
@@ -170,6 +176,39 @@ function useGenerateList({ resetTranscript, finalTranscript }: Props) {
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [itemsList]);
+
+    useEffect(() => {
+        if (finalTranscript && clienteState.cliente?.status === "pending") {
+            toast
+                .promise(
+                    dispatch(
+                        obtenerClientes({
+                            startDate: null,
+                            endDate: null,
+                            page: 1,
+                            pageSize: 20,
+                            texto: clienteState.cliente?.nombres ?? "",
+                        })
+                    ),
+                    {
+                        loading: "Verificando clientes...",
+                        success: "Verificación completa",
+                        error: "Error al verificar",
+                    }
+                )
+                .then((res: any) => {
+                    if (res.payload.length === 0) {
+                        dispatch(
+                            seleccionarCliente({
+                                ...clienteState.cliente,
+                                status: "sent",
+                            } as Cliente)
+                        );
+                    }
+                    resetTranscript();
+                });
+        }
+    }, [finalTranscript]);
 }
 
 export default useGenerateList;

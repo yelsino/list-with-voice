@@ -6,7 +6,8 @@ import getCurrentUser from "@/actions/getCurrentUser";
 import {
     createSearchParams,
     dateStringToStringISO,
-} from "../utils/global.utils";
+} from "../utils/back.global.utils";
+
 // import { Lista } from "@/interfaces/list.interface";
 const prisma = new PrismaClient();
 
@@ -16,30 +17,46 @@ export async function POST(request: Request) {
     const body: Lista = await request.json();
 
     try {
-        // const currentUser = await getCurrentUser();
-
-        if (!body.clienteId) return NextResponse.error();
+        const currentUser = await getCurrentUser();
+        
+        if (!currentUser) {
+            return NextResponse.error();
+        }
 
         const ordenLista = await prisma.lista.count();
 
-        // calcular monto total
         const montoTotal = montoTotalLista(body.items);
 
         const completado = body.items.every(
             (item) => item.status === "success"
         );
 
+        let clienteId: string = "";
+        if (!body.cliente.id) {
+            const nuevoCliente = await prisma.cliente.create({
+                data: {
+                    celular: body.cliente.celular,
+                    nombres: body.cliente.nombres,
+                    usuarioId: currentUser.id,
+                },
+            });
+
+            clienteId = nuevoCliente.id;
+        }else {
+            clienteId = body.cliente.id as string;
+        }
+
+
         const nuevaLista = await prisma.lista.create({
             data: {
                 numero: ordenLista + 1,
-                nombreCliente: body.nombreCliente,
                 montoTotal: montoTotal,
                 pagado: body.pagado,
                 completado: completado,
                 items: {
                     create: body.items.map((item) => generarItemListBD(item)),
                 },
-                clienteId: body.clienteId,
+                clienteId: clienteId,
             },
             include: {
                 items: true,
@@ -48,6 +65,8 @@ export async function POST(request: Request) {
 
         return NextResponse.json(nuevaLista);
     } catch (error) {
+        console.log(error);
+        
         NextResponse.error();
     }
 }
@@ -75,6 +94,7 @@ export async function GET(request: NextRequest) {
             cliente: {
                 nombres: {
                     contains: textfilter,
+                    mode: 'insensitive'
                 },
             },
         },
@@ -86,7 +106,7 @@ export async function GET(request: NextRequest) {
         where,
         skip,
         take,
-        include: { items: true },
+        include: { items: true, cliente: true },
     });
 
     return NextResponse.json({
@@ -114,9 +134,9 @@ export async function PUT(request: Request) {
     const listaActualizada = await prisma.lista.update({
         where: { id: body.id },
         data: {
-            nombreCliente: body.nombreCliente,
             montoTotal: montoTotalNuevo,
             pagado: body.pagado,
+            clienteId: body.cliente.id ?? "",
             completado: body.items.every((item) => item.status === "success"),
             items: {
                 upsert: body.items.map((item) => ({

@@ -1,13 +1,15 @@
-
 interface Props {
     children: React.ReactNode;
+    title: React.ReactNode;
 }
 
-export const SuperTitle = ({ children }:Props) => {
+export const SuperTitle = ({ title, children }: Props) => {
     return (
-        <div className="text-5xl font-black  font-catamaran  leading-tight text-secondary-100  ">
-           {children}
+        <div className="font-catamaran">
+            <p className="text-4xl capitalize text-secondary-100 font-black   leading-tight  ">
+                {title}
+            </p>
+            {children}
         </div>
     );
 };
-

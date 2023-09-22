@@ -7,75 +7,26 @@ import { IconCalendar, IconHome } from "@/app/components/Icons";
 import { SuperTitle } from "@/app/components/SuperTitle";
 import { DateType } from "react-tailwindcss-datepicker";
 import InfiniteScroll from "react-infinite-scroll-component";
-import dayjs from "dayjs";
 import { Cliente } from "@/interfaces/client.interface";
 import { useGetCostumersQuery } from "@/redux/services/clienteApi";
+import { generarTextoFecha } from "@/app/utils/front.global.utils";
+import { UserCircleIcon } from "@heroicons/react/20/solid";
+import { formatText } from "@/interfaces/FormatReact";
 
 function ClientesPage() {
-    const { startDate, endDate } = useAppSelector(
-        (state) => state.listaReducer
-    );
+    const { searchParams } = useAppSelector((state) => state.globalReducer);
 
     const [pageNumber, setPageNumber] = useState(1);
     const [dataAcumulada, setDataAcumulada] = useState<Cliente[]>([]);
+    const { cliente } = useAppSelector((state) => state.clienteReducer);
 
-    const { data } = useGetCostumersQuery({
-        startDate: startDate as DateType,
-        endDate: endDate as DateType,
+    const { data, isFetching } = useGetCostumersQuery({
+        startDate: searchParams.startDate as DateType,
+        endDate: searchParams.endDate as DateType,
         page: pageNumber,
         pageSize: 10,
-        texto: "",
+        texto: cliente?.nombres ?? "",
     });
-
-    function generarTextoFecha(startDateStr: any, endDateStr: any) {
-        // Convertir las cadenas de texto en objetos dayjs
-        const startDate = dayjs(startDateStr);
-        const endDate = dayjs(endDateStr);
-
-        const today = dayjs();
-        const diffDays = endDate.diff(startDate, "day");
-
-        if (today.isSame(startDate, "day") && today.isSame(endDate, "day")) {
-            return "De hoy";
-        } else if (
-            diffDays === 2 ||
-            (diffDays === 3 && today.isSame(endDate, "day"))
-        ) {
-            return "De los últimos 3 días";
-        } else if (
-            diffDays === 6 ||
-            (diffDays === 7 && today.isSame(endDate, "day"))
-        ) {
-            return "De los últimos 7 días";
-        } else if (
-            today.isSame(startDate, "week") &&
-            today.isSame(endDate, "week")
-        ) {
-            return "De esta semana";
-        } else if (
-            startDate.isSame(today.startOf("month"), "day") &&
-            endDate.isSame(today.endOf("month"), "day")
-        ) {
-            return "De este mes";
-        } else if (
-            startDate.isSame(today.startOf("month"), "day") &&
-            endDate.isSame(today.subtract(1, "day"))
-        ) {
-            return "De este mes";
-        } else if (
-            startDate.isSame(
-                today.subtract(1, "month").startOf("month"),
-                "day"
-            ) &&
-            endDate.isSame(today.subtract(1, "month").endOf("month"), "day")
-        ) {
-            return "Del mes pasado";
-        } else {
-            return `${startDate.format("DD-MM-YYYY")} a ${endDate.format(
-                "DD-MM-YYYY"
-            )}`;
-        }
-    }
 
     useEffect(() => {
         if (data) {
@@ -104,16 +55,12 @@ function ClientesPage() {
                             </Link>
                         }
                     />
-                    <SuperTitle>
-                        <p className="text-4xl">
-                            <span>Todos</span>
-                            <br /> <span>Los clientes</span>
-                        </p>
+                    <SuperTitle  title={formatText("Todos Los clientes")}>
                         <p className="text-base font-medium text-secondary-200 break-words">
-                            {generarTextoFecha(startDate, endDate)}{" "}
-                            <span className="text-secondary-100">
-                                {/* {data?.cantidad ?? 0} items */}
-                            </span>
+                            {generarTextoFecha(
+                                searchParams.startDate,
+                                searchParams.endDate
+                            )}{" "}
                         </p>
                     </SuperTitle>
 
@@ -145,9 +92,9 @@ function ClientesPage() {
                         className="h-[calc(100vh-320px)] overflow-y-scroll"
                     >
                         <InfiniteScroll
-                            dataLength={30}
+                            dataLength={data?.cantidad ?? 0}
                             next={() => setPageNumber(pageNumber + 1)}
-                            hasMore={true}
+                            hasMore={isFetching}
                             loader={
                                 <h4 className="text-secondary-200">
                                     Cargando...
@@ -159,10 +106,18 @@ function ClientesPage() {
                             {dataAcumulada?.map((cliente, index: any) => (
                                 <Link
                                     href={`/clientes/${cliente.id}`}
-                                    className="text-secondary-100 bg-primary-100 px-3 cursor-pointer flex  rounded-lg  py-4"
+                                    className="text-secondary-100 bg-primary-100 px-3 cursor-pointer flex  rounded-lg  py-4 items-center gap-x-3"
                                     key={index}
                                 >
-                                    {cliente.nombres}
+                                    <UserCircleIcon height={28} width={28} />
+                                    <div className="flex flex-col">
+                                        <span className="capitalize text-lg">
+                                            {cliente.nombres}
+                                        </span>
+                                        <span className="text-secondary-200">
+                                            Celular: 939616350
+                                        </span>
+                                    </div>
                                 </Link>
                             ))}
                         </InfiniteScroll>

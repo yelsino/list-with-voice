@@ -2,40 +2,10 @@ import { NextRequest, NextResponse } from "next/server";
 import { Prisma, PrismaClient } from "@prisma/client";
 import getCurrentUser from "@/actions/getCurrentUser";
 import { Cliente } from "@/interfaces/client.interface";
-import { ResponseParams } from "@/interfaces/global.interface";
-import {
-    createSearchParams,
-    dateStringToStringISO,
-} from "../utils/global.utils";
+import { createSearchParams, dateStringToStringISO } from "../utils/back.global.utils";
+
 // import { Lista } from "@/interfaces/list.interface";
 const prisma = new PrismaClient();
-
-// localhost/listas/
-// POST
-export async function POST(request: Request) {
-    const body: Cliente = await request.json();
-
-    try {
-        const currentUser = await getCurrentUser();
-
-        if (!currentUser) return NextResponse.error();
-
-        const nuevoUsuario = await prisma.cliente.create({
-            data: {
-                nombres: body.nombres,
-                celular: body.celular,
-                usuarioId: currentUser.id,
-            },
-        });
-
-        return NextResponse.json({
-            data: nuevoUsuario,
-            status: true,
-        });
-    } catch (error) {
-        NextResponse.error();
-    }
-}
 
 export async function GET(request: NextRequest) {
     const currentUser = await getCurrentUser();
@@ -47,7 +17,9 @@ export async function GET(request: NextRequest) {
     const { endDate, skip, startDate, take, textfilter } = createSearchParams(
         request.nextUrl.searchParams
     );
-        console.log("textfilter",textfilter);
+
+    console.log("TEXTO FILTER: ", textfilter);
+    
         
     const where: Prisma.ClienteWhereInput = {
         usuarioId: currentUser.id,
@@ -59,6 +31,7 @@ export async function GET(request: NextRequest) {
             {
                 nombres: {
                     contains: textfilter,
+                    mode: 'insensitive',
                 },
             },
         ],
@@ -77,5 +50,34 @@ export async function GET(request: NextRequest) {
         cantidad,
     });
 }
+
+
+export async function POST(request: Request) {
+    const body: Cliente = await request.json();
+
+    try {
+        const currentUser = await getCurrentUser();
+
+        if (!currentUser) return NextResponse.error();
+
+        const nuevoUsuario = await prisma.cliente.create({
+            data: {
+                nombres: body.nombres,
+                celular: body.celular,
+                usuarioId: currentUser.id,
+                
+            },
+        });
+
+        return NextResponse.json({
+            data: nuevoUsuario,
+            status: true,
+        });
+    } catch (error) {
+        NextResponse.error();
+    }
+}
+
+
 
 export async function PUT(request: Request) {}

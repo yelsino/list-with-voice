@@ -2,13 +2,15 @@ import { configureStore } from "@reduxjs/toolkit";
 import { listaApi } from "./services/listaApi";
 
 import listaReducer from "./features/listaSlice";
+import clienteReducer from "./features/clienteSlice";
 import globalReducer from './features/globalSlice'
 import { setupListeners } from "@reduxjs/toolkit/dist/query";
 import { clienteApi } from "./services/clienteApi";
 
 export const store = configureStore({
   reducer: {
-    listaReducer,
+    listaReducer, 
+    clienteReducer,
     globalReducer,
     [listaApi.reducerPath]: listaApi.reducer,
     [clienteApi.reducerPath]: clienteApi.reducer,

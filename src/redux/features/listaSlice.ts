@@ -12,19 +12,12 @@ import { format, subDays, startOfWeek, endOfWeek } from "date-fns";
 
 const initialState: ListaState = {
     id: "",
-    nombreCliente: "",
     itemsList: [],
     itemSelected: null,
     montoTotal: 0,
     edit: false,
     pagada: false,
     cargando: false,
-    startDate: format(
-        subDays(new Date(), 7),
-        "yyyy-MM-dd"
-    ),
-    endDate: format(new Date(), "yyyy-MM-dd"),
-    
 };
 
 export const listaSlice = createSlice({
@@ -41,9 +34,7 @@ export const listaSlice = createSlice({
             state.itemsList = state.itemsList.concat(missingVoices);
             
         },
-        nameLista: (state, action: PayloadAction<string>) => {
-            state.nombreCliente = action.payload;
-        },
+       
         sumarLista: (state, action: PayloadAction<number>) => {
             state.montoTotal = action.payload;
         },
@@ -67,7 +58,6 @@ export const listaSlice = createSlice({
             const itemIndex = state.itemsList.findIndex(
                 (item) => item.id === action.payload.id
             );
-
             // actualizar itemsList con el nuevo item
             if (itemIndex !== -1) {
                 state.itemsList[itemIndex] = action.payload;
@@ -86,20 +76,16 @@ export const listaSlice = createSlice({
             state.itemSelected = action.payload;
         },
         updateLista: (state, action: PayloadAction<Lista>) => {
-            console.log("voy a actualziar");
 
-            const { items, nombreCliente, pagado, id } = action.payload;
-
-            state.nombreCliente = nombreCliente;
+            const { items, pagado, id } = action.payload;
+           
             state.itemsList = items;
+
             state.edit = true;
             state.pagada = pagado;
             state.id = id;
         },
-        selectDate: (state, action:PayloadAction<DateValueType>)=>{
-            state.startDate = action.payload?.startDate
-            state.endDate = action.payload?.endDate
-        }
+     
     },
     extraReducers: (builder) => {
         builder.addCase(obtenerImagenLista.fulfilled, (state, action) => {
@@ -118,7 +104,6 @@ export const listaSlice = createSlice({
 export const {
     addItemsToList,
     updateItems,
-    nameLista,
     sumarLista,
     limpiarLista,
     listaPagada,
@@ -127,7 +112,6 @@ export const {
     updateItem,
     selectItem,
     updateLista,
-    selectDate
 } = listaSlice.actions;
 
 export default listaSlice.reducer;

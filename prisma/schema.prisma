@@ -29,7 +29,7 @@ model Tienda {
 model Cliente {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
   usuario   Usuario  @relation(fields: [usuarioId], references: [id])
-  usuarioId String   @map("clienteId") @db.ObjectId
+  usuarioId String   @map("usuarioId") @db.ObjectId
   nombres   String
   celular   String
   listas    Lista[]
@@ -55,7 +55,6 @@ model Lista {
   clienteId     String     @db.ObjectId
   numero        Int
   items         ItemList[]
-  nombreCliente String
   montoTotal    Float      @default(0)
   pagado        Boolean    @default(false)
   completado    Boolean    @default(false)

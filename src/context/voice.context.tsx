@@ -60,7 +60,7 @@ export const VoiceControlProvider = ({ children }: Props) => {
             matchInterim: true,
         },
         {
-            command: buildCommandRegex(comando.app.goconfig),
+            command: buildCommandRegex(comando.direccion.configuracion),
             callback: () => {
                 push("/configuracion");
                 context.resetTranscript();
@@ -106,7 +106,7 @@ export const VoiceControlProvider = ({ children }: Props) => {
     };
 
 
-    useGenerateList({ finalTranscript, resetTranscript });
+    useGenerateList({ finalTranscript, resetTranscript,interimTranscript  });
 
 
 
