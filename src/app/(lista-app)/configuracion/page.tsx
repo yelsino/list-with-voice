@@ -58,18 +58,21 @@ function ConfiguracionPage() {
                     {Object.entries(comando).map(
                         ([key, subcomandos], index) => {
                             return (
-                                <ItemsComando title={`> Comandos de ${key}`}>
+                                <ItemsComando key={index} title={`> Comandos de ${key}`}>
                                     {Object.entries(subcomandos).map(
                                         ([key2, subcomandos2], index2) => {
                                             return (
                                                 <ItemsComando
+                                                    key={index2}
                                                     title={`> para ${key2}`}
                                                     stilo="ml-6"
                                                 >
                                                     {subcomandos2.map(
-                                                        (comando: any) => {
+                                                        (comando: any,index3) => {
                                                             return (
-                                                                <div className="ml-6 text-secondary-200">
+                                                                <div 
+                                                                    key={index3}
+                                                                    className="ml-6 text-secondary-200">
                                                                     <p>
                                                                         {"-" +
                                                                             comando}
