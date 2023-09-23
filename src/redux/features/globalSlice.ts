@@ -1,7 +1,6 @@
-import { ListaState } from "@/interfaces/list.interface";
+import { GlobalState, SearchParams } from "@/interfaces/global.interface";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { format, subDays } from "date-fns";
-import { GlobalState, SearchParams } from "@/interfaces/global.interface";
 
 const initialState: GlobalState = {
     searchParams: {

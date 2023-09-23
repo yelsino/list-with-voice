@@ -1,17 +1,17 @@
 "use client";
-import Link from "next/link";
-import React, { useEffect, useState } from "react";
-import { useAppSelector } from "@/redux/hooks";
 import { Header } from "@/app/components/Header";
 import { IconCalendar, IconHome } from "@/app/components/Icons";
 import { SuperTitle } from "@/app/components/SuperTitle";
-import { DateType } from "react-tailwindcss-datepicker";
-import InfiniteScroll from "react-infinite-scroll-component";
-import { Cliente } from "@/interfaces/client.interface";
-import { useGetCostumersQuery } from "@/redux/services/clienteApi";
 import { generarTextoFecha } from "@/app/utils/front.global.utils";
-import { UserCircleIcon } from "@heroicons/react/20/solid";
 import { formatText } from "@/interfaces/FormatReact";
+import { Cliente } from "@/interfaces/client.interface";
+import { useAppSelector } from "@/redux/hooks";
+import { useGetCostumersQuery } from "@/redux/services/clienteApi";
+import { UserCircleIcon } from "@heroicons/react/20/solid";
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import InfiniteScroll from "react-infinite-scroll-component";
+import { DateType } from "react-tailwindcss-datepicker";
 
 function ClientesPage() {
     const { searchParams } = useAppSelector((state) => state.globalReducer);

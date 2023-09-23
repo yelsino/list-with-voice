@@ -1,6 +1,6 @@
-import { NextResponse } from "next/server";
-import { PrismaClient } from "@prisma/client";
 import { ItemList } from "@/interfaces/list.interface";
+import { PrismaClient } from "@prisma/client";
+import { NextResponse } from "next/server";
 const prisma = new PrismaClient();
 
 interface GetParams {
@@ -13,7 +13,8 @@ interface GetParams {
 // get lista por ID
 export async function GET(request: Request, { params }: GetParams) {
     const { listaId } = params;
-
+    console.log("listaId", listaId);
+    
     if (!listaId) {
         return NextResponse.json(
             { error: "No se proporcionó el ID de la lista." },

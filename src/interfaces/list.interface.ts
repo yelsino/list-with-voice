@@ -1,11 +1,11 @@
 import { ISODateString } from "next-auth";
-import { DateType } from "react-tailwindcss-datepicker";
-import { Usuario } from "./user.interface";
 import { Cliente } from "./client.interface";
+import { Usuario } from "./user.interface";
 
 export interface ListaState {
     id?: string;
     itemsList: ItemList[];
+    abono: Abono | null;
     itemSelected: ItemList | null;
     montoTotal?: number;
     edit?: boolean;
@@ -37,11 +37,17 @@ export interface ItemList {
     updatedAt?: Date;
 }
 
+export interface Abono {
+    createdAt: string;
+    monto: number;
+}
+
 export interface Lista {
     id?: string;
     numero?: number;
     clienteId?: string;
     items: ItemList[];
+    abonos: Abono[];
     cliente: Cliente; 
     pagado: boolean;
     completado: boolean;

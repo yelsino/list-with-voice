@@ -1,6 +1,5 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { GlobalState, SearchParams } from "@/interfaces/global.interface";
 import { Cliente, ClienteState } from "@/interfaces/client.interface";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { obtenerClientes } from "../chunks/clienteChunck";
 
 const initialState: ClienteState = {

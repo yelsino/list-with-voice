@@ -1,5 +1,4 @@
-// const baseUrl = process.env.REACT_APP_API_URL;
-// const baseUrl = import.meta.env.VITE_SOME_KEY
+
 interface Props {
     endpoint: string;
     body?: object;

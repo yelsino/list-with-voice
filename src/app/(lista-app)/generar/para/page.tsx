@@ -1,10 +1,8 @@
 "use client";
-import Link from "next/link";
-import React, { useEffect, useState } from "react";
-import { dateFormat, moneyFormat } from "@/interfaces/mapper";
-import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { SuperTitle } from "@/app/components/SuperTitle";
 import { seleccionarCliente } from "@/redux/features/clienteSlice";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { UserCircleIcon } from "@heroicons/react/20/solid";
 import { useRouter } from "next/navigation";
 
 function ParaPage() {
@@ -15,12 +13,15 @@ function ParaPage() {
     return (
         <>
             <div className="flex flex-col gap-y-3">
-                <SuperTitle>
-                    <p className="text-4xl">
-                        <span>
-                            Selección de <br /> clientes similares{" "}
-                        </span>
-                    </p>
+                <SuperTitle
+                    title={
+                        <p className="text-4xl">
+                            <span>
+                                Selección de <br /> clientes similares{" "}
+                            </span>
+                        </p>
+                    }
+                >
                     <p className="text-base font-normal  text-secondary-200 break-words">
                         Se encontraron algúnas coincidencias, debes seleccionar
                         al cliente que te refieres
@@ -39,23 +40,23 @@ function ParaPage() {
                                 );
                                 router.back();
                             }}
-                            className="text-secondary-100 bg-primary-100 px-3 cursor-pointer flex  rounded-lg  py-4"
+                            className="text-secondary-100 bg-primary-100 px-3 cursor-pointer flex gap-x-3 items-center  rounded-lg  py-4"
                             key={index}
                         >
-                            <div className="w-full ">
-                                <div className="flex justify-between text-lg">
-                                    <span className="capitalize">
-                                        {cliente.nombres}
-                                    </span>
-                                    <span></span>
-                                </div>
-                                <p className="text-secondary-200 text-sm">
-                                    celular: {cliente.celular}
-                                </p>
-                            </div>
+                            <UserCircleIcon height={28} width={28} />
+                                    <div className="flex flex-col">
+                                        <span className="capitalize text-lg">
+                                            {cliente.nombres}
+                                        </span>
+                                        <span className="text-secondary-200">
+                                            Celular: 939616350
+                                        </span>
+                                    </div>
                         </div>
                     ))}
                 </div>
+
+              
             </div>
         </>
     );

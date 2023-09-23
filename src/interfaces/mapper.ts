@@ -1,5 +1,5 @@
-import { ItemList, ResponseGPT } from "./list.interface";
 import { v4 as uuid } from "uuid";
+import { ItemList, ResponseGPT } from "./list.interface";
 
 interface Props {
     response: ResponseGPT;
@@ -67,6 +67,7 @@ export const moneyFormat = (value: any) => {
     return formater.format(numero);
 };
 
+// "Lunes 26 De agosto De 2023"
 export const dateFormat = (value: Date | string | undefined) => {
     if (!value) {
         return ""; // Si el valor es undefined o null, se devuelve una cadena vacía
@@ -89,6 +90,17 @@ export const dateFormat = (value: Date | string | undefined) => {
 
     return formatter.format(date);
 };
+
+// "Lunes 26/05/2023"
+export function dateFormatShort(fecha: Date): string {
+    const diasSemana = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+    const fechaObj = new Date(fecha);
+    const diaSemana = diasSemana[3];
+    const dia = fechaObj.getDate();
+    const mes = fechaObj.getMonth() + 1;
+    const año = fechaObj.getFullYear();
+    return `${diaSemana} ${dia}/${mes}/${año}`;
+  }
 
 export const buildCommandRegex = (phrases: string[]) => {
     const escapedPhrases = phrases.map((phrase) =>

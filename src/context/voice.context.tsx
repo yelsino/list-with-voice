@@ -1,14 +1,14 @@
 "use client";
-import "regenerator-runtime/runtime";
-import React, { createContext, useContext } from "react";
-import toast from "react-hot-toast";
-import { buildCommandRegex } from "@/interfaces/mapper";
 import { comando } from "@/app/components/Voice/comandos";
 import useGenerateList from "@/app/hooks/useGenerateList";
+import { buildCommandRegex } from "@/interfaces/mapper";
+import { useRouter } from "next/navigation";
+import React, { createContext, useContext } from "react";
+import toast from "react-hot-toast";
 import SpeechRecognition, {
     useSpeechRecognition,
 } from "react-speech-recognition";
-import { useRouter } from "next/navigation";
+import "regenerator-runtime/runtime";
 
 interface VoiceControlContextProps {
     transcript: string;

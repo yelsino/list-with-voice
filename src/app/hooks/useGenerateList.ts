@@ -1,26 +1,27 @@
-import { useEffect, useState } from "react";
-import { useAppDispatch, useAppSelector } from "@/redux/hooks";
-import { useConvertVoiceToItemMutation } from "@/redux/services/listaApi";
+import { Cliente } from "@/interfaces/client.interface";
+import { ItemList } from "@/interfaces/list.interface";
 import {
+    buildCommandRegex,
+    responseToItemList,
+    stringToItem,
+} from "@/interfaces/mapper";
+import { obtenerClientes } from "@/redux/chunks/clienteChunck";
+import { seleccionarCliente } from "@/redux/features/clienteSlice";
+import {
+    abonarLista,
     addItemsToList,
     listaPagada,
     selectItem,
     updateItem,
     updateItems,
 } from "@/redux/features/listaSlice";
-import { usePathname, useRouter } from "next/navigation";
-import { comando } from "../components/Voice/comandos";
-import {
-    buildCommandRegex,
-    responseToItemList,
-    stringToItem,
-} from "@/interfaces/mapper";
-import { useSpeechRecognition } from "react-speech-recognition";
-import { ItemList } from "@/interfaces/list.interface";
-import { obtenerClientes } from "@/redux/chunks/clienteChunck";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { useConvertVoiceToItemMutation } from "@/redux/services/listaApi";
+import { usePathname } from "next/navigation";
+import { useEffect } from "react";
 import toast from "react-hot-toast";
-import { seleccionarCliente } from "@/redux/features/clienteSlice";
-import { Cliente } from "@/interfaces/client.interface";
+import { useSpeechRecognition } from "react-speech-recognition";
+import { comando } from "../components/Voice/comandos";
 
 interface Props {
     resetTranscript: () => void;
@@ -56,9 +57,22 @@ function useGenerateList({
         {
             command: "lista no pagada",
             callback: () => {
-                dispatch(listaPagada(true));
+                dispatch(listaPagada(false));
                 resetTranscript();
             },
+        },
+        {
+            command: "abonar :monto soles",
+            callback: (monto: string) => {
+                dispatch(
+                    abonarLista({
+                        createdAt: new Date().toISOString(),
+                        monto: Number(monto),
+                    })
+                );
+                console.log("abonar: ", monto);
+            },
+            matchInterim: true,
         },
         {
             command: "lista para *",

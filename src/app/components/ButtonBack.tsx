@@ -1,6 +1,5 @@
 "use client";
-import { useRouter, usePathname } from "next/navigation";
-import React from "react";
+import { usePathname, useRouter } from "next/navigation";
 
 function ButtonBack() {
     const router = useRouter();

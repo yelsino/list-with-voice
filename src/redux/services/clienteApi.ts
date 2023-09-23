@@ -1,10 +1,10 @@
 import { Cliente } from "@/interfaces/client.interface";
-import { SearchParams, ResponseParams } from "@/interfaces/global.interface";
+import { ResponseParams, SearchParams } from "@/interfaces/global.interface";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 export const URLBASE = {
-    // LOCAL: "http://localhost:3000/api/",
-    LOCAL: `http://127.0.0.1:3000/api`,
+    LOCAL: "http://localhost:3000/api/",
+    // LOCAL: `http://127.0.0.1:3000/api`,
     // LOCAL: "https://list-with-voice.vercel.app/api/",
     API_NEGOCIO: "https://api-ns-carlos-3b46dcee2dd0.herokuapp.com",
     // API_NEGOCIO: "http://localhost:3002",

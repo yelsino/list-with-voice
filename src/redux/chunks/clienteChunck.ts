@@ -1,11 +1,8 @@
-import { createAsyncThunk } from "@reduxjs/toolkit";
-import { URLBASE } from "../services/listaApi";
-import { Lista } from "@/interfaces/list.interface";
-import { fetchSinToken } from "../fetch";
-import { Usuario } from "@/interfaces/user.interface";
-import { ResponseParams, SearchParams } from "@/interfaces/global.interface";
-import axios from "axios";
 import { Cliente } from "@/interfaces/client.interface";
+import { ResponseParams, SearchParams } from "@/interfaces/global.interface";
+import { createAsyncThunk } from "@reduxjs/toolkit";
+import axios from "axios";
+import { URLBASE } from "../services/listaApi";
 
 export const obtenerClientes = createAsyncThunk(
     "obtener_clientes",

@@ -1,24 +1,22 @@
-import { NextRequest, NextResponse } from "next/server";
-import { Prisma, PrismaClient } from "@prisma/client";
-import { Lista } from "@/interfaces/list.interface";
-import { generarItemListBD, montoTotalLista } from "./mapper/listas";
 import getCurrentUser from "@/actions/getCurrentUser";
+import { Lista } from "@/interfaces/list.interface";
+import { Prisma, PrismaClient } from "@prisma/client";
+import { NextRequest, NextResponse } from "next/server";
 import {
     createSearchParams,
     dateStringToStringISO,
 } from "../utils/back.global.utils";
+import { generarItemListBD, montoTotalLista } from "./mapper/listas";
 
-// import { Lista } from "@/interfaces/list.interface";
 const prisma = new PrismaClient();
 
-// localhost/listas/
-// POST
+
 export async function POST(request: Request) {
     const body: Lista = await request.json();
 
     try {
         const currentUser = await getCurrentUser();
-        
+
         if (!currentUser) {
             return NextResponse.error();
         }
@@ -42,10 +40,9 @@ export async function POST(request: Request) {
             });
 
             clienteId = nuevoCliente.id;
-        }else {
+        } else {
             clienteId = body.cliente.id as string;
         }
-
 
         const nuevaLista = await prisma.lista.create({
             data: {
@@ -57,6 +54,7 @@ export async function POST(request: Request) {
                     create: body.items.map((item) => generarItemListBD(item)),
                 },
                 clienteId: clienteId,
+                abonos: body.abonos as any,
             },
             include: {
                 items: true,
@@ -66,7 +64,7 @@ export async function POST(request: Request) {
         return NextResponse.json(nuevaLista);
     } catch (error) {
         console.log(error);
-        
+
         NextResponse.error();
     }
 }
@@ -94,7 +92,7 @@ export async function GET(request: NextRequest) {
             cliente: {
                 nombres: {
                     contains: textfilter,
-                    mode: 'insensitive'
+                    mode: "insensitive",
                 },
             },
         },
@@ -131,6 +129,8 @@ export async function PUT(request: Request) {
     // Calcular el nuevo monto total
     const montoTotalNuevo = montoTotalLista(body.items);
 
+    const abonos: any = listaActual.abonos;
+
     const listaActualizada = await prisma.lista.update({
         where: { id: body.id },
         data: {
@@ -138,6 +138,7 @@ export async function PUT(request: Request) {
             pagado: body.pagado,
             clienteId: body.cliente.id ?? "",
             completado: body.items.every((item) => item.status === "success"),
+            abonos: [...abonos, ...body.abonos] as any,
             items: {
                 upsert: body.items.map((item) => ({
                     where: { id: item.id },

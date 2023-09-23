@@ -1,5 +1,5 @@
 import { actualizarCliente, crearCliente, eliminarCliente } from "./comandos/cliente.comando";
-import {  cerrarLista, actualizarLista, guardarLista, eliminarLista } from "./comandos/lista.comando";
+import { actualizarLista, cerrarLista, eliminarLista, guardarLista } from "./comandos/lista.comando";
 import { goClientes, goGenerarLista, goInicio, goconfig, golistas } from "./comandos/pagina.comando";
 
 

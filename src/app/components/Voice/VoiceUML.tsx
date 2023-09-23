@@ -1,6 +1,6 @@
 'use client';
+import { useState } from "react";
 import useLLM from "usellm";
-import React, { useState } from "react";
 
 export default function AudioRecorder() {
   const [audioUrl, setAudioUrl] = useState("");

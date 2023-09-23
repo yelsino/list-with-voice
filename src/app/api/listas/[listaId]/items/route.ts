@@ -1,4 +1,4 @@
-import { ItemList, Lista } from "@/interfaces/list.interface";
+import { ItemList } from "@/interfaces/list.interface";
 import { PrismaClient } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 import {
@@ -7,15 +7,7 @@ import {
     obtenerLista,
 } from "../../mapper/listas";
 
-
 const prisma = new PrismaClient();
-
-interface PostParams {
-    listaId: string;
-    itemId: string;
-}
-
-// http://localhost:3000/api/listas/321312/items?id=2
 
 interface Params<T> {
     params: T;

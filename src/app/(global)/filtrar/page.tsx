@@ -1,17 +1,16 @@
 "use client";
 import { Header } from "@/app/components/Header";
 
+import { IconDelete, IconLists } from "@/app/components/Icons";
 import SelectDate from "@/app/components/SelectDate";
 import { SuperTitle } from "@/app/components/SuperTitle";
-import Link from "next/link";
-import AutoComplete from "./AutoComplete";
-import { useAppDispatch } from "@/redux/hooks";
-import { useState } from "react";
-import { IconDelete, IconLists } from "@/app/components/Icons";
-import { useRouter } from "next/navigation";
-import { cleanSearchParams } from "@/redux/features/globalSlice";
-import { seleccionarCliente } from "@/redux/features/clienteSlice";
 import { formatText } from "@/interfaces/FormatReact";
+import { seleccionarCliente } from "@/redux/features/clienteSlice";
+import { cleanSearchParams } from "@/redux/features/globalSlice";
+import { useAppDispatch } from "@/redux/hooks";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import AutoComplete from "./AutoComplete";
 
 function FiltrarPage() {
     const dispatch = useAppDispatch();

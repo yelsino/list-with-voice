@@ -4,6 +4,7 @@ import { FormEvent, useState } from "react";
 import { signIn } from "next-auth/react";
 import { SuperTitle } from "@/app/components/SuperTitle";
 import { toast } from "react-hot-toast";
+import { formatText } from "@/interfaces/FormatReact";
 
 function Signin() {
     const router = useRouter();
@@ -37,12 +38,8 @@ function Signin() {
     return (
         <>
             {" "}
-            <SuperTitle>
-                <p className="">
-                    <span>Hola!</span>
-                    <br /> <span>Bienvenido a</span>
-                    <br /> <span>Voice List</span>
-                </p>
+            <span className="mt-5"></span>
+            <SuperTitle title={formatText("Bienvenido Lista Voice")}>
             </SuperTitle>
             {/* contenido */}
             <div className="flex flex-col gap-y-5">

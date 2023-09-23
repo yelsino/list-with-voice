@@ -1,26 +1,25 @@
 "use client";
-import { useSession } from "next-auth/react";
-import { useAppSelector, useAppDispatch } from "@/redux/hooks";
-import React, { useEffect } from "react";
-import Link from "next/link";
+import { Header } from "@/app/components/Header";
+import { IconHome, IconSave } from "@/app/components/Icons";
+import { ItemLista } from "@/app/components/Lista/ItemLista";
+import { Loader } from "@/app/components/Loader/Loader";
+import { SuperTitle } from "@/app/components/SuperTitle";
+import { formatText } from "@/interfaces/FormatReact";
+import { Cliente } from "@/interfaces/client.interface";
+import { Abono } from "@/interfaces/list.interface";
+import { isMongoId, moneyFormat } from "@/interfaces/mapper";
+import { seleccionarCliente } from "@/redux/features/clienteSlice";
 import { limpiarLista } from "@/redux/features/listaSlice";
-import { LayoutGroup, motion } from "framer-motion";
-import { toast } from "react-hot-toast";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import {
     useRegistrarListDBMutation,
     useUpdateListMutation,
 } from "@/redux/services/listaApi";
+import { LayoutGroup, motion } from "framer-motion";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Loader } from "@/app/components/Loader/Loader";
-import { Header } from "@/app/components/Header";
-import { IconHome, IconSave } from "@/app/components/Icons";
-import { SuperTitle } from "@/app/components/SuperTitle";
-import { ItemLista } from "@/app/components/Lista/ItemLista";
-import { isMongoId } from "@/interfaces/mapper";
-import { seleccionarCliente } from "@/redux/features/clienteSlice";
-import { useVoiceControl } from "@/context/voice.context";
-import { Cliente } from "@/interfaces/client.interface";
-import { formatText } from "@/interfaces/FormatReact";
+import { useEffect } from "react";
+import { toast } from "react-hot-toast";
 
 function GenerarPage() {
     const dispatch = useAppDispatch();
@@ -33,7 +32,6 @@ function GenerarPage() {
     );
     const listaState = useAppSelector((state) => state.listaReducer);
     const clienteState = useAppSelector((state) => state.clienteReducer);
-    const { startListening, listening, finalTranscript } = useVoiceControl();
 
     const guardarLista = async () =>
         listaState.edit ? actualizarLista() : crearListaNueva();
@@ -59,6 +57,7 @@ function GenerarPage() {
                     completado: false,
                     pagado: pagada ?? false,
                     cliente: clienteState.cliente as Cliente,
+                    abonos: [listaState.abono as Abono],
                 }).unwrap(),
                 {
                     loading: "Generando...",
@@ -71,6 +70,9 @@ function GenerarPage() {
                     dispatch(limpiarLista());
                     push(`/listas/${resp.id}`);
                 }
+            })
+            .finally(() => {
+                dispatch(seleccionarCliente(null));
             });
     };
     const actualizarLista = async () => {
@@ -100,6 +102,7 @@ function GenerarPage() {
                     completado: false,
                     pagado: pagada ?? false,
                     id: listaState.id,
+                    abonos: [listaState.abono as Abono],
                 }).unwrap(),
                 {
                     loading: "Actualizando...",
@@ -151,7 +154,7 @@ function GenerarPage() {
                     >
                         <p className="text-secondary-200 text-lg font-semibold">
                             Pagada: {pagada ? "Si" : "No"} - Adelanto:{" "}
-                            {pagada ? "Si" : "No"}
+                            {moneyFormat(listaState.abono?.monto ?? 0)}
                         </p>
                     </SuperTitle>
 
@@ -190,7 +193,7 @@ function GenerarPage() {
                     </div>
 
                     <LayoutGroup>
-                        <motion.div className="flex flex-col  h-[calc(100vh-320px)] pb-20 overflow-hidden overflow-y-scroll">
+                        <motion.div className="flex flex-col  h-[calc(100vh-320px)] pb-20 overflow-hidden overflow-y-scroll gap-y-1">
                             {itemsList.map((item, index) => (
                                 <ItemLista
                                     key={item.id}

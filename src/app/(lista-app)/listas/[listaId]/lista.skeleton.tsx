@@ -1,13 +1,10 @@
 "use client";
 import { Header } from "@/app/components/Header";
 import { IconHome, IconTool } from "@/app/components/Icons";
-import OptionsMenu from "@/app/components/Popover/Popover";
 import { SuperTitle } from "@/app/components/SuperTitle";
 import { formatText } from "@/interfaces/FormatReact";
-import { dateFormat, moneyFormat } from "@/interfaces/mapper";
 
 import Link from "next/link";
-import React from "react";
 
 function ListasIdSkeleton() {
     return (

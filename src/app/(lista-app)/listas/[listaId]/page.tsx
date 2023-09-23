@@ -1,34 +1,31 @@
 "use client";
 import { Header } from "@/app/components/Header";
 import {
-    IconCalendar,
-    IconHome,
     IconLists,
-    IconPrint,
-    IconTool,
+    IconTool
 } from "@/app/components/Icons";
-import { ItemLista } from "@/app/components/Lista/ItemLista";
-import { Loader } from "@/app/components/Loader/Loader";
 import OptionsMenu from "@/app/components/Popover/Popover";
 import { SuperTitle } from "@/app/components/SuperTitle";
 import { formatText } from "@/interfaces/FormatReact";
-import { dateFormat, formatNameTitle, moneyFormat } from "@/interfaces/mapper";
-import { obtenerImagenLista } from "@/redux/chunks/listaChunk";
-import { useAppDispatch, useAppSelector } from "@/redux/hooks";
-import {
-    useGetListaByIdQuery,
-    useGetListasQuery,
-} from "@/redux/services/listaApi";
-import { LayoutGroup, motion } from "framer-motion";
-import Link from "next/link";
-import React from "react";
-import { toast } from "react-hot-toast";
-import ListasIdSkeleton from "./lista.skeleton";
-import { updateLista } from "@/redux/features/listaSlice";
-import { Lista } from "@/interfaces/list.interface";
-import { useRouter } from "next/navigation";
-import { seleccionarCliente } from "@/redux/features/clienteSlice";
 import { Cliente } from "@/interfaces/client.interface";
+import { Lista } from "@/interfaces/list.interface";
+import {
+    dateFormat,
+    dateFormatShort,
+    moneyFormat
+} from "@/interfaces/mapper";
+import { obtenerImagenLista } from "@/redux/chunks/listaChunk";
+import { seleccionarCliente } from "@/redux/features/clienteSlice";
+import { updateLista } from "@/redux/features/listaSlice";
+import { useAppDispatch } from "@/redux/hooks";
+import {
+    useGetListaByIdQuery
+} from "@/redux/services/listaApi";
+import { AnimatePresence, LayoutGroup, motion } from "framer-motion";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import ListasIdSkeleton from "./lista.skeleton";
 
 interface IParams {
     listaId: string;
@@ -38,6 +35,8 @@ function ListasIdPage({ params }: { params: IParams }) {
     const { isLoading, isFetching, data, error } = useGetListaByIdQuery({
         id: params.listaId,
     });
+
+    const [detalle, setDetalle] = useState(false);
 
     const { push } = useRouter();
     const dispatch = useAppDispatch();
@@ -74,20 +73,56 @@ function ListasIdPage({ params }: { params: IParams }) {
                         }
                     />
 
-                    <SuperTitle title={formatText(data?.cliente.nombres ?? "")}>
+                    <SuperTitle
+                        title={formatText(data?.cliente?.nombres ?? "")}
+                    >
                         <div className="text-lg text-secondary-200">
-                            <p className="capitalize">{dateFormat(data?.createdAt)}</p>
-                            <p>Lista pagada: No</p>
-                            <p>Adelanto: S/. 100.00</p>
+                            <p className="capitalize">
+                                {dateFormat(data?.createdAt)}
+                            </p>
+                            <p>Monto: {moneyFormat(data?.montoTotal)}</p>
+                            <p>Lista pagada: {data?.pagado ? "Si" : "No"}</p>
+
+                            {(data?.abonos?.length ?? 0) > 0 && (
+                                <LayoutGroup>
+                                    <motion.div className="bg-primary-100">
+                                        <p
+                                            onClick={(e) => {
+                                                setDetalle(!detalle);
+                                            }}
+                                            className="text-secondary-200 py-1 cursor-pointer"
+                                        >
+                                            {" "}
+                                            {"> Detalle de abonos"}
+                                        </p>
+                                        <AnimatePresence>
+                                            {detalle && (
+                                                <motion.div
+                                                    initial={{ opacity: 0 }}
+                                                    animate={{ opacity: 1 }}
+                                                    exit={{ opacity: 0 }}
+                                                    className="pl-5"
+                                                >
+                                                    {data?.abonos.map(
+                                                        (abono, index) => (
+                                                            <ItemAbono
+                                                                key={index}
+                                                                abono={abono}
+                                                            />
+                                                        )
+                                                    )}
+                                                </motion.div>
+                                            )}
+                                        </AnimatePresence>
+                                    </motion.div>
+                                </LayoutGroup>
+                            )}
                         </div>
                     </SuperTitle>
 
                     <div>
-                        <p className="font-semibold pb-2 text-secondary-200 uppercase">
-                            <span className="text-secondary-100">
-                                S/. 64.00 {" "}
-                            </span>
-                            10 Productos{" "}
+                        <p className="font-semibold pb-2 text-secondary-100 uppercase flex justify-between">
+                            Productos
                         </p>
                         <div className="flex flex-col gap-y-4 h-[calc(100vh-320px)] pb-32 overflow-x-hidden overflow-y-scroll">
                             {data?.items.map((item, index) => (
@@ -100,7 +135,7 @@ function ListasIdPage({ params }: { params: IParams }) {
                                     </span>{" "}
                                     <div className="w-full  flex justify-between">
                                         {item.calculated ? (
-                                            <span>{item.nombre}</span>
+                                            <span>{item?.nombre}</span>
                                         ) : (
                                             <span>
                                                 {item.cantidad} {item.medida}{" "}
@@ -129,3 +164,12 @@ function ListasIdPage({ params }: { params: IParams }) {
 }
 
 export default ListasIdPage;
+
+const ItemAbono = ({ abono }: any) => {
+    return (
+        <p>
+            {dateFormatShort(new Date(abono.createdAt))} -{" "}
+            {moneyFormat(abono.monto)}
+        </p>
+    );
+};

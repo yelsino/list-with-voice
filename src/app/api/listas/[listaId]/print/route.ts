@@ -1,5 +1,4 @@
 import { NextResponse } from "next/server";
-// import qrcode from 'qrcode';
 
 interface IParams {
     params: {

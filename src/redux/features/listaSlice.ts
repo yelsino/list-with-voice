@@ -1,18 +1,17 @@
 import {
+    Abono,
     ItemList,
     Lista,
     ListaState,
 } from "@/interfaces/list.interface";
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { obtenerImagenLista, registrarUsuario } from "../chunks/listaChunk";
+import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { saveAs } from "file-saver";
-import { DateValueType } from "react-tailwindcss-datepicker";
-import { format, subDays, startOfWeek, endOfWeek } from "date-fns";
-
+import { obtenerImagenLista, registrarUsuario } from "../chunks/listaChunk";
 
 const initialState: ListaState = {
     id: "",
     itemsList: [],
+    abono: null,
     itemSelected: null,
     montoTotal: 0,
     edit: false,
@@ -25,16 +24,13 @@ export const listaSlice = createSlice({
     initialState,
     reducers: {
         addItemsToList: (state, action: PayloadAction<ItemList[]>) => {
-
             // filtrar todas las voces que no esten en el payload
             const missingVoices: ItemList[] = action.payload.filter(
                 (item) => !state.itemsList.some((i) => i.voz === item.voz)
             );
 
             state.itemsList = state.itemsList.concat(missingVoices);
-            
         },
-       
         sumarLista: (state, action: PayloadAction<number>) => {
             state.montoTotal = action.payload;
         },
@@ -64,28 +60,31 @@ export const listaSlice = createSlice({
             }
         },
         updateItems: (state, action: PayloadAction<ItemList[]>) => {
-          
-            const nuevosItems = state.itemsList.map((item)=>{
-                const existe = action.payload.find((p)=>item.id === p.id);
+            const nuevosItems = state.itemsList.map((item) => {
+                const existe = action.payload.find((p) => item.id === p.id);
                 return existe ? existe : item;
-            })
+            });
 
-            state.itemsList = nuevosItems
+            state.itemsList = nuevosItems;
         },
         selectItem: (state, action: PayloadAction<ItemList | null>) => {
             state.itemSelected = action.payload;
         },
         updateLista: (state, action: PayloadAction<Lista>) => {
-
             const { items, pagado, id } = action.payload;
-           
-            state.itemsList = items;
 
+            state.itemsList = items;
             state.edit = true;
             state.pagada = pagado;
             state.id = id;
+            state.abono = null;
         },
-     
+        abonarLista: (state, action: PayloadAction<Abono>) => {
+            state.abono = action.payload
+        },
+        actualizarAbono: (state, action: PayloadAction<Abono[]>) => {
+            // state.abonos = action.payload
+        },
     },
     extraReducers: (builder) => {
         builder.addCase(obtenerImagenLista.fulfilled, (state, action) => {
@@ -112,6 +111,8 @@ export const {
     updateItem,
     selectItem,
     updateLista,
+    abonarLista,
+    actualizarAbono
 } = listaSlice.actions;
 
 export default listaSlice.reducer;

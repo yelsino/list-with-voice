@@ -1,17 +1,17 @@
 "use client";
 import { Header } from "@/app/components/Header";
-import { IconSave, IconTool, IconUsers } from "@/app/components/Icons";
+import { IconTool, IconUsers } from "@/app/components/Icons";
 import OptionsMenu from "@/app/components/Popover/Popover";
 import { SuperTitle } from "@/app/components/SuperTitle";
 import { formatText } from "@/interfaces/FormatReact";
-import { useAppDispatch, useAppSelector } from "@/redux/hooks";
-import Link from "next/link";
-import React from "react";
-import { useRouter } from "next/navigation";
+import { dateFormat } from "@/interfaces/mapper";
+import { obtenerImagenLista } from "@/redux/chunks/listaChunk";
+import { seleccionarCliente } from "@/redux/features/clienteSlice";
+import { useAppDispatch } from "@/redux/hooks";
 import { useGetCostumerQuery } from "@/redux/services/clienteApi";
 import { ClipboardIcon, FolderPlusIcon } from "@heroicons/react/20/solid";
-import { obtenerImagenLista } from "@/redux/chunks/listaChunk";
-import { dateFormat } from "@/interfaces/mapper";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 
 interface IParams {
@@ -29,7 +29,7 @@ function ClienteIdPage({ params }: { params: IParams }) {
     return (
         <>
             {isLoading ? (
-                <p>CARGANDO</p>
+                <p className="text-secondary-100">Cargando...</p>
             ) : (
                 <div className="flex flex-col gap-y-4">
                     <Header
@@ -62,6 +62,14 @@ function ClienteIdPage({ params }: { params: IParams }) {
                     {data?.data.listas?.length === 0 ? (
                         <div>
                             <Link
+                                onClick={()=>{
+                                    dispatch(seleccionarCliente({
+                                        celular: data.data.celular,
+                                        nombres: data.data.nombres,
+                                        id: data.data.id
+                                    }));
+                                    // push('/generar')
+                                }}
                                 href="/generar"
                                 className="text-secondary-100 bg-primary-100 p-3 rounded-lg flex flex-col justify-center items-center w-32 gap-y-1 cursor-pointer"
                             >

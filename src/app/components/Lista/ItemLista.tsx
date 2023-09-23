@@ -1,17 +1,17 @@
+import { useVoiceControl } from "@/context/voice.context";
 import { ItemList } from "@/interfaces/list.interface";
 import { moneyFormat } from "@/interfaces/mapper";
-import { AnimatePresence, motion } from "framer-motion";
-import React, { useState } from "react";
-import { IconDelete, IconRefresh } from "../Icons";
-import { ItemLoader } from "../Loader/ItemLoader";
-import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import {
     deleteItem,
     selectItem,
     updateItem,
 } from "@/redux/features/listaSlice";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { AnimatePresence, motion } from "framer-motion";
+import { useState } from "react";
+import { IconDelete, IconRefresh } from "../Icons";
+import { ItemLoader } from "../Loader/ItemLoader";
 import { SpeakLoader } from "../Loader/SpeakLoader";
-import { useVoiceControl } from "@/context/voice.context";
 
 interface Props {
     item: ItemList;
@@ -41,7 +41,7 @@ export const ItemLista = ({ item, index }: Props) => {
 
     return (
         <div
-            className={`rounded-lg cursor-pointer p-3  ${
+            className={`rounded-lg cursor-pointer p-2  ${
                 isOpen ? "bg-primary-100" : ""
             }`}
         >

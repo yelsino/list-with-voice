@@ -1,6 +1,8 @@
 "use client";
-import "regenerator-runtime/runtime";
+import { formatText } from "@/interfaces/FormatReact";
 import Link from "next/link";
+import "regenerator-runtime/runtime";
+import { Header } from "./components/Header";
 import {
     IconAddUser,
     IconConfig,
@@ -8,12 +10,7 @@ import {
     IconSave,
     IconUsers,
 } from "./components/Icons";
-import { Header } from "./components/Header";
-import { Puntos } from "./components/Puntos";
 import { SuperTitle } from "./components/SuperTitle";
-import * as Realm from "realm-web";
-import { useEffect, useState } from "react";
-import { formatText } from "@/interfaces/FormatReact";
 
 export default function Home() {
 

@@ -1,14 +1,12 @@
 "use client";
-import React, { useState } from "react";
-import Link from "next/link";
 import { Header } from "@/app/components/Header";
-import { IconHome, IconSave } from "@/app/components/Icons";
-import { Puntos } from "@/app/components/Puntos";
+import { IconHome } from "@/app/components/Icons";
 import { SuperTitle } from "@/app/components/SuperTitle";
-import { useSession, signOut } from "next-auth/react";
-import { AnimatePresence, LayoutGroup, motion } from "framer-motion";
 import { comando } from "@/app/components/Voice/comandos";
-import { formatText } from "@/interfaces/FormatReact";
+import { AnimatePresence, LayoutGroup, motion } from "framer-motion";
+import { signOut } from "next-auth/react";
+import Link from "next/link";
+import { useState } from "react";
 
 function ConfiguracionPage() {
     return (

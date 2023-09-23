@@ -1,11 +1,9 @@
 "use client";
-import Link from "next/link";
-import React from "react";
 import { Header } from "@/app/components/Header";
 import { IconCalendar, IconHome } from "@/app/components/Icons";
 import { SuperTitle } from "@/app/components/SuperTitle";
-import { dateFormat } from "@/interfaces/mapper";
 import { formatText } from "@/interfaces/FormatReact";
+import Link from "next/link";
 
 function ListasSkeleton() {
     return (

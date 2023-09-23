@@ -1,8 +1,7 @@
 "use client";
-
+import { useVoiceControl } from "@/context/voice.context";
 import "regenerator-runtime/runtime";
 import { IconMicrophone } from "../Icons";
-import { useVoiceControl } from "@/context/voice.context";
 
 function Voice() {
     const { startListening, listening, finalTranscript } = useVoiceControl();

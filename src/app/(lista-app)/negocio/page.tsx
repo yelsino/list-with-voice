@@ -6,12 +6,15 @@ function Negocio() {
     return (
         <div className="overflow-y-scroll h-screen pb-28">
             {" "}
-            <SuperTitle>
-                <p className="">
-                    <span>Hola!</span>
-                    <br /> <span>Configura tu negocio</span>
-                    {/* <br /> <span>Voice List</span> */}
-                </p>
+            <SuperTitle
+                title={
+                    <p className="">
+                        <span>Hola!</span>
+                        <br /> <span>Configura tu negocio</span>
+                        {/* <br /> <span>Voice List</span> */}
+                    </p>
+                }
+            >
             </SuperTitle>
             {/* contenido */}
             <form

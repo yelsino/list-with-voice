@@ -1,22 +1,18 @@
 "use client";
-import { useRouter } from "next/navigation";
-import { SuperTitle } from "../../components/SuperTitle";
-import { FormEvent, useEffect, useState } from "react";
-import { signIn } from "next-auth/react";
-import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { formatText } from "@/interfaces/FormatReact";
 import {
-    obtenerImagenLista,
     registrarUsuario,
 } from "@/redux/chunks/listaChunk";
+import { useAppDispatch } from "@/redux/hooks";
+import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { FormEvent } from "react";
 import toast from "react-hot-toast";
+import { SuperTitle } from "../../components/SuperTitle";
 
 function Signup() {
-    const [error, setError] = useState();
     const router = useRouter();
     const dispatch = useAppDispatch();
-    const { clientes } = useAppSelector(
-        (state) => state.clienteReducer
-    );
 
     const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -55,14 +51,10 @@ function Signup() {
     return (
         <>
             {" "}
-            <SuperTitle>
-                <p className="">
-                    <span>Registrar en</span>
-                    <br /> <span>Voice List</span>
-                    {/* <br /> <span>Voice List</span> */}
-                </p>
+            <span className="mt-5"></span>
+            <SuperTitle  title={formatText("Registrarse Lista Voice")}>
             </SuperTitle>
-            {/* contenido */}
+            
             <div className="flex flex-col gap-y-5">
                 <div className="font-poppins text-lg  text-secondary-200">
                     Usa la inteligencia artificial para crear rapidamente listas

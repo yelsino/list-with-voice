@@ -1,4 +1,8 @@
-import { Fragment, useEffect, useState } from "react";
+import { CirculoLoader } from "@/app/components/Loader/CirculoLoader";
+import { Cliente } from "@/interfaces/client.interface";
+import { obtenerClientes } from "@/redux/chunks/clienteChunck";
+import { seleccionarCliente } from "@/redux/features/clienteSlice";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { Combobox, Transition } from "@headlessui/react";
 import {
     CheckIcon,
@@ -7,11 +11,7 @@ import {
 import {
     XMarkIcon
 } from "@heroicons/react/24/outline";
-import { seleccionarCliente } from "@/redux/features/clienteSlice";
-import { useAppDispatch, useAppSelector } from "@/redux/hooks";
-import { Cliente } from "@/interfaces/client.interface";
-import { obtenerClientes } from "@/redux/chunks/clienteChunck";
-import { CirculoLoader } from "@/app/components/Loader/CirculoLoader";
+import { Fragment, useEffect, useState } from "react";
 
 interface Props {}
 

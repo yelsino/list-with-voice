@@ -1,13 +1,13 @@
-import { Providers } from "@/redux/provider";
-import "./globals.css";
-import { Inter } from "next/font/google";
-import ButtonBack from "./components/ButtonBack";
-import Voice from "./components/Voice/Voice";
-import { Toaster } from "react-hot-toast";
-import { Metadata } from "next";
-import ButtonRegister from "./components/ButtonRegister";
 import { VoiceControlProvider } from "@/context/voice.context";
+import { Providers } from "@/redux/provider";
+import { Metadata } from "next";
+import { Inter } from "next/font/google";
+import { Toaster } from "react-hot-toast";
+import ButtonBack from "./components/ButtonBack";
+import ButtonRegister from "./components/ButtonRegister";
 import { Cinta } from "./components/Cinta";
+import Voice from "./components/Voice/Voice";
+import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {

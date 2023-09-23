@@ -1,14 +1,11 @@
-// import { connectDB } from "@/libs/mongodb";
-// import User from "@/models/user";
-import { NextResponse } from "next/server";
+
+import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcryptjs";
-import { PrismaClient, Prisma } from "@prisma/client";
-// import mongoose from "mongoose";
+import { NextResponse } from "next/server";
 const prisma = new PrismaClient();
 
 export async function POST(request: Request) {
     try {
-        // await connectDB();
 
         const { nombreUsuario, password } = await request.json();
 
