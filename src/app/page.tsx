@@ -12,6 +12,7 @@ import {
     IconUsers,
 } from "./components/Icons";
 import { SuperTitle } from "./components/SuperTitle";
+import { useEffect } from "react";
 
 export default function Home() {
 
@@ -42,6 +43,10 @@ export default function Home() {
             icon: <IconNegocio estilo="" />,
         },
     ];
+
+    useEffect(()=>{
+        conectarImpresoraTermica();
+    },)
 
     return (
         <>
@@ -84,3 +89,21 @@ export default function Home() {
         </>
     );
 }
+
+
+async function conectarImpresoraTermica() {
+    if ("bluetooth" in navigator) {
+        navigator.bluetooth.requestDevice({
+          acceptAllDevices: true,
+          optionalServices: [] // Puedes especificar servicios específicos si lo deseas
+        })
+        .then(device => {
+          console.log("Dispositivo encontrado:", device.name);
+        })
+        .catch(error => {
+          console.error("Error al buscar dispositivos Bluetooth:", error);
+        });
+      } else {
+        console.log("El navegador no admite Web Bluetooth Scanning.");
+      }
+  }
