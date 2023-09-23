@@ -3,11 +3,6 @@ import { URLBASE } from "@/interfaces/constantes";
 import { ResponseParams, SearchParams } from "@/interfaces/global.interface";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
-interface Response<T>{
-    data: T
-    cantidad: number
-}
-
 export const clienteApi = createApi({
     reducerPath: "clienteApi",
     refetchOnFocus: true, // when the window is refocused, refetch the data

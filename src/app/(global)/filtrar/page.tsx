@@ -30,9 +30,9 @@ function FiltrarPage() {
                     </Link>
                 }
                 childrenRight={
-                    <div onClick={resetFiltros} className="cursor-pointer">
+                    <button type="button" onClick={resetFiltros} className="cursor-pointer">
                         <IconDelete />
-                    </div>
+                    </button>
                 }
             />
             <SuperTitle  title={formatText("Filtros De busqueda")}>
@@ -40,7 +40,7 @@ function FiltrarPage() {
                     <span className="text-secondary-200">
                         Tambien te puede interesar ver los comandos de filtros
                         por voz, para verlos dirigete{" "}
-                        <span className="text-secondary-100">aquí</span>
+                        <Link href="/configuracion" className="text-secondary-100">aquí</Link>
                     </span>
                 </p>
             </SuperTitle>

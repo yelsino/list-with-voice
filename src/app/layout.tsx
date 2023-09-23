@@ -33,7 +33,7 @@ export default function RootLayout({
                                 <Cinta />
                                 <div className="flex flex-col">{children}</div>
                                 <Voice />
-                                <ButtonBack />
+                                {/* <ButtonBack /> */}
                                 <ButtonRegister />
                             </VoiceControlProvider>
                         </Providers>

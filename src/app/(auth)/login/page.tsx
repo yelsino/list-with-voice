@@ -62,7 +62,7 @@ function Signin() {
                     <input
                         className="bg-primary-100 py-5 px-3 w-full text-xl text-secondary-100 outline-none rounded-md"
                         type="text"
-                        placeholder="ej: sunombre"
+                        placeholder="ej: su nombre"
                         name="nombreUsuario"
                     />
                 </div>

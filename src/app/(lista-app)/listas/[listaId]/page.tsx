@@ -1,31 +1,23 @@
 "use client";
 import { Header } from "@/app/components/Header";
-import {
-    IconLists,
-    IconTool
-} from "@/app/components/Icons";
+import { IconLists, IconTool } from "@/app/components/Icons";
 import OptionsMenu from "@/app/components/Popover/Popover";
 import { SuperTitle } from "@/app/components/SuperTitle";
 import { formatText } from "@/interfaces/FormatReact";
 import { Cliente } from "@/interfaces/client.interface";
 import { Lista } from "@/interfaces/list.interface";
-import {
-    dateFormat,
-    dateFormatShort,
-    moneyFormat
-} from "@/interfaces/mapper";
+import { dateFormat, dateFormatShort, moneyFormat } from "@/interfaces/mapper";
 import { obtenerImagenLista } from "@/redux/chunks/listaChunk";
 import { seleccionarCliente } from "@/redux/features/clienteSlice";
 import { updateLista } from "@/redux/features/listaSlice";
 import { useAppDispatch } from "@/redux/hooks";
-import {
-    useGetListaByIdQuery
-} from "@/redux/services/listaApi";
+import { useGetListaByIdQuery } from "@/redux/services/listaApi";
 import { AnimatePresence, LayoutGroup, motion } from "framer-motion";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import ListasIdSkeleton from "./lista.skeleton";
+import toast from "react-hot-toast";
 
 interface IParams {
     listaId: string;
@@ -61,9 +53,18 @@ function ListasIdPage({ params }: { params: IParams }) {
                         }
                         childrenRight={
                             <OptionsMenu
-                                imprimirLista={() =>
-                                    dispatch(obtenerImagenLista(data as any))
-                                }
+                                imprimirLista={() => {
+                                    toast.promise(
+                                        dispatch(
+                                            obtenerImagenLista(data as any)
+                                        ),
+                                        {
+                                            loading: "Generando recibo...",
+                                            success: <b>Recibo listo</b>,
+                                            error: <b>Error al generar</b>,
+                                        }
+                                    );
+                                }}
                                 actualizarLista={actualizarLista}
                             >
                                 <div className="w-full h-full flex items-center justify-center">
@@ -124,16 +125,16 @@ function ListasIdPage({ params }: { params: IParams }) {
                         <p className="font-semibold pb-2 text-secondary-100 uppercase flex justify-between">
                             Productos
                         </p>
-                        <div className="flex flex-col gap-y-4 h-[calc(100vh-320px)] pb-32 overflow-x-hidden overflow-y-scroll">
+                        <div className="flex flex-col gap-y-4 h-[calc(100vh-320px)] pb-16 overflow-x-hidden overflow-y-scroll">
                             {data?.items.map((item, index) => (
                                 <div
                                     className="text-secondary-100 flex items-center gap-x-2"
                                     key={index}
                                 >
-                                    <span className="text-secondary-200 text-xs">
+                                    <span className="text-secondary-200 text-sm">
                                         {index + 1}.-{" "}
                                     </span>{" "}
-                                    <div className="w-full  flex justify-between">
+                                    <div className="w-full  flex justify-between text-lg">
                                         {item.calculated ? (
                                             <span>{item?.nombre}</span>
                                         ) : (
@@ -146,10 +147,6 @@ function ListasIdPage({ params }: { params: IParams }) {
                                             </span>
                                         )}
                                         <span>
-                                            {" "}
-                                            <span className="text-sm">
-                                                {" "}
-                                            </span>{" "}
                                             {moneyFormat(item.montoItem)}
                                         </span>
                                     </div>

@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+body {
+  /* Bloquear la rotación */
+  orientation: portrait;
+}
 
 .triangulo-equilatero-bottom-left {
     width: 0;

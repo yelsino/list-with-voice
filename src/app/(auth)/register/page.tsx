@@ -57,14 +57,14 @@ function Signup() {
             
             <div className="flex flex-col gap-y-5">
                 <div className="font-poppins text-lg  text-secondary-200">
-                    Usa la inteligencia artificial para crear rapidamente listas
-                    de pedidos y generar voucher de pagos.
+                    Usa la inteligencia artificial para crear rapidamente listas de pedidos y generar voucher de pagos.
                 </div>
             </div>
             {/* inputs */}
+            {/* <div className="flex flex-col gap-y-4 h-[calc(100vh-320px)] pb-10 overflow-x-hidden overflow-y-scroll"> */}
             <form
                 autoComplete="new-password"
-                className="flex flex-col gap-y-4 mt-3"
+                className="flex flex-col gap-y-4 mt-3 overflow-y-scroll pb-32"
                 onSubmit={handleSubmit}
             >
                 <div>
@@ -95,7 +95,7 @@ function Signup() {
                     />
                 </div>
 
-                <div className="flex justify-center mt-8">
+                <div className="flex justify-center pt-4">
                     <button
                         type="submit"
                         className="bg-secondary-100 px-5 py-3 rounded-full font-bold"

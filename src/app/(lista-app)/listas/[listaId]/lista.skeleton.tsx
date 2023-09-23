@@ -36,7 +36,7 @@ function ListasIdSkeleton() {
                         PRODUCTOS
                     </p>
                     <div className="flex flex-col gap-y-4 h-[calc(100vh-320px)] pb-10 overflow-x-hidden overflow-y-scroll">
-                        {[1, 2, 3, 4, 5, 6, 7, 8].map((item, index) => (
+                        {[1, 2, 3, 4, 5, 6].map((item, index) => (
                             <div
                                 className="text-secondary-100 flex items-center gap-x-2 bg-primary-100 py-4 animate-pulse"
                                 key={index}

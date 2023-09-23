@@ -1,4 +1,5 @@
 "use client";
+import "regenerator-runtime/runtime";
 import { comando } from "@/app/components/Voice/comandos";
 import useGenerateList from "@/app/hooks/useGenerateList";
 import { buildCommandRegex } from "@/interfaces/mapper";
@@ -8,7 +9,6 @@ import toast from "react-hot-toast";
 import SpeechRecognition, {
     useSpeechRecognition,
 } from "react-speech-recognition";
-import "regenerator-runtime/runtime";
 
 interface VoiceControlContextProps {
     transcript: string;
