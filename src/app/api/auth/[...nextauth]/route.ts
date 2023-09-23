@@ -21,6 +21,9 @@ export const authOptions: NextAuthOptions  = {
                 // await connectDB();
                 const userFound = await prisma.usuario.findFirst({
                     where: { nombreUsuario: credentials?.nombreUsuario },
+                    include: {
+                        tienda: true
+                    }
                 });
 
                 if (!userFound) throw new Error("Invalid credentials");

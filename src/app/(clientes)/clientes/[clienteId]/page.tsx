@@ -93,8 +93,6 @@ function ClienteIdPage({ params }: { params: IParams }) {
                                     <p className="text-lg">Lista pagada s/. 50.00</p>
                                     
                                     <div className="text-secondary-200">
-                                        {/* <p>Pagado: si</p> */}
-                                        {/* <p>Adelanto: s/. 100.00</p> */}
                                         <p className="capitalize">
                                         {dateFormat(lista.createdAt)}
                                     </p>

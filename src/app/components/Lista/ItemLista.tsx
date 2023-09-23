@@ -35,8 +35,10 @@ export const ItemLista = ({ item, index }: Props) => {
     };
 
     const renovarItem = (item: ItemList) => {
+        // dispatch(selectItem(item))
         dispatch(selectItem(item))
-        // dispatch(updateItem({...item,status:'pending'}))
+        dispatch(updateItem({...item,status:'updating'}))
+        resetTranscript()
     };
 
     return (

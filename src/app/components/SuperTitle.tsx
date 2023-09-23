@@ -6,7 +6,7 @@ interface Props {
 export const SuperTitle = ({ title, children }: Props) => {
     return (
         <div className="font-catamaran">
-            <p className="text-4xl capitalize text-secondary-100 font-black   leading-tight  ">
+            <p className="text-4xl  text-secondary-100 font-black   leading-tight">
                 {title}
             </p>
             {children}

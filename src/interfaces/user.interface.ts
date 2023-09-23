@@ -8,9 +8,11 @@ export interface Tienda {
     numeroContacto: string;
     email: string;
     referencia: string;
+    texto1: string;
+    texto2: string;
     urlTienda: string;
-    codigoQr: string;
-    codigoBarra: string;
+    codigoQr: boolean;
+    codigoBarra: boolean;
     createdAt?: Date;
     updatedAt?: Date;
 }

@@ -69,8 +69,9 @@ function useGenerateList({
                         createdAt: new Date().toISOString(),
                         monto: Number(monto),
                     })
-                );
-                console.log("abonar: ", monto);
+                    );
+                    resetTranscript()
+                
             },
             matchInterim: true,
         },

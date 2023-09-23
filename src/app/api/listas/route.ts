@@ -10,9 +10,9 @@ import { generarItemListBD, montoTotalLista } from "./mapper/listas";
 
 const prisma = new PrismaClient();
 
-
 export async function POST(request: Request) {
     const body: Lista = await request.json();
+    console.log("BODY::::", body);
 
     try {
         const currentUser = await getCurrentUser();
@@ -43,6 +43,8 @@ export async function POST(request: Request) {
         } else {
             clienteId = body.cliente.id as string;
         }
+
+        // const abonos = body.abonos.
 
         const nuevaLista = await prisma.lista.create({
             data: {
@@ -115,40 +117,46 @@ export async function GET(request: NextRequest) {
 
 export async function PUT(request: Request) {
     const body: Lista = await request.json();
+    console.log("BODY::::", body);
+    try {
+        // Obtener la lista actual
+        const listaActual = await prisma.lista.findUnique({
+            where: { id: body.id },
+            include: { items: true },
+        });
 
-    // Obtener la lista actual
-    const listaActual = await prisma.lista.findUnique({
-        where: { id: body.id },
-        include: { items: true },
-    });
+        if (!listaActual) {
+            return new Response("Lista no encontrada", { status: 404 });
+        }
 
-    if (!listaActual) {
-        return new Response("Lista no encontrada", { status: 404 });
-    }
+        // Calcular el nuevo monto total
+        const montoTotalNuevo = montoTotalLista(body.items);
 
-    // Calcular el nuevo monto total
-    const montoTotalNuevo = montoTotalLista(body.items);
+        const abonos: any = listaActual.abonos;
 
-    const abonos: any = listaActual.abonos;
-
-    const listaActualizada = await prisma.lista.update({
-        where: { id: body.id },
-        data: {
-            montoTotal: montoTotalNuevo,
-            pagado: body.pagado,
-            clienteId: body.cliente.id ?? "",
-            completado: body.items.every((item) => item.status === "success"),
-            abonos: [...abonos, ...body.abonos] as any,
-            items: {
-                upsert: body.items.map((item) => ({
-                    where: { id: item.id },
-                    create: generarItemListBD(item),
-                    update: generarItemListBD(item),
-                })),
+        const listaActualizada = await prisma.lista.update({
+            where: { id: body.id },
+            data: {
+                montoTotal: montoTotalNuevo,
+                pagado: body.pagado,
+                clienteId: body.cliente.id ?? "",
+                completado: body.items.every(
+                    (item) => item.status === "success"
+                ),
+                abonos: [...abonos, ...body.abonos] as any,
+                items: {
+                    upsert: body.items.map((item) => ({
+                        where: { id: item.id },
+                        create: generarItemListBD(item),
+                        update: generarItemListBD(item),
+                    })),
+                },
             },
-        },
-        include: { items: true },
-    });
+            include: { items: true },
+        });
 
-    return NextResponse.json(listaActualizada);
+        return NextResponse.json(listaActualizada);
+    } catch (error) {
+        NextResponse.error();
+    }
 }

@@ -16,6 +16,8 @@ model Tienda {
   nombreTienda   String
   logo           String
   ubicacion      String
+  texto1         String
+  texto2         String
   numeroContacto String
   email          String
   referencia     String
@@ -48,20 +50,21 @@ model Usuario {
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 }
-  // usuario   Usuario  @relation(fields: [usuarioId], references: [id])
-  // usuarioId String   @map("usuarioId") @db.ObjectId
+
+// usuario   Usuario  @relation(fields: [usuarioId], references: [id])
+// usuarioId String   @map("usuarioId") @db.ObjectId
 model Lista {
-  id            String     @id @default(auto()) @map("_id") @db.ObjectId
-  cliente       Cliente    @relation(fields: [clienteId], references: [id])
-  clienteId     String      @map("clienteId") @db.ObjectId
-  numero        Int
-  items         ItemList[]
-  abonos        Json[]
-  montoTotal    Float      @default(0)
-  pagado        Boolean    @default(false)
-  completado    Boolean    @default(false)
-  createdAt     DateTime   @default(now())
-  updatedAt     DateTime   @updatedAt
+  id         String     @id @default(auto()) @map("_id") @db.ObjectId
+  cliente    Cliente    @relation(fields: [clienteId], references: [id])
+  clienteId  String     @map("clienteId") @db.ObjectId
+  numero     Int
+  items      ItemList[]
+  abonos     Json[]
+  montoTotal Float      @default(0)
+  pagado     Boolean    @default(false)
+  completado Boolean    @default(false)
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
 }
 
 model ItemList {

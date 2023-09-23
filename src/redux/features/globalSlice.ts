@@ -1,6 +1,7 @@
 import { GlobalState, SearchParams } from "@/interfaces/global.interface";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { format, subDays } from "date-fns";
+import { actualizarNegocio } from "../chunks/negocioChunck";
 
 const initialState: GlobalState = {
     searchParams: {
@@ -27,6 +28,12 @@ export const globalSlice = createSlice({
             };
         },
     },
+    // extraReducers: (builder) => {
+    //     builder.addCase(actualizarNegocio.fulfilled, (state, action) => {
+    //         return state;
+    //     });
+       
+    // },
 });
 
 export const { udateSearchParams, cleanSearchParams } = globalSlice.actions;

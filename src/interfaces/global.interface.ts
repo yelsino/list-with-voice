@@ -9,7 +9,7 @@ export interface SearchParams {
 }
 
 export interface GlobalState {
-    searchParams : SearchParams
+    searchParams : SearchParams;
 }
 
 export interface ResponseParams<T> {

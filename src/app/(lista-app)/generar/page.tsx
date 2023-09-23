@@ -50,6 +50,8 @@ function GenerarPage() {
 
         if (someItemFailed) return;
 
+        const abonos = listaState.abono ? [listaState.abono] : [];
+
         toast
             .promise(
                 registrarListDB({
@@ -57,7 +59,7 @@ function GenerarPage() {
                     completado: false,
                     pagado: pagada ?? false,
                     cliente: clienteState.cliente as Cliente,
-                    abonos: [listaState.abono as Abono],
+                    abonos: abonos,
                 }).unwrap(),
                 {
                     loading: "Generando...",
@@ -90,6 +92,7 @@ function GenerarPage() {
         );
 
         if (someItemFailed) return;
+        const abonos = listaState.abono ? [listaState.abono] : [];
 
         toast
             .promise(
@@ -102,7 +105,7 @@ function GenerarPage() {
                     completado: false,
                     pagado: pagada ?? false,
                     id: listaState.id,
-                    abonos: [listaState.abono as Abono],
+                    abonos: abonos,
                 }).unwrap(),
                 {
                     loading: "Actualizando...",
@@ -153,7 +156,7 @@ function GenerarPage() {
                         )}
                     >
                         <p className="text-secondary-200 text-lg font-semibold">
-                            Pagada: {pagada ? "Si" : "No"} - Adelanto:{" "}
+                            Pagada: {pagada ? "Si" : "No"} - Abonar:{" "}
                             {moneyFormat(listaState.abono?.monto ?? 0)}
                         </p>
                     </SuperTitle>
@@ -190,19 +193,19 @@ function GenerarPage() {
                                 </div>
                             </div>
                         )}
-                    </div>
 
-                    <LayoutGroup>
-                        <motion.div className="flex flex-col  h-[calc(100vh-320px)] pb-20 overflow-hidden overflow-y-scroll gap-y-1">
-                            {itemsList.map((item, index) => (
-                                <ItemLista
-                                    key={item.id}
-                                    index={index}
-                                    item={item}
-                                />
-                            ))}
-                        </motion.div>
-                    </LayoutGroup>
+                        <LayoutGroup>
+                            <motion.div className="flex flex-col  h-[calc(100vh-320px)] pb-10 overflow-hidden overflow-y-scroll gap-y-1">
+                                {itemsList.map((item, index) => (
+                                    <ItemLista
+                                        key={item.id}
+                                        index={index}
+                                        item={item}
+                                    />
+                                ))}
+                            </motion.div>
+                        </LayoutGroup>
+                    </div>
                 </div>
             )}
         </>

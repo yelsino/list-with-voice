@@ -7,6 +7,7 @@ import {
     IconAddUser,
     IconConfig,
     IconLists,
+    IconNegocio,
     IconSave,
     IconUsers,
 } from "./components/Icons";
@@ -34,6 +35,11 @@ export default function Home() {
             title: "ver clientes",
             url: "/clientes",
             icon: <IconUsers estilo="" />,
+        },
+        {
+            title: " negocio",
+            url: "/negocio",
+            icon: <IconNegocio estilo="" />,
         },
     ];
 

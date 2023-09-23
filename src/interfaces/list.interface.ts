@@ -1,6 +1,6 @@
 import { ISODateString } from "next-auth";
 import { Cliente } from "./client.interface";
-import { Usuario } from "./user.interface";
+import { Tienda, Usuario } from "./user.interface";
 
 export interface ListaState {
     id?: string;
@@ -54,6 +54,11 @@ export interface Lista {
     montoTotal?: number;
     createdAt?: Date;
     updatedAt?: Date;
+}
+
+export interface PrintLista {
+    lista: Lista,
+    tienda: Tienda
 }
 
 

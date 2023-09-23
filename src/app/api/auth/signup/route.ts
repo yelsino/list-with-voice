@@ -1,4 +1,3 @@
-
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcryptjs";
 import { NextResponse } from "next/server";
@@ -6,7 +5,6 @@ const prisma = new PrismaClient();
 
 export async function POST(request: Request) {
     try {
-
         const { nombreUsuario, password } = await request.json();
 
         if (password < 6)
@@ -43,6 +41,23 @@ export async function POST(request: Request) {
                 nombres: "",
                 nombreUsuario: nombreUsuario,
                 password: hashedPassword,
+            },
+        });
+
+        await prisma.tienda.create({
+            data: {
+                email: "",
+                logo: "",
+                nombreTienda: "tienda",
+                numeroContacto: "",
+                referencia: "",
+                texto1: "Bienvenido a nuestro negocio",
+                texto2: "de frutas y verduras",
+                ubicacion: "",
+                urlTienda: "",
+                codigoBarra: false,
+                codigoQr: false,
+                usuarioId: newUser.id,
             },
         });
 

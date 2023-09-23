@@ -18,6 +18,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import ListasIdSkeleton from "./lista.skeleton";
 import toast from "react-hot-toast";
+import { getSession } from "next-auth/react";
 
 interface IParams {
     listaId: string;
@@ -39,6 +40,25 @@ function ListasIdPage({ params }: { params: IParams }) {
         push(`/generar`);
     };
 
+    const imprimirLista = async () => {
+        const session: any = await getSession();
+        if (!session) return;
+
+        toast.promise(
+            dispatch(
+                obtenerImagenLista({
+                    lista: data as any,
+                    tienda: session.user.tienda,
+                })
+            ),
+            {
+                loading: "Generando recibo...",
+                success: "Recibo listo",
+                error: "Error al generar",
+            }
+        );
+    };
+
     return (
         <>
             {isLoading ? (
@@ -53,18 +73,7 @@ function ListasIdPage({ params }: { params: IParams }) {
                         }
                         childrenRight={
                             <OptionsMenu
-                                imprimirLista={() => {
-                                    toast.promise(
-                                        dispatch(
-                                            obtenerImagenLista(data as any)
-                                        ),
-                                        {
-                                            loading: "Generando recibo...",
-                                            success: <b>Recibo listo</b>,
-                                            error: <b>Error al generar</b>,
-                                        }
-                                    );
-                                }}
+                                imprimirLista={imprimirLista}
                                 actualizarLista={actualizarLista}
                             >
                                 <div className="w-full h-full flex items-center justify-center">
