@@ -70,7 +70,6 @@ export default function AutoComplete({}: Props) {
                 <div className="relative mt-1">
                     <div className="relative w-full cursor-default overflow-hidden rounded-lg bg-primary-100 text-left shadow-md focus:outline-none ">
                         <Combobox.Input
-                            readOnly
                             className="w-full border-none py-4 pl-3 pr-10 text-lg leading-5 text-secondary-100  bg-primary-100 placeholder:text-secondary-200 focus:outline-none"
                             displayValue={(person: any) => person?.nombres}
                             onChange={(event) => setQuery(event.target.value)}

@@ -30,7 +30,8 @@ function SelectDate() {
             displayFormat={"DD/MM/YYYY"}
             separator={"a"}
             showShortcuts={true}
-            inputClassName=" w-full bg-primary-100 text-secondary-100 text-lg rounded-lg p-3 placeholder:text-secondary-200 text-lg"
+            inputClassName=" w-full bg-primary-100 text-secondary-100 text-lg rounded-lg p-3 placeholder:text-secondary-200 text-lg focus:outline-none"
+            readOnly
             configs={
                 {
                     shortcuts: {
