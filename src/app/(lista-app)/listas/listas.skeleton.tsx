@@ -17,7 +17,7 @@ function ListasSkeleton() {
                     }
                     childrenRight={
                         <Link
-                            href="/listas/selectdate"
+                            href="/filtrar"
                             className="cursor-pointer"
                         >
                             <IconCalendar />

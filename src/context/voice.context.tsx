@@ -39,7 +39,7 @@ interface Props {
 }
 
 export const VoiceControlProvider = ({ children }: Props) => {
-    const { push } = useRouter();
+    const { push,back } = useRouter();
 
     const commands = [
         {
@@ -67,7 +67,46 @@ export const VoiceControlProvider = ({ children }: Props) => {
             },
             matchInterim: true,
         },
-        // Otros comandos aquí
+        {
+            command: buildCommandRegex(comando.direccion.clientes),
+            callback: () => {
+                push("/clientes");
+                context.resetTranscript();
+            },
+            matchInterim: true,
+        },
+        {
+            command: buildCommandRegex(comando.direccion.generar),
+            callback: () => {
+                push("/generar");
+                context.resetTranscript();
+            },
+            matchInterim: true,
+        },
+        {
+            command: buildCommandRegex(comando.direccion.inicio),
+            callback: () => {
+                push("/");
+                context.resetTranscript();
+            },
+            matchInterim: true,
+        },
+        {
+            command: buildCommandRegex(comando.direccion.listas),
+            callback: () => {
+                push("/listas");
+                context.resetTranscript();
+            },
+            matchInterim: true,
+        },
+        {
+            command: buildCommandRegex(comando.direccion.retroceder),
+            callback: () => {
+                back();
+                context.resetTranscript();
+            },
+            matchInterim: true,
+        },
     ];
 
     const {

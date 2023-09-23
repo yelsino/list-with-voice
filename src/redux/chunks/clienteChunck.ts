@@ -19,6 +19,8 @@ export const obtenerClientes = createAsyncThunk(
             }
         );
         
+        console.log("RESPONSE AXIOS: ", response);
+        
         if(response.statusText !== "OK") return [];
 
         return response.data.data

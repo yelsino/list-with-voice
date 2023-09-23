@@ -18,13 +18,13 @@ function ListasIdSkeleton() {
                     }
                     childrenRight={
                         <button className="w-full h-full flex items-center justify-center">
-                                <IconTool />
-                            </button>
+                            <IconTool />
+                        </button>
                     }
                 />
 
                 <div className="">
-                <SuperTitle title={formatText("Cargando Lista")}>
+                    <SuperTitle title={formatText("Cargando Lista")}>
                         <div className="text-lg text-secondary-200">
                             <p>Cargando...</p>
                         </div>
@@ -40,9 +40,7 @@ function ListasIdSkeleton() {
                             <div
                                 className="text-secondary-100 flex items-center gap-x-2 bg-primary-100 py-4 animate-pulse"
                                 key={index}
-                            >
-                               
-                            </div>
+                            ></div>
                         ))}
                     </div>
                 </div>

@@ -6,6 +6,7 @@ export const goconfig = [
 ];
 
 export const goInicio = [
+    "inicio",
     "ir a inicio",
     "volver a inicio",
     "regresar al inicio",
