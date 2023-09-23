@@ -1,5 +1,5 @@
-import { URLBASE } from "@/app/utils/constantes";
 import { Cliente } from "@/interfaces/client.interface";
+import { URLBASE } from "@/interfaces/constantes";
 import { ResponseParams, SearchParams } from "@/interfaces/global.interface";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";

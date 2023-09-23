@@ -1,4 +1,4 @@
-import { URLBASE } from "@/app/utils/constantes";
+import { URLBASE } from "@/interfaces/constantes";
 import { SearchParams } from "@/interfaces/global.interface";
 import {
     GptRequest,

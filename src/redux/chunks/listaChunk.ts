@@ -2,7 +2,7 @@ import { Lista, } from "@/interfaces/list.interface";
 import { Usuario } from "@/interfaces/user.interface";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { fetchSinToken } from "../fetch";
-import { URLBASE } from "@/app/utils/constantes";
+import { URLBASE } from "@/interfaces/constantes";
 
 export const obtenerImagenLista = createAsyncThunk(
     "obtener_imagen",
