@@ -21,7 +21,7 @@ export const obtenerClientes = createAsyncThunk(
         
         console.log("RESPONSE AXIOS: ", response);
         
-        if(response.statusText !== "OK") return [];
+        if(response.status !== 200) return [];
 
         return response.data.data
         
