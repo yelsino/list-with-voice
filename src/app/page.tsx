@@ -13,9 +13,9 @@ import {
 } from "./components/Icons";
 import { SuperTitle } from "./components/SuperTitle";
 import { useEffect } from "react";
+// import * as noble from "noble";
 
 export default function Home() {
-
     const items = [
         {
             title: "crear lista",
@@ -44,9 +44,9 @@ export default function Home() {
         },
     ];
 
-    useEffect(()=>{
-        conectarImpresoraTermica();
-    },)
+    // useEffect(() => {
+    //     conectarImpresoraTermica();
+    // });
 
     return (
         <>
@@ -63,9 +63,7 @@ export default function Home() {
                 }
             />
 
-
-            <SuperTitle title={formatText("Hola! Lista nueva?")}>
-            </SuperTitle>
+            <SuperTitle title={formatText("Hola! Lista nueva?")}>{null}</SuperTitle>
             {/* contenido */}
             <div className="flex flex-col gap-y-5">
                 <div className="font-poppins text-lg  text-secondary-200">
@@ -90,20 +88,7 @@ export default function Home() {
     );
 }
 
-
-async function conectarImpresoraTermica() {
-    if ("bluetooth" in navigator) {
-        navigator.bluetooth.requestDevice({
-          acceptAllDevices: true,
-          optionalServices: [] // Puedes especificar servicios específicos si lo deseas
-        })
-        .then(device => {
-          console.log("Dispositivo encontrado:", device.name);
-        })
-        .catch(error => {
-          console.error("Error al buscar dispositivos Bluetooth:", error);
-        });
-      } else {
-        console.log("El navegador no admite Web Bluetooth Scanning.");
-      }
-  }
+// async function conectarImpresoraTermica() {
+//     const devices = await noble.startScanning([], true);
+//     console.log("devices", devices);
+// }
