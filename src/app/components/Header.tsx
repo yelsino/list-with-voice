@@ -1,4 +1,3 @@
-import Link from "next/link";
 
 interface Props {
     childrenLeft: JSX.Element;
@@ -7,7 +6,7 @@ interface Props {
 
 export const Header = ({ childrenLeft, childrenRight }: Props) => {
     return (
-        <div className="flex justify-between items-center ">
+        <div className="flex justify-between items-center pt-2">
             <span className="text-4xl font-bold font-poppins text-text1 tracking-wider text-secondary-100">
                 {childrenLeft}
             </span>

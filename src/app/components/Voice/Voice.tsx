@@ -8,11 +8,8 @@ function Voice() {
     const { startListening, listening, finalTranscript } = useVoiceControl();
 
     return (
-        <div className="fixed bottom-0 left-1/2 transform py-2 -translate-x-1/2  w-full flex justify-center bg-primary-200  sm:rounded-3xl select-none">
-            {/* <div className="">
-                <p className="text-secondary-100">FINA: {finalTranscript}</p>
-            </div> */}
-
+        <div className="fixed sm:absolute bottom-0 left-1/2 transform py-3 -translate-x-1/2  bg-primary-200 w-full flex justify-center  sm:rounded-3xl select-none">
+           
             <button  onClick={startListening} type="button" className="select-none focus:select-none">
                 <div
                     className={`${
@@ -24,7 +21,7 @@ function Voice() {
                     <IconMicrophone />
                 </div>
             </button>
-            <ButtonBack />
+            {/* <ButtonBack /> */}
         </div>
     );
 }

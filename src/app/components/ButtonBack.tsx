@@ -14,7 +14,7 @@ function ButtonBack() {
             {shouldShowButton && (
                 <button
                     onClick={() => router.back()}
-                    className=" absolute bottom-1 right-1 text-fuchsia-500  p-4  sm:rounded-3xl cursor-pointer"
+                    className="fixed sm:absolute bottom-0  sm:translate-y-0  right-1 text-fuchsia-500  p-4  sm:rounded-3xl cursor-pointer "
                 >
                     <svg
                         xmlns="http://www.w3.org/2000/svg"

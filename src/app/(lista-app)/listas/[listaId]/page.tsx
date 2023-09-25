@@ -19,6 +19,7 @@ import { useState } from "react";
 import ListasIdSkeleton from "./lista.skeleton";
 import toast from "react-hot-toast";
 import { getSession } from "next-auth/react";
+import { ArrowsPointingOutIcon } from "@heroicons/react/20/solid";
 
 interface IParams {
     listaId: string;
@@ -30,6 +31,7 @@ function ListasIdPage({ params }: { params: IParams }) {
     });
 
     const [detalle, setDetalle] = useState(false);
+    const [expand, setExpand] = useState(false);
 
     const { push } = useRouter();
     const dispatch = useAppDispatch();
@@ -64,7 +66,7 @@ function ListasIdPage({ params }: { params: IParams }) {
             {isLoading ? (
                 <ListasIdSkeleton />
             ) : (
-                <div className="flex flex-col gap-y-4">
+                <>
                     <Header
                         childrenLeft={
                             <Link href="/listas" className="text-2xl">
@@ -83,58 +85,68 @@ function ListasIdPage({ params }: { params: IParams }) {
                         }
                     />
 
-                    <SuperTitle
-                        title={formatText(data?.cliente?.nombres ?? "")}
-                    >
-                        <div className="text-lg text-secondary-200">
-                            <p className="capitalize">
-                                {dateFormat(data?.createdAt)}
-                            </p>
-                            <p>Monto: {moneyFormat(data?.montoTotal)}</p>
-                            <p>Lista pagada: {data?.pagado ? "Si" : "No"}</p>
+                    {!expand && (
+                        <SuperTitle
+                            title={formatText(data?.cliente?.nombres ?? "")}
+                        >
+                            <div className="text-lg text-secondary-200 ">
+                                <p className="capitalize">
+                                    {dateFormat(data?.createdAt)}
+                                </p>
+                                <p>Monto: {moneyFormat(data?.montoTotal)}</p>
+                                <p>
+                                    Lista pagada: {data?.pagado ? "Si" : "No"}
+                                </p>
 
-                            {(data?.abonos?.length ?? 0) > 0 && (
-                                <LayoutGroup>
-                                    <motion.div className="bg-primary-100">
-                                        <p
-                                            onClick={(e) => {
-                                                setDetalle(!detalle);
-                                            }}
-                                            className="text-secondary-200 py-1 cursor-pointer"
-                                        >
-                                            {" "}
-                                            {"> Detalle de abonos"}
-                                        </p>
-                                        <AnimatePresence>
-                                            {detalle && (
-                                                <motion.div
-                                                    initial={{ opacity: 0 }}
-                                                    animate={{ opacity: 1 }}
-                                                    exit={{ opacity: 0 }}
-                                                    className="pl-5"
-                                                >
-                                                    {data?.abonos.map(
-                                                        (abono, index) => (
-                                                            <ItemAbono
-                                                                key={index}
-                                                                abono={abono}
-                                                            />
-                                                        )
-                                                    )}
-                                                </motion.div>
-                                            )}
-                                        </AnimatePresence>
-                                    </motion.div>
-                                </LayoutGroup>
-                            )}
-                        </div>
-                    </SuperTitle>
+                                {(data?.abonos?.length ?? 0) > 0 && (
+                                    <LayoutGroup>
+                                        <motion.div className="bg-primary-100">
+                                            <p
+                                                onClick={(e) => {
+                                                    setDetalle(!detalle);
+                                                }}
+                                                className="text-secondary-200 py-1 cursor-pointer"
+                                            >
+                                                {" "}
+                                                {"> Detalle de abonos"}
+                                            </p>
+                                            <AnimatePresence>
+                                                {detalle && (
+                                                    <motion.div
+                                                        initial={{ opacity: 0 }}
+                                                        animate={{ opacity: 1 }}
+                                                        exit={{ opacity: 0 }}
+                                                        className="pl-5"
+                                                    >
+                                                        {data?.abonos.map(
+                                                            (abono, index) => (
+                                                                <ItemAbono
+                                                                    key={index}
+                                                                    abono={
+                                                                        abono
+                                                                    }
+                                                                />
+                                                            )
+                                                        )}
+                                                    </motion.div>
+                                                )}
+                                            </AnimatePresence>
+                                        </motion.div>
+                                    </LayoutGroup>
+                                )}
+                            </div>
+                        </SuperTitle>
+                    )}
 
-                    <div>
-                        <p className="font-semibold pb-2 text-secondary-100 uppercase flex justify-between">
-                            Productos
+                    <div  className="pt-2">
+                        <p
+                            className="font-semibold pb-2 text-secondary-100 uppercase flex justify-between "
+                        >
+                            <span>Productos</span>
+                            <ArrowsPointingOutIcon width={20} height={20}  onClick={()=> setExpand(!expand)}
+                             />
                         </p>
-                        <div className="flex flex-col gap-y-4 h-[calc(100vh-320px)] pb-16 overflow-x-hidden overflow-y-scroll">
+                        <div className={`flex flex-col gap-y-4 ${expand ? 'h-[calc(100vh-200px)] sm:h-[calc(100vh-340px)]' : 'h-[calc(100vh-400px)] sm:h-[calc(100vh-520px)]'}   overflow-x-hidden pb-5 overflow-y-scroll`}>
                             {data?.items.map((item, index) => (
                                 <div
                                     className="text-secondary-100 flex items-center gap-x-2"
@@ -163,7 +175,7 @@ function ListasIdPage({ params }: { params: IParams }) {
                             ))}
                         </div>
                     </div>
-                </div>
+                </>
             )}
         </>
     );
