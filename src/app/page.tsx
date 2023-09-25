@@ -12,8 +12,6 @@ import {
     IconUsers,
 } from "./components/Icons";
 import { SuperTitle } from "./components/SuperTitle";
-import { useEffect } from "react";
-// import * as noble from "noble";
 
 export default function Home() {
     const items = [
