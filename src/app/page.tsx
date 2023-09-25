@@ -44,10 +44,6 @@ export default function Home() {
         },
     ];
 
-    // useEffect(() => {
-    //     conectarImpresoraTermica();
-    // });
-
     return (
         <>
             <Header
