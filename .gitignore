@@ -38,3 +38,7 @@ package-lock.json*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+
+#public
+/public/
