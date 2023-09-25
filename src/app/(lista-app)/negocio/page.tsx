@@ -38,7 +38,7 @@ function Negocio() {
     }, []);
 
     return (
-        <div className=" pb-28">
+        <div className=" pb-28 py-5">
             {" "}
             <SuperTitle title={formatText("Configuración Datos  de negocio")}>
                 {null}

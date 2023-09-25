@@ -70,7 +70,7 @@ export const listaApi = createApi({
                         {
                             role: "system",
                             content: `
-                            Eres un asistente inteligente que transforma descripciones de productos en formato JSON. Tu objetivo es extraer información relevante de instrucciones en español peruano y generar una respuesta JSON. Debes analizar estos textos; si el texto no contiene números, no es un nombre de producto válido. 
+                            Eres un asistente inteligente que transforma descripciones de productos en formato JSON. Tu objetivo es extraer información relevante de instrucciones en español peruano y generar una respuesta JSON. Debes analizar estos textos; si el texto no contiene números, no es una descripción válida. 
                             
                             Aquí hay reglas para la conversión, no son límites rígidos; debes ser inteligente y adaptarte para hacer una lista de compras adecuada:
                             
@@ -80,7 +80,7 @@ export const listaApi = createApi({
                             Respuesta: "{ 'cantidad': 5.5, 'medida': 'kg', 'nombre': 'manzana', 'precio': 2, 'calculated': false, 'codigo': '${codigo}' }"
 
                             Instrucción: 'un litro de aceite a 7 soles'
-                            Respuesta: "{ 'cantidad': 1, 'medida': 'kg', 'nombre': 'aceite', 'precio': 7, 'calculated': false, 'codigo': '${codigo}' }"
+                            Respuesta: "{ 'cantidad': 1, 'medida': 'lt', 'nombre': 'aceite', 'precio': 7, 'calculated': false, 'codigo': '${codigo}' }"
                             
                             2. Si la instrucción contiene únicamente el montoItem y el nombre del producto, la respuesta debe incluir estos datos, y la propiedad "calculated" debe establecerse en "true". Por ejemplo:
 
@@ -97,20 +97,18 @@ export const listaApi = createApi({
                             
                             4. Si la instrucción tiene información de varios productos, es confuso, no se puede extraer informacion clara añade o  'status': 'error' al objeto y extrae al menos el nombre del producto. Por ejemplo:
 
-                            Instrucción: '15 kg de zanahorias a un sol veinte 10 litros de leche a un sol 10 8 kg de arroz a un sol 50'
                             Respuesta: "{'status':'error', nombre: 'información confusa', 'codigo': '${codigo}'}" 
 
-                            Instrucción: 'manzana hola. cuanto cuesta?'
-                            Respuesta: "{ 'nombre': 'manzana',  'status':'error', 'codigo': '${codigo}' }"
+                            5. En algunos casos la instrucciones incluiran la medida del producto en texto completo por ejemplo. kilos, cajas, unidades, costales, etc. debes analizar los textos y abreviarlos de 2 a 3 caracteres. ejemplo. unidades = und.
 
-                        
-
+                            Instrucción: '10 costales de zanahorias a 65 soles'
+                            Respuesta: "{ 'cantidad': 10, 'medida': 'cos', 'nombre': 'zanahorias', 'precio': 65, 'calculated': false, 'codigo': '${codigo}' }"
                             `,
                         },
                         {
                             role: "user",
                             content:
-                                "cinco kilos y medio de cebolla son 2 soles cincuenta",
+                                "cinco kilos y medio de cebolla a 2 soles cincuenta",
                         },
                         {
                             role: "assistant",
@@ -133,7 +131,7 @@ export const listaApi = createApi({
                             role: "assistant",
                             content: JSON.stringify({
                                 cantidad: 3.25,
-                                medida: "l",
+                                medida: "lt",
                                 nombre: "aceite",
                                 precio: 3.2,
                                 calculated: false,
@@ -173,7 +171,7 @@ export const listaApi = createApi({
                         },
                         { role: "user", content: message },
                     ],
-                    temperature: 0.8,
+                    temperature: 0.7,
                 },
                 headers: {
                     "Content-Type": "application/json",
