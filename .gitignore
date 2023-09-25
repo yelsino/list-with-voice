@@ -1,9 +1,11 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+#public
 
 # dependencies
 /node_modules
 /.pnp
 .pnp.js
+/public
 
 # testing
 /coverage
@@ -40,5 +42,3 @@ package-lock.json*
 next-env.d.ts
 
 
-#public
-/public/

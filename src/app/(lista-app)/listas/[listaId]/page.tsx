@@ -146,7 +146,7 @@ function ListasIdPage({ params }: { params: IParams }) {
                             <ArrowsPointingOutIcon width={20} height={20}  onClick={()=> setExpand(!expand)}
                              />
                         </p>
-                        <div className={`flex flex-col gap-y-4 ${expand ? 'h-[calc(100vh-200px)] sm:h-[calc(100vh-340px)]' : 'h-[calc(100vh-400px)] sm:h-[calc(100vh-520px)]'}   overflow-x-hidden pb-5 overflow-y-scroll`}>
+                        <div className={`flex flex-col gap-y-4 ${expand ? 'h-[calc(100vh-200px)] sm:h-[calc(100vh-340px)]' : 'h-[calc(100vh-400px)] sm:h-[calc(100vh-520px)]'}   overflow-x-hidden pb-5 overflow-y-scroll font-dosis`}>
                             {data?.items.map((item, index) => (
                                 <div
                                     className="text-secondary-100 flex items-center gap-x-2"

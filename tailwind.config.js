@@ -21,6 +21,10 @@ module.exports = {
         'text-100': '#ffffff',
         'text-200': '#d8d9d6',
       },
+      fontFamily: {
+        sans: ['var(--font-inter)'],
+        dosis: ['var(--font-dosis)']
+      }
     },
    
   },
