@@ -56,15 +56,28 @@ export const stringToItem = (voice: string): ItemList => {
     };
 };
 
+// export const moneyFormat = (value: any) => {
+//     const numero = Number(value);
+//     const formater = new Intl.NumberFormat("es-PE", {
+//         style: "currency",
+//         currency: "PEN",
+//     });
+//     if (typeof numero !== "number") return formater.format(0);
+
+//     return formater.format(numero);
+// };
+
 export const moneyFormat = (value: any) => {
     const numero = Number(value);
-    const formater = new Intl.NumberFormat("es-PE", {
-        style: "currency",
-        currency: "PEN",
-    });
-    if (typeof numero !== "number") return formater.format(0);
+    if (isNaN(numero)) return ""; // Devuelve una cadena vacía si el valor no es un número.
 
-    return formater.format(numero);
+    // Formatea el número sin el símbolo de la moneda.
+    const formattedValue = numero.toLocaleString("es-PE", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+    });
+
+    return formattedValue;
 };
 
 // "Lunes 26 De agosto De 2023"

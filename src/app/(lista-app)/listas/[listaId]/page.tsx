@@ -146,7 +146,7 @@ function ListasIdPage({ params }: { params: IParams }) {
                             <ArrowsPointingOutIcon width={20} height={20}  onClick={()=> setExpand(!expand)}
                              />
                         </p>
-                        <div className={`flex flex-col gap-y-4 ${expand ? 'h-[calc(100vh-200px)] sm:h-[calc(100vh-340px)]' : 'h-[calc(100vh-400px)] sm:h-[calc(100vh-520px)]'}   overflow-x-hidden pb-5 overflow-y-scroll font-dosis`}>
+                        <div className={`flex flex-col gap-y-4 ${expand ? 'h-[calc(100vh-200px)] sm:h-[calc(100vh-340px)]' : 'h-[calc(100vh-400px)] sm:h-[calc(100vh-520px)]'}   overflow-x-hidden pb-5 overflow-y-scroll  font-sans `}>
                             {data?.items.map((item, index) => (
                                 <div
                                     className="text-secondary-100 flex items-center gap-x-2"
@@ -155,19 +155,19 @@ function ListasIdPage({ params }: { params: IParams }) {
                                     <span className="text-secondary-200 text-sm">
                                         {index + 1}.-{" "}
                                     </span>{" "}
-                                    <div className="w-full  flex justify-between text-lg">
+                                    <div className="w-full  flex justify-between">
                                         {item.calculated ? (
                                             <span>{item?.nombre}</span>
                                         ) : (
-                                            <span>
+                                            <span className="tracking-tight">
                                                 {item.cantidad} {item.medida}{" "}
                                                 {item.nombre}{" "}
-                                                <span className="text-sm text-secondary-200">
+                                                <span className="text-secondary-200 text-sm">
                                                     {item.precio} x und
                                                 </span>
                                             </span>
                                         )}
-                                        <span>
+                                        <span className="">
                                             {moneyFormat(item.montoItem)}
                                         </span>
                                     </div>
