@@ -43,14 +43,14 @@ interface ListaPrint {
     items: ItemPrint[];
 }
 
-export function listaToPrint(lista: Lista): ListaPrint {
-    return {
-        fecha: dateFormat(lista.createdAt),
-        montoTotal: moneyFormat(lista.montoTotal),
-        nombreCliente: lista.cliente?.nombres  ?? "",
-        items: lista.items.map((item) => ({
-            descripcion: `${item.cantidad} ${item.nombre} ${item.precio} x und`,
-            monto: moneyFormat(item.montoItem),
-        })),
-    };
-}
+// export function listaToPrint(lista: Lista): ListaPrint {
+//     return {
+//         fecha: dateFormat(lista.createdAt),
+//         montoTotal: moneyFormat(lista.montoTotal),
+//         nombreCliente: lista.cliente?.nombres  ?? "",
+//         items: lista.items.map((item) => ({
+//             descripcion: `${item.cantidad} ${item.nombre} ${item.precio} x und`,
+//             monto: moneyFormat(item.montoItem),
+//         })),
+//     };
+// }
