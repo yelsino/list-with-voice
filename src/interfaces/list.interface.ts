@@ -3,14 +3,15 @@ import { Cliente } from "./client.interface";
 import { Tienda, Usuario } from "./user.interface";
 
 export interface ListaState {
-    id?: string;
-    itemsList: ItemList[];
+    // id?: string;
+    // itemsList: ItemList[];
     abono: Abono | null;
     itemSelected: ItemList | null;
-    montoTotal?: number;
-    edit?: boolean;
-    pagada?: boolean;
+    // montoTotal?: number;
+    // edit?: boolean;
+    // pagada?: boolean;
     cargando?: boolean;
+    lista: Lista
     // startDate?: DateType;
     // endDate?: DateType;
 }
@@ -42,25 +43,30 @@ export interface Abono {
     monto: number;
 }
 
+export interface Error {
+    id?: string;
+    itemList : ItemList
+}
+
 export interface Lista {
     id?: string;
     numero?: number;
     clienteId?: string;
     items: ItemList[];
     abonos: Abono[];
-    cliente: Cliente; 
+    cliente: Cliente | null; 
     pagado: boolean;
     completado: boolean;
     montoTotal?: number;
     createdAt?: Date;
     updatedAt?: Date;
+    errors: Error[]
 }
 
 export interface PrintLista {
     lista: Lista,
     tienda: Tienda
 }
-
 
 export interface GptRequest {
     message: string;

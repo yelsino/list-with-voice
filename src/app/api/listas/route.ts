@@ -12,12 +12,15 @@ const prisma = new PrismaClient();
 
 export async function POST(request: Request) {
     const body: Lista = await request.json();
-    console.log("BODY::::", body);
+    console.log("BODY::::", body); 
 
     try {
         const currentUser = await getCurrentUser();
 
         if (!currentUser) {
+            return NextResponse.error();
+        }
+        if (!body.cliente) {
             return NextResponse.error();
         }
 
@@ -62,6 +65,13 @@ export async function POST(request: Request) {
                 items: true,
             },
         });
+
+        const errores:any[] = body.errors ?? [];
+        if(errores.length > 0){
+            await prisma.error.createMany({
+                data: errores as any
+            })
+        }
 
         return NextResponse.json(nuevaLista);
     } catch (error) {
@@ -127,6 +137,10 @@ export async function PUT(request: Request) {
 
         if (!listaActual) {
             return new Response("Lista no encontrada", { status: 404 });
+        }
+
+        if (!body.cliente) {
+            return NextResponse.error();
         }
 
         // Calcular el nuevo monto total

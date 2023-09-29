@@ -2,10 +2,10 @@
 import { useVoiceControl } from "@/context/voice.context";
 import "regenerator-runtime/runtime";
 import { IconMicrophone } from "../Icons";
-import ButtonBack from "../ButtonBack";
+
 
 function Voice() {
-    const { startListening, listening, finalTranscript } = useVoiceControl();
+    const { startListening, listening } = useVoiceControl();
 
     return (
         <div className="fixed sm:absolute bottom-0 left-1/2 transform py-3 -translate-x-1/2  bg-primary-200 w-full flex justify-center  sm:rounded-3xl select-none">
@@ -21,7 +21,7 @@ function Voice() {
                     <IconMicrophone />
                 </div>
             </button>
-            {/* <ButtonBack /> */}
+            
         </div>
     );
 }

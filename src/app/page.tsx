@@ -57,7 +57,7 @@ export default function Home() {
                 }
             />
 
-            <SuperTitle title={formatText("Hola!!!!! Lista nueva?")}>{null}</SuperTitle>
+            <SuperTitle title={formatText("Bienvenido! Lista nueva?")}>{null}</SuperTitle>
             {/* contenido */}
             <div className="flex flex-col gap-y-5">
                 <div className="font-poppins text-lg  text-secondary-200">

@@ -41,7 +41,7 @@ function useGenerateList({
 
     const [convertVoiceToItem] = useConvertVoiceToItemMutation();
 
-    const { itemsList, itemSelected } = useAppSelector(
+    const { lista, itemSelected } = useAppSelector(
         (state) => state.listaReducer
     );
     const clienteState = useAppSelector((state) => state.clienteReducer);
@@ -181,7 +181,7 @@ function useGenerateList({
 
     useEffect(() => {
         if (pathname !== "/generar") return;
-        const itemsNoSend: ItemList[] = itemsList
+        const itemsNoSend: ItemList[] = lista.items
             .filter((item) => item.status === "pending")
             .map((item) => ({ ...item, status: "sent" }));
 
@@ -190,7 +190,7 @@ function useGenerateList({
             sendVoiceGPT2(itemsNoSend);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [itemsList]);
+    }, [lista]);
 
     useEffect(() => {
         if (finalTranscript && clienteState.cliente?.status === "pending") {

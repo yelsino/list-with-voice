@@ -109,13 +109,13 @@ function ClientesPage() {
                                     className="text-secondary-100 bg-primary-100 px-3 cursor-pointer flex  rounded-lg  py-4 items-center gap-x-3"
                                     key={index}
                                 >
-                                    <UserCircleIcon height={28} width={28} />
+                                    <UserCircleIcon height={26} width={26} />
                                     <div className="flex flex-col">
                                         <span className="capitalize text-lg">
                                             {cliente.nombres}
                                         </span>
                                         <span className="text-secondary-200">
-                                            Celular: 939616350
+                                            Celular: {cliente.celular ? cliente.celular : "no registrado"}
                                         </span>
                                     </div>
                                 </Link>

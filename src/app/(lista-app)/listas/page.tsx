@@ -114,7 +114,7 @@ function ListasPage() {
                                     <div className="w-full ">
                                         <div className="flex justify-between text-lg">
                                             <span className="capitalize">
-                                                {lista.cliente.nombres}
+                                                {lista.cliente?.nombres ?? ""}
                                             </span>
                                             <span>
                                                 {moneyFormat(lista.montoTotal)}

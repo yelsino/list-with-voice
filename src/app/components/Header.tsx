@@ -6,7 +6,7 @@ interface Props {
 
 export const Header = ({ childrenLeft, childrenRight }: Props) => {
     return (
-        <div className="flex justify-between items-center pt-2">
+        <div className="flex justify-between items-center ">
             <span className="text-4xl font-bold font-poppins text-text1 tracking-wider text-secondary-100">
                 {childrenLeft}
             </span>

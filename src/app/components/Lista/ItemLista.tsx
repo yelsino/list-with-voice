@@ -8,7 +8,6 @@ import {
 } from "@/redux/features/listaSlice";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { AnimatePresence, motion } from "framer-motion";
-import { useState } from "react";
 import { IconDelete, IconRefresh } from "../Icons";
 import { ItemLoader } from "../Loader/ItemLoader";
 import { SpeakLoader } from "../Loader/SpeakLoader";
@@ -19,15 +18,19 @@ interface Props {
 }
 
 export const ItemLista = ({ item, index }: Props) => {
-    const { itemSelected: itemList } = useAppSelector((state) => state.listaReducer);
+    const { itemSelected } = useAppSelector((state) => state.listaReducer);
 
     const { resetTranscript } = useVoiceControl();
 
     const dispatch = useAppDispatch();
-    const [isOpen, setIsOpen] = useState(false);
     const toggleOpen = () => {
+        if (itemSelected?.id === item.id) {
+            dispatch(selectItem(null));
+            resetTranscript();
+            return;
+        }
+        dispatch(selectItem(item));
         resetTranscript();
-        setIsOpen(!isOpen);
     };
 
     const eliminarItem = () => {
@@ -35,20 +38,21 @@ export const ItemLista = ({ item, index }: Props) => {
     };
 
     const renovarItem = (item: ItemList) => {
-        // dispatch(selectItem(item))
-        dispatch(selectItem(item))
-        dispatch(updateItem({...item,status:'updating'}))
-        resetTranscript()
+        dispatch(updateItem({ ...item, status: "updating" }));
+        resetTranscript();
     };
 
     return (
         <div
             className={`rounded-lg cursor-pointer p-2  ${
-                isOpen ? "bg-primary-100" : ""
+                itemSelected?.id === item.id ? "bg-primary-100" : ""
             }`}
         >
             {item.status === "pending" || item.status === "sent" ? (
-                <div onClick={toggleOpen} className=" flex  gap-x-5 py-2 items-center">
+                <div
+                    onClick={toggleOpen}
+                    className=" flex  gap-x-5 py-2 items-center"
+                >
                     <span className="text-secondary-200 text-xs">
                         {index + 1}.-{" "}
                     </span>{" "}
@@ -67,7 +71,7 @@ export const ItemLista = ({ item, index }: Props) => {
                 </div>
             )}
             <AnimatePresence>
-                {isOpen && (
+                {itemSelected?.id === item.id && (
                     <motion.div
                         layout
                         initial={{ opacity: 0 }}
@@ -96,7 +100,9 @@ export const ItemLista = ({ item, index }: Props) => {
                             {item.status === "updating" ? (
                                 <button
                                     onClick={() => {
-                                        dispatch(updateItem(itemList as ItemList));
+                                        dispatch(
+                                            updateItem(itemSelected as ItemList)
+                                        );
                                     }}
                                     className="flex gap-x-1  bg-secondary-100 text-black rounded-lg p-1 font-bold  items-center justify-center"
                                 >
@@ -127,14 +133,12 @@ interface PropsText {
 }
 
 const TextList = ({ item, index }: PropsText) => {
-    const dispatch = useAppDispatch();
     return (
         <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             layout
-            // onClick={toggleOpen}
             id={String(item.id)}
             className="flex items-center gap-x-2 text-lg"
         >

@@ -23,13 +23,12 @@ function ClienteIdPage({ params }: { params: IParams }) {
         id: params.clienteId,
     });
 
-    const { push } = useRouter();
     const dispatch = useAppDispatch();
 
     return (
         <>
             {isLoading ? (
-                <p className="text-secondary-100">Cargando...</p>
+                <p className="text-secondary-100">Cargando datos...</p>
             ) : (
                 <div className="flex flex-col gap-y-4">
                     <Header
@@ -40,9 +39,7 @@ function ClienteIdPage({ params }: { params: IParams }) {
                         }
                         childrenRight={
                             <OptionsMenu
-                                imprimirLista={() =>
-                                    dispatch(obtenerImagenLista(data as any))
-                                }
+                                imprimirLista={() => {}}
                                 actualizarLista={() => {}}
                             >
                                 <div className="w-full h-full flex items-center justify-center">
@@ -88,8 +85,8 @@ function ClienteIdPage({ params }: { params: IParams }) {
                                 className="text-secondary-100 bg-primary-100 px-3 cursor-pointer flex  rounded-lg  py-4 items-center gap-x-3"
                                 key={index}
                             >
-                                <ClipboardIcon height={28} width={28} />
-                                <Link href={`/listas/${lista.id}`} className="flex flex-col">
+                                <ClipboardIcon height={26} width={26} />
+                                <div className="flex flex-col">
                                     <p className="text-lg">Lista pagada s/. 50.00</p>
                                     
                                     <div className="text-secondary-200">
@@ -97,7 +94,7 @@ function ClienteIdPage({ params }: { params: IParams }) {
                                         {dateFormat(lista.createdAt)}
                                     </p>
                                     </div>
-                                </Link>
+                                </div>
                             </Link>
                         ))}
                     </div>

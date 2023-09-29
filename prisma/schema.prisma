@@ -51,6 +51,11 @@ model Usuario {
   updatedAt     DateTime  @updatedAt
 }
 
+model Error {
+  id         String @id @default(auto()) @map("_id") @db.ObjectId
+  itemList   Json
+}
+
 // usuario   Usuario  @relation(fields: [usuarioId], references: [id])
 // usuarioId String   @map("usuarioId") @db.ObjectId
 model Lista {
