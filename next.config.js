@@ -19,7 +19,8 @@ const withPWA = require('next-pwa')({
 const nextConfig = withPWA({
     env: {
         GPT_TOKEN: process.env.GPT_TOKEN,
-        NEXTAUTH_URL: process.env.NEXTAUTH_URL
+        NEXTAUTH_URL: process.env.NEXTAUTH_URL,
+        API_NEGOCIO: process.env.API_NEGOCIO
     },
 })
 
