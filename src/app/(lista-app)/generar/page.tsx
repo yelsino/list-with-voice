@@ -204,9 +204,6 @@ function GenerarPage() {
                                         item={item}
                                     />
                                 ))}
-                                  <pre className="text-secondary-100">
-                        {JSON.stringify(lista.errors,null,2)}
-                    </pre>
                             </motion.div>
                         </LayoutGroup>
                     </div>
