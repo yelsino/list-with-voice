@@ -13,7 +13,7 @@ export function generarItemListBD(item: any): ItemList {
         medida: item.medida,
         voz: item.voz,
         status: item.status,
-        calculated: item.calculated as boolean,
+        calculated: item.calculated as boolean, 
     };
 }
 
