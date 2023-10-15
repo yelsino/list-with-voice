@@ -34,13 +34,9 @@ export async function POST(request: Request) {
   // console.time('transcripcion');
   deepgram.transcription
     .preRecorded(source, {
-      smart_format: true,
       language: "es-419",
       model: "nova",
-      // diarize: true,
-      multichannel: true,
-    detect_entities:true
-      // filler_words: true
+      diarize: true,
     })
     .then((response: any) => {
       console.dir(response, { depth: null });
