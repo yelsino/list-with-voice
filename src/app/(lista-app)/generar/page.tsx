@@ -19,10 +19,9 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { toast } from "react-hot-toast";
-import ButtonVoz from "./button";
 
 function GenerarPage() {
-  const dispatch = useAppDispatch();
+  const dispatch = useAppDispatch(); 
   const { push } = useRouter();
 
   const [registrarListDB] = useRegistrarListDBMutation();
@@ -161,7 +160,6 @@ function GenerarPage() {
             </p>
           </SuperTitle>
 
-          <ButtonVoz />
 
           <div>
             <p className="text-secondary-100 font-semibold text-lg ">

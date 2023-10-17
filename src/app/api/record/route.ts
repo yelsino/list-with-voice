@@ -5,50 +5,48 @@ import { Deepgram } from "@deepgram/sdk";
 import axios from "axios";
 import path from "node:path";
 import { writeFile } from "node:fs/promises";
+import cloudinary from "./cloudinary";
+import { assembly } from "./assembly";
 
 export async function POST(request: Request) {
 
+
+  // generar archivo
   const data = await request.formData();
   const file = data.get('audio') as Blob;
-
   const bytes = await file.arrayBuffer();
   const buffer = Buffer.from(bytes);
+  const filePath = path.join(__dirname, "new.wav");
 
-  const filePath = path.join(process.cwd(), "public", "new.wav");
   await writeFile(filePath, buffer);
 
+  // subir archivo
+  const upload = await cloudinary.uploader.upload(filePath,{
+    resource_type: "video",
+    folder: 'voices'
+  });
+  const urlAudio = upload.url;
 
-  // CONVERTIR A VOZ
-  const deepgramApiKey = "754c19bbce9d48c2839a43f436ea954a804043fd";
+  // transformar archivo
+  const assembly_params = {
+    audio_url: urlAudio,
+    speaker_labels: true,
+    language_code: 'es'
+  }
 
-  const deepgram = new Deepgram(deepgramApiKey);
-  let source: any = null;
+  const transcript:any = await assembly.transcripts.create(assembly_params);
 
-  source = {
-    buffer: buffer,
-    mimetype: "http://127.0.0.1:3000",
-  };
+  let texto = ""
+  for (let utterance of transcript.utterances) {
+    console.log(`Speaker ${utterance.speaker}: ${utterance.text}`);
+    texto = utterance.text
+  }
 
-  // Send the audio to Deepgram and get the response
-  console.log('empezando....');
-  // console.time('transcripcion');
-  deepgram.transcription
-    .preRecorded(source, {
-      language: "es-419",
-      model: "nova",
-      diarize: true,
-    })
-    .then((response: any) => {
-      console.dir(response, { depth: null });
-      console.log('respuesta....');
-    
-      // console.dir(response.results.channels[0].alternatives[0].transcript, { depth: null });
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+  // const responses = transcript.utterances.text
 
+  console.log(texto);
 
+  
 
   return NextResponse.json({});
 }

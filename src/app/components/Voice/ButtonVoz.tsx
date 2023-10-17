@@ -1,3 +1,4 @@
+'use client'
 import { enviarVoz } from "@/redux/chunks/listaChunk";
 import { useState, useRef } from "react";
 import toast from "react-hot-toast";
@@ -38,7 +39,7 @@ const ButtonVoz = (): JSX.Element => {
       });
 
       // console.log("AUDIO URL: ", audioUrl);
-      
+
       // const downloadLink = document.createElement("a");
       // downloadLink.href = audioUrl;
       // downloadLink.download = "recording.wav";
