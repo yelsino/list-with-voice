@@ -36,8 +36,18 @@ export default function Home() {
             icon: <IconUsers estilo="" />,
         },
         {
-            title: " negocio",
+            title: "negocio",
             url: "/negocio",
+            icon: <IconNegocio estilo="" />,
+        },
+        {
+            title: "ver productos",
+            url: "/productos",
+            icon: <IconNegocio estilo="" />,
+        },
+        {
+            title: "crear producto",
+            url: "/productos/crear",
             icon: <IconNegocio estilo="" />,
         },
     ];
