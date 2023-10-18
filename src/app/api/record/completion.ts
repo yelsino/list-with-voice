@@ -1,6 +1,8 @@
 import openai from "./openia";
 
 export async function completion(texto: string) {
+  console.log("TEXTO A COMPLETAR: ", texto);
+  
   const completion = await openai.chat.completions.create({
     model: "gpt-3.5-turbo",
     messages: [
@@ -18,8 +20,7 @@ export async function completion(texto: string) {
     temperature: 0.7,
   });
   
-  const listObject:object[] = JSON.parse(completion.choices[0].message.content ?? "[]")
-
+  const listObject:object[] = JSON.parse(completion.choices[0].message.content ?? "[]");
 
   return  listObject
 }

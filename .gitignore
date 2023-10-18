@@ -9,7 +9,8 @@
 
 # testing
 /coverage
-
+.turbo
+turbo.json
 # next.js
 /.next/
 /out/

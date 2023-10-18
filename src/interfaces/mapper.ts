@@ -47,7 +47,6 @@ export const mapItemToList2 = (item: any): ItemList => {
     const monto = item.montoTotal ?? 0;
 
     const montoItem = precio && cantidad ? cantidad * precio : monto;
-
     return {
         nombre: item.nombre ?? "",
         precio: item.precio ?? 0,
@@ -56,7 +55,7 @@ export const mapItemToList2 = (item: any): ItemList => {
         medida: item.medida ?? "",
         voz: item.voz ?? "",
         status: item.status ?? "success",
-        id: item.id,
+        id: uuid(),
         calculated: item.calculado ?? true,
     };
 };
