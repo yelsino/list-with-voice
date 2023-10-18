@@ -10,4 +10,9 @@ cloudinary.config({
 export default cloudinary
 
 
+// const upload = await cloudinary.uploader.upload(filePath,{
+//   resource_type: "video",
+//   folder: 'voices'
+// });
+
 

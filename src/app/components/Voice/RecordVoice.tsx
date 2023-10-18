@@ -2,7 +2,6 @@
 import { IconPause, IconPlay } from "../Icons";
 import { usePathname } from "next/navigation";
 import toast from "react-hot-toast";
-import {  recordToText } from "@/redux/chunks/listaChunk";
 import { useRef, useState } from "react";
 import { useAppDispatch } from "@/redux/hooks";
 import { useConvertRecordToJsonMutation } from "@/redux/services/listaApi";
@@ -41,35 +40,20 @@ function RecordVoice() {
   
       microphone.onstop = () => {
         const audioBlob = new Blob(chunks, { type: "audio/wav" });
-  
         // const audioUrl = URL.createObjectURL(audioBlob);
+
+        const formData = new FormData();
+        formData.append("audio", audioBlob);
   
-        toast.promise(dispatch(recordToText(audioBlob)).unwrap(), {
+        toast.promise(convertirRecordJson(formData).unwrap(), {
           loading: "Convirtiendo grabación...",
           error: "Error al convertir grabación",
           success: "Converción de grabación completa",
         }).then((res)=>{
-          console.log("CONVERSION RES: ");
-          
-          toast.promise(convertirRecordJson({texto: res}).unwrap(),{
-            loading: "Creando items...",
-            error: "Error al Crear items",
-            success: "Items creados",
-          }).then((json)=>{
-            console.log("JSON:", json.choices[0].message.content);
-            const itemsParse:any[] = JSON.parse(json.choices[0].message.content);
-
-            const itemsList = itemsParse.map((item)=>mapItemToList2(item))
-            dispatch(addItemsToList(itemsList))
-          })
+          // console.log("CONVERSION RES: ");
+          dispatch(addItemsToList(res))
         })
   
-        // console.log("AUDIO URL: ", audioUrl);
-  
-        // const downloadLink = document.createElement("a");
-        // downloadLink.href = audioUrl;
-        // downloadLink.download = "recording.wav";
-        // downloadLink.click();
       };
     };
   

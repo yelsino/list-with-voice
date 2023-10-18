@@ -7,7 +7,7 @@ import {
 } from "@/interfaces/list.interface";
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { saveAs } from "file-saver";
-import { obtenerImagenLista, recordToText, registrarUsuario } from "../chunks/listaChunk";
+import { obtenerImagenLista, registrarUsuario } from "../chunks/listaChunk";
 
 const initialState: ListaState = {
   abono: null,
@@ -64,17 +64,17 @@ export const listaSlice = createSlice({
       );
       // actualizar itemsList con el nuevo item
       if (itemIndex !== -1) {
-        
-        const errors:Error[] = Array.from(state.lista.errors);
-        errors.push({ itemList: { ...action.payload, status: "error" }});
 
-        const unicErrors =  errors.reduce((acc,b)=>{
-            const comparar = acc.some((e)=>e.itemList.voz === b.itemList.voz);
-            if(!comparar){
-                acc.push(b)
-            }
-            return acc
-        },[] as Error[])
+        const errors: Error[] = Array.from(state.lista.errors);
+        errors.push({ itemList: { ...action.payload, status: "error" } });
+
+        const unicErrors = errors.reduce((acc, b) => {
+          const comparar = acc.some((e) => e.itemList.voz === b.itemList.voz);
+          if (!comparar) {
+            acc.push(b)
+          }
+          return acc
+        }, [] as Error[])
 
         state.lista.errors = Array.from(unicErrors);
         state.lista.items[itemIndex] = action.payload;
@@ -110,9 +110,6 @@ export const listaSlice = createSlice({
       return state;
     });
     builder.addCase(registrarUsuario.fulfilled, (state) => state);
-    builder.addCase(recordToText.fulfilled, (state,action) => {
-      state.textRecord = action.payload
-    })
   },
 });
 

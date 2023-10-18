@@ -41,38 +41,12 @@ export const listaApi = createApi({
             }),
             providesTags: ["lists"]
         }),
-        convertRecordToJson: builder.mutation<ResponseGPT, GptRequest>({
-            query: ({ texto }) => ({
-                url: URLBASE.GPT,
+        convertRecordToJson: builder.mutation<ItemList[], FormData>({
+            query: (bodyFormData) => ({
+                url: `${URLBASE.LOCAL}/record`,
                 method: "POST",
-                body: {
-                    model: "gpt-3.5-turbo",
-                    temperature: 0.7,
-                    messages: [
-                        {
-                            role: "system",
-                            content: `Convierte texto de productos peruanos en formato JSON envuelto en un string plano sin saltos de linea, sin espacio, sin nada solo texto como el formato indicado. Formato: 
-                            [{nombre:'',precio:0,cantidad:0,medida:'kg', montoTotal:0,calculado:false}].
-                            Ejemplos de productos: 'camote', 'papa', 'naranja', 'fideos', 'papa peruanita', 'platanos', etc.
-                            Texto en español Perú con precios en nuevos soles. 
-                            Ejemplos de medida: kilogramos, litros, gramos, unidades, sacos, bolsas, cajas, etc. Si hay montoTotal quiere decir que es un item calculado por ende la propiedad calculado es true. 
-                            Por ejemplo: 
-                            '3 soles de camote' (solo cuenta con montoTotal y nombre), 
-                            '3 kilos de camote a 2 soles ' (no cuenta con montotTotal), 
-                            '3 kilos de camote a 2 soles cada kilo' (no cuenta con montoTotal).
-                            Esto solos son ejemplos casi nunca la información será con la misma estructura, debes analizarlos correctamente y convertirlos a JSON 
-                           `,
-                        },
-                        {
-                            role: "user",
-                            content: texto,
-                        },
-                    ]
-                },
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${process.env.GPT_TOKEN}`,
-                }
+                body: bodyFormData,
+                formData:true
             })
         }),
         registrarListDB: builder.mutation<Lista, Lista>({

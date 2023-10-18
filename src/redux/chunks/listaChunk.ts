@@ -52,17 +52,17 @@ export const registrarUsuario = createAsyncThunk(
 );
 
 
-export const recordToText = createAsyncThunk("record_text",
-  async (audio: Blob):Promise<string> => {
+// export const recordToItems = createAsyncThunk("record_text",
+//   async (audio: Blob):Promise<string> => {
 
-    const formData = new FormData();
-    formData.append("audio", audio);
-    const response = await axios.post<{texto: string}>(
-      `${URLBASE.LOCAL}/record`,
-      formData,
-    );
+//     const formData = new FormData();
+//     formData.append("audio", audio);
+//     const response = await axios.post<{texto: string}>(
+//       `${URLBASE.LOCAL}/record`,
+//       formData,
+//     );
 
-    return response.data.texto ?? ""
-  }
-)
+//     return response.data.texto ?? ""
+//   }
+// )
 
