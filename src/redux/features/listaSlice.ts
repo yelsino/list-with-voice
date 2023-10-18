@@ -7,7 +7,7 @@ import {
 } from "@/interfaces/list.interface";
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { saveAs } from "file-saver";
-import { obtenerImagenLista, registrarUsuario } from "../chunks/listaChunk";
+import { obtenerImagenLista, recordToText, registrarUsuario } from "../chunks/listaChunk";
 
 const initialState: ListaState = {
   abono: null,
@@ -22,6 +22,7 @@ const initialState: ListaState = {
     id: "",
     cliente: null,
   },
+  textRecord: "",
   cargando: false,
 };
 
@@ -29,13 +30,17 @@ export const listaSlice = createSlice({
   name: "lista",
   initialState,
   reducers: {
+    // addItemsToList: (state, action: PayloadAction<ItemList[]>) => {
+    //   // filtrar todas las voces que no esten en el payload
+    //   const missingVoices: ItemList[] = action.payload.filter(
+    //     (item) => !state.lista.items.some((i) => i.voz === item.voz)
+    //   );
+
+    //   state.lista.items = state.lista.items.concat(missingVoices);
+    // },
     addItemsToList: (state, action: PayloadAction<ItemList[]>) => {
       // filtrar todas las voces que no esten en el payload
-      const missingVoices: ItemList[] = action.payload.filter(
-        (item) => !state.lista.items.some((i) => i.voz === item.voz)
-      );
-
-      state.lista.items = state.lista.items.concat(missingVoices);
+      state.lista.items = state.lista.items.concat(action.payload);
     },
     limpiarLista: (state) => {
       state = initialState;
@@ -105,6 +110,9 @@ export const listaSlice = createSlice({
       return state;
     });
     builder.addCase(registrarUsuario.fulfilled, (state) => state);
+    builder.addCase(recordToText.fulfilled, (state,action) => {
+      state.textRecord = action.payload
+    })
   },
 });
 

@@ -41,6 +41,25 @@ export const mapItemToList = (item: any): ItemList => {
         calculated: item.calculated ?? true,
     };
 };
+export const mapItemToList2 = (item: any): ItemList => {
+    const precio = item.precio ?? 0;
+    const cantidad = item.cantidad ?? 0;
+    const monto = item.montoTotal ?? 0;
+
+    const montoItem = precio && cantidad ? cantidad * precio : monto;
+
+    return {
+        nombre: item.nombre ?? "",
+        precio: item.precio ?? 0,
+        cantidad: item.cantidad ?? 0,
+        montoItem: montoItem,
+        medida: item.medida ?? "",
+        voz: item.voz ?? "",
+        status: item.status ?? "success",
+        id: item.id,
+        calculated: item.calculado ?? true,
+    };
+};
 
 export const stringToItem = (voice: string): ItemList => {
     return {

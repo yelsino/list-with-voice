@@ -16,7 +16,7 @@ import {
     updateItems,
 } from "@/redux/features/listaSlice";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
-import { useConvertVoiceToItemMutation } from "@/redux/services/listaApi";
+// import { useConvertVoiceToItemMutation } from "@/redux/services/listaApi";
 import { usePathname } from "next/navigation";
 import { useEffect } from "react";
 import toast from "react-hot-toast";
@@ -39,7 +39,7 @@ function useGenerateList({
     const pathname = usePathname();
     const dispatch = useAppDispatch();
 
-    const [convertVoiceToItem] = useConvertVoiceToItemMutation();
+    // const [convertVoiceToItem] = useConvertVoiceToItemMutation();
 
     const { lista, itemSelected } = useAppSelector(
         (state) => state.listaReducer
@@ -133,30 +133,30 @@ function useGenerateList({
             .filter((v) => v.length > 0);
     }
 
-    const sendVoiceGPT2 = async (itemsNoSent: ItemList[]) => {
-        const promises = itemsNoSent.map((item) => {
-            return () =>
-                convertVoiceToItem({
-                    message: item.voz,
-                    codigo: item.id,
-                }).unwrap();
-        });
+    // const sendVoiceGPT2 = async (itemsNoSent: ItemList[]) => {
+    //     const promises = itemsNoSent.map((item) => {
+    //         return () =>
+    //             convertVoiceToItem({
+    //                 message: item.voz,
+    //                 codigo: item.id,
+    //             }).unwrap();
+    //     });
 
-        const responses = await Promise.all(promises.map((p) => p()));
+    //     const responses = await Promise.all(promises.map((p) => p()));
 
-        const itemsNuevos: ItemList[] = responses
-            .map((response) => responseToItemList({ response }))
-            .map((item) => {
-                const existe = itemsNoSent.find((p) => item.id === p.id);
-                if (existe) {
-                    item.voz = existe.voz;
-                }
-                return item;
-            });
+    //     const itemsNuevos: ItemList[] = responses
+    //         .map((response) => responseToItemList({ response }))
+    //         .map((item) => {
+    //             const existe = itemsNoSent.find((p) => item.id === p.id);
+    //             if (existe) {
+    //                 item.voz = existe.voz;
+    //             }
+    //             return item;
+    //         });
 
-        dispatch(updateItems(itemsNuevos));
-        if (itemSelected) dispatch(selectItem(null));
-    };
+    //     dispatch(updateItems(itemsNuevos));
+    //     if (itemSelected) dispatch(selectItem(null));
+    // };
 
     useEffect(() => {
         if (!finalTranscript || pathname !== "/generar") return;
@@ -187,7 +187,7 @@ function useGenerateList({
 
         if (itemsNoSend.length > 0) {
             dispatch(updateItems(itemsNoSend));
-            sendVoiceGPT2(itemsNoSend);
+            // sendVoiceGPT2(itemsNoSend);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [lista]);

@@ -21,12 +21,12 @@ import { useEffect } from "react";
 import { toast } from "react-hot-toast";
 
 function GenerarPage() {
-  const dispatch = useAppDispatch(); 
+  const dispatch = useAppDispatch();
   const { push } = useRouter();
 
   const [registrarListDB] = useRegistrarListDBMutation();
   const [updateListDB] = useUpdateListMutation();
-  const { lista, cargando, abono } = useAppSelector(
+  const { lista, cargando, abono, textRecord } = useAppSelector(
     (state) => state.listaReducer
   );
   const clienteState = useAppSelector((state) => state.clienteReducer);
@@ -160,7 +160,9 @@ function GenerarPage() {
             </p>
           </SuperTitle>
 
-
+          <div>
+            <pre>{JSON.stringify(textRecord, null, 2)}</pre>
+          </div>
           <div>
             <p className="text-secondary-100 font-semibold text-lg ">
               Productos

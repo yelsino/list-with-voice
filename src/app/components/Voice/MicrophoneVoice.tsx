@@ -1,6 +1,5 @@
 "use client";
 import { useVoiceControl } from "@/context/voice.context";
-// import "regenerator-runtime/runtime";
 import { IconMicrophone } from "../Icons";
 import { usePathname } from "next/navigation";
 

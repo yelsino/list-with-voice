@@ -3,17 +3,11 @@ import { Cliente } from "./client.interface";
 import { Tienda, Usuario } from "./user.interface";
 
 export interface ListaState {
-    // id?: string;
-    // itemsList: ItemList[];
     abono: Abono | null;
     itemSelected: ItemList | null;
-    // montoTotal?: number;
-    // edit?: boolean;
-    // pagada?: boolean;
+    textRecord:string;
     cargando?: boolean;
     lista: Lista
-    // startDate?: DateType;
-    // endDate?: DateType;
 }
 
 export type Status = "pending" | "sent" | "success" | "error" | "updating";
@@ -69,7 +63,7 @@ export interface PrintLista {
 }
 
 export interface GptRequest {
-    message: string;
+    texto: string;
     codigo?: string;
 }
 
