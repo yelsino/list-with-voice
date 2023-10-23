@@ -40,7 +40,11 @@ export async function GET(request: Request, { params }: GetParams) {
             );
         }
 
-        return NextResponse.json(lista);
+        const updateResponse = Object.assign({},lista,{
+            errors: []
+        })
+
+        return NextResponse.json(updateResponse);
     } catch (error) {
         console.error("Error al obtener la lista:", error);
         return NextResponse.json(

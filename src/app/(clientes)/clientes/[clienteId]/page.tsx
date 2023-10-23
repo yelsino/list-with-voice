@@ -4,14 +4,12 @@ import { IconTool, IconUsers } from "@/app/components/Icons";
 import OptionsMenu from "@/app/components/Popover/Popover";
 import { SuperTitle } from "@/app/components/SuperTitle";
 import { formatText } from "@/interfaces/FormatReact";
-import { dateFormat } from "@/interfaces/mapper";
-import { obtenerImagenLista } from "@/redux/chunks/listaChunk";
+import { dateFormat, moneyFormat, moneyFormatSimbol } from "@/interfaces/mapper";
 import { seleccionarCliente } from "@/redux/features/clienteSlice";
 import { useAppDispatch } from "@/redux/hooks";
 import { useGetCostumerQuery } from "@/redux/services/clienteApi";
 import { ClipboardIcon, FolderPlusIcon } from "@heroicons/react/20/solid";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 
 
 interface IParams {
@@ -87,7 +85,7 @@ function ClienteIdPage({ params }: { params: IParams }) {
                             >
                                 <ClipboardIcon height={26} width={26} />
                                 <div className="flex flex-col">
-                                    <p className="text-lg">Lista pagada s/. 50.00</p>
+                                    <p className="text-lg">{moneyFormatSimbol(lista.montoTotal)}</p>
                                     
                                     <div className="text-secondary-200">
                                         <p className="capitalize">
@@ -98,6 +96,7 @@ function ClienteIdPage({ params }: { params: IParams }) {
                             </Link>
                         ))}
                     </div>
+                    
                 </div>
             )}
         </>

@@ -10,7 +10,7 @@ export interface ListaState {
     lista: Lista
 }
 
-export type Status = "pending" | "sent" | "success" | "error" | "updating";
+export type Status = "pending" | "sent" | "success" | "error" | "updating" | undefined;
 
 export interface Sesion {
     user?: Usuario;
@@ -20,14 +20,14 @@ export interface Sesion {
 export interface ItemList {
     id?: string;
     listaId?: string;
+    status?: Status;
     nombre: string;
     precio: number;
     cantidad: number;
     montoItem: number;
     medida: string;
-    voz: string;
-    status: Status;
-    calculated?: boolean;
+    texto: string;
+    calculado?: boolean;
     createdAt?: Date;
     updatedAt?: Date;
 }

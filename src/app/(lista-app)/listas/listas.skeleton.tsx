@@ -1,47 +1,16 @@
-"use client";
-import { Header } from "@/app/components/Header";
-import { IconCalendar, IconHome } from "@/app/components/Icons";
-import { SuperTitle } from "@/app/components/SuperTitle";
-import { formatText } from "@/interfaces/FormatReact";
-import Link from "next/link";
-
 function ListasSkeleton() {
-    return (
-        <>
-            <div className="flex flex-col gap-y-3">
-                <Header
-                    childrenLeft={
-                        <Link href="/" className="text-2xl">
-                            <IconHome />
-                        </Link>
-                    }
-                    childrenRight={
-                        <Link
-                            href="/filtrar"
-                            className="cursor-pointer"
-                        >
-                            <IconCalendar />
-                        </Link>
-                    }
-                />
-
-                <SuperTitle title={formatText("Todas Las listas")}>
-                    <p className="text-base font-medium text-secondary-200 break-words">
-                       Cargando listas...
-                    </p>
-                </SuperTitle>
-
-                <div className="flex flex-col gap-y-4">
-                    {[1, 2, 3, 4, 5].map((lista, index: any) => (
-                        <div
-                            className="text-secondary-100 bg-primary-100 px-3 cursor-pointer flex justify-between items-center rounded-lg text-lg py-7 animate-pulse"
-                            key={index}
-                        ></div>
-                    ))}
-                </div>
-            </div>
-        </>
-    );
+  return (
+    <>
+      <div className="flex flex-col gap-y-4">
+        {[1, 2, 3, 4, 5].map((lista, index: any) => (
+          <div
+            className="text-secondary-100 bg-primary-100 px-3 cursor-pointer flex justify-between items-center rounded-lg text-lg py-7 animate-pulse"
+            key={index}
+          ></div>
+        ))}
+      </div>
+    </>
+  );
 }
 
 export default ListasSkeleton;

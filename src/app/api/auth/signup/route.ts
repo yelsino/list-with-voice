@@ -1,6 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcryptjs";
 import { NextResponse } from "next/server";
+
 const prisma = new PrismaClient();
 
 export async function POST(request: Request) {
@@ -41,9 +42,10 @@ export async function POST(request: Request) {
                 nombres: "",
                 nombreUsuario: nombreUsuario,
                 password: hashedPassword,
+                defaultCliente: ""
             },
         });
-
+      
         await prisma.tienda.create({
             data: {
                 email: "",
@@ -60,6 +62,25 @@ export async function POST(request: Request) {
                 usuarioId: newUser.id,
             },
         });
+
+        const clienteDefault = await prisma.cliente.create({
+            data: {
+                celular: "",
+                nombres: "cliente tienda",
+                usuarioId: newUser.id,
+                createdAt: new Date("2050-01-01")
+            }
+        });
+
+
+        await prisma.usuario.update({
+            where: {
+                id: newUser.id
+            },
+            data: {
+                defaultCliente: clienteDefault.id 
+            }
+        })
 
         return NextResponse.json(
             {

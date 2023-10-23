@@ -35,10 +35,9 @@ export const mapItemToList = (item: any): ItemList => {
         cantidad: item.cantidad ?? 0,
         montoItem: montoItem,
         medida: item.medida ?? "",
-        voz: item.voz ?? "",
-        status: item.status,
+        texto: item.voz ?? "",
         id: item.id,
-        calculated: item.calculated ?? true,
+        calculado: item.calculado ?? true,
     };
 };
 export const mapItemToList2 = (item: any): ItemList => {
@@ -53,10 +52,9 @@ export const mapItemToList2 = (item: any): ItemList => {
         cantidad: item.cantidad ?? 0,
         montoItem: montoItem,
         medida: item.medida ?? "",
-        voz: item.voz ?? "",
-        status: item.status ?? "success",
+        texto: item.texto ?? "",
         id: uuid(),
-        calculated: item.calculado ?? true,
+        calculado: item.calculado ?? true,
     };
 };
 
@@ -67,23 +65,22 @@ export const stringToItem = (voice: string): ItemList => {
         cantidad: 0,
         montoItem: 0,
         medida: "",
-        voz: voice,
-        status: "pending",
+        texto: voice,
         id: uuid(),
-        calculated: false,
+        calculado: false,
     };
 };
 
-// export const moneyFormat = (value: any) => {
-//     const numero = Number(value);
-//     const formater = new Intl.NumberFormat("es-PE", {
-//         style: "currency",
-//         currency: "PEN",
-//     });
-//     if (typeof numero !== "number") return formater.format(0);
+export const moneyFormatSimbol = (value: any) => {
+    const numero = Number(value);
+    const formater = new Intl.NumberFormat("es-PE", {
+        style: "currency",
+        currency: "PEN",
+    });
+    if (typeof numero !== "number") return formater.format(0);
 
-//     return formater.format(numero);
-// };
+    return formater.format(numero);
+};
 
 export const moneyFormat = (value: any) => {
     const numero = Number(value);

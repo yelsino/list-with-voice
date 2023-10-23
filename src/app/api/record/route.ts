@@ -1,11 +1,9 @@
 import { NextResponse } from "next/server";
 import path from "node:path";
 import { writeFile } from "node:fs/promises";
-import cloudinary from "./cloudinary";
-import { transcriptLanchain } from "./lanchain";
-import { transcribe } from "./wishper";
 import { completion } from "./completion";
 import { mapItemToList2 } from "@/interfaces/mapper";
+import { deepgramTranscript } from "./deepgram";
 
 export async function POST(request: Request) {
 
@@ -16,18 +14,14 @@ export async function POST(request: Request) {
   const buffer = Buffer.from(bytes);
   const filePath = path.join(__dirname, "new.wav");
   await writeFile(filePath, buffer);
-
   // transcript
-  const textFile = await transcribe(filePath);
-  console.log("TRANSCRIPT: ", textFile);
+  // const textFile = await wishperTranscript(filePath);
+  const textFile = await deepgramTranscript(filePath);
   
-
-  // convert
   const itemsgpt = await completion(textFile ?? "");
-  console.log("itemsgpt:", itemsgpt);
-  console.log("itemsgpt:", typeof itemsgpt);
+  console.log("ITEMS GPT: ", itemsgpt);
   
-  const itemsList =itemsgpt.map((item)=>mapItemToList2(item))
+  const itemsList =itemsgpt.map((item)=>mapItemToList2(item));
 
   return NextResponse.json(itemsList);
 }

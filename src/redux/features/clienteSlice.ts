@@ -4,10 +4,10 @@ import { obtenerClientes } from "../chunks/clienteChunck";
 
 const initialState: ClienteState = {
     clientes: [],
-    cliente: null,
+    cliente: {nombres:"", celular: ""},
 };
 
-export const clienteSlice = createSlice({
+export const clienteSlice  = createSlice({
     name: "global",
     initialState,
     reducers: {

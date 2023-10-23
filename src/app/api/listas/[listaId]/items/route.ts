@@ -96,6 +96,7 @@ export async function PUT(request: NextRequest, { params }: Params<Update>) {
             montoTotal,
         },
         include: { items: true },
+        
     });
 
     return NextResponse.json(updateLista);

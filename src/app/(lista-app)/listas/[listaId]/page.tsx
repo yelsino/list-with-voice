@@ -65,7 +65,7 @@ function ListasIdPage({ params }: { params: IParams }) {
 
   const toggleExpand = () => {
     setExpand(!expand);
-    resetTranscript()
+    resetTranscript();
   }
 
   return (
@@ -145,7 +145,7 @@ function ListasIdPage({ params }: { params: IParams }) {
                       {index + 1}.-{" "}
                     </span>{" "}
                     <div className="w-full  flex justify-between">
-                      {item.calculated ? (
+                      {item.calculado ? (
                         <span>{item?.nombre}</span>
                       ) : (
                         <span className="tracking-tight">

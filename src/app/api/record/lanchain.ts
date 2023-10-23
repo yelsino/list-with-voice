@@ -35,9 +35,8 @@ export const mapItemToList = (item: any): ItemList => {
       cantidad: item.cantidad ?? 0,
       montoItem: montoItem,
       medida: item.medida ?? "",
-      voz: item.voz ?? "",
-      status: item.status,
+      texto: item.voz ?? "",
       id: item.id,
-      calculated: item.calculated ?? true,
+      calculado: item.calculado ?? true,
   };
 };

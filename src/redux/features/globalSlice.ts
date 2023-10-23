@@ -5,8 +5,8 @@ import { actualizarNegocio } from "../chunks/negocioChunck";
 
 const initialState: GlobalState = {
     searchParams: {
-        startDate: format(subDays(new Date(), 7), "yyyy-MM-dd"),
-        endDate: format(new Date(), "yyyy-MM-dd"),
+        startDate: null,
+        endDate: null,
         page: 1,
         pageSize: 10,
         texto: "",

@@ -1,6 +1,6 @@
 "use client";
 import { Header } from "@/app/components/Header";
-import { IconHome, IconSave } from "@/app/components/Icons";
+import { IconHome, IconSave, IconFilter, IconUser } from "@/app/components/Icons";
 import { ItemLista } from "@/app/components/Lista/ItemLista";
 import { Loader } from "@/app/components/Loader/Loader";
 import { SuperTitle } from "@/app/components/SuperTitle";
@@ -8,7 +8,7 @@ import { formatText } from "@/interfaces/FormatReact";
 import { Cliente } from "@/interfaces/client.interface";
 import { isMongoId, moneyFormat } from "@/interfaces/mapper";
 import { seleccionarCliente } from "@/redux/features/clienteSlice";
-import { limpiarLista } from "@/redux/features/listaSlice";
+import { limpiarLista, restaurarItems } from "@/redux/features/listaSlice";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import {
   useRegistrarListDBMutation,
@@ -26,7 +26,7 @@ function GenerarPage() {
 
   const [registrarListDB] = useRegistrarListDBMutation();
   const [updateListDB] = useUpdateListMutation();
-  const { lista, cargando, abono, textRecord } = useAppSelector(
+  const { lista, cargando, abono, textRecord,itemSelected } = useAppSelector(
     (state) => state.listaReducer
   );
   const clienteState = useAppSelector((state) => state.clienteReducer);
@@ -35,19 +35,6 @@ function GenerarPage() {
     lista.id ? actualizarLista() : crearListaNueva();
 
   const crearListaNueva = async () => {
-    if (!clienteState.cliente) {
-      toast.error("Indica al cliente", {
-        icon: "👏",
-      });
-      return;
-    }
-
-    const someItemFailed = lista.items.some(
-      (voice) => voice.status === "error" || voice.status === "pending"
-    );
-
-    if (someItemFailed) return;
-
     const abonos = abono ? [abono] : [];
 
     toast
@@ -79,18 +66,6 @@ function GenerarPage() {
   const actualizarLista = async () => {
     console.log("voy a actualizar lsita");
 
-    if (!clienteState.cliente) {
-      toast.error("Indica al cliente", {
-        icon: "👏",
-      });
-      return;
-    }
-
-    const someItemFailed = lista.items.some(
-      (voice) => voice.status === "error" || voice.status === "pending"
-    );
-
-    if (someItemFailed) return;
     const abonos = abono ? [abono] : [];
 
     toast
@@ -132,6 +107,7 @@ function GenerarPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [clienteState.clientes]);
 
+
   return (
     <>
       {cargando ? (
@@ -151,18 +127,21 @@ function GenerarPage() {
             }
           />
 
-          <SuperTitle
-            title={formatText(clienteState?.cliente?.nombres ?? "Lista para:")}
-          >
+          <div className="font-catamaran ">
+            <div className="flex items-center gap-x-3">
+              <Link href='/seleccionar/cliente' className="text-secondary-100 bg-secondary-100/5 inline-flex rounded-full p-2 ">
+                <IconUser />
+              </Link>
+              <p className="text-2xl  text-secondary-100 font-black   leading-tight capitalize">
+                {clienteState.cliente?.nombres ? clienteState.cliente.nombres : "Cliente de Tienda"}
+              </p>
+            </div>
             <p className="text-secondary-200 text-lg font-semibold">
               Pagada: {lista.pagado ? "Si" : "No"} - Abonar:{" "}
               {moneyFormat(abono?.monto ?? 0)}
             </p>
-          </SuperTitle>
-
-          <div>
-            <pre>{JSON.stringify(textRecord, null, 2)}</pre>
           </div>
+          
           <div>
             <p className="text-secondary-100 font-semibold text-lg ">
               Productos
@@ -190,7 +169,7 @@ function GenerarPage() {
                 </div>
               </div>
             )}
-
+          
             <LayoutGroup>
               <motion.div className="flex flex-col  h-[calc(100vh-320px)] pb-10 overflow-hidden overflow-y-scroll gap-y-1">
                 {lista.items.map((item, index) => (

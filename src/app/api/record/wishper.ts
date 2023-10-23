@@ -1,7 +1,7 @@
 import fs from "fs";
 import openai from "./openia";
 
-export async function transcribe(filePath: string) {
+export async function wishperTranscript(filePath: string) {
   try {
   
     const newFile = fs.createReadStream(filePath)
