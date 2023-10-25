@@ -1,13 +1,10 @@
 "use client";
-
-import getCurrentUser from "@/actions/getCurrentUser";
 import { SuperTitle } from "@/app/components/SuperTitle";
 import { formatText } from "@/interfaces/FormatReact";
 import { Tienda } from "@/interfaces/user.interface";
 import { actualizarNegocio } from "@/redux/chunks/negocioChunck";
 import { useAppDispatch } from "@/redux/hooks";
-import { sign } from "crypto";
-import { getSession, signIn, signOut } from "next-auth/react";
+import { getSession, signOut } from "next-auth/react";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 

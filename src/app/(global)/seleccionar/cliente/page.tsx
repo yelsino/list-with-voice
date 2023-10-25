@@ -1,9 +1,6 @@
 "use client";
 import { Header } from "@/app/components/Header";
-import { IconAddUser, IconCalendar, IconHome, IconFilter } from "@/app/components/Icons";
-import { SuperTitle } from "@/app/components/SuperTitle";
-import { generarTextoFecha } from "@/app/utils/front.global.utils";
-import { formatText } from "@/interfaces/FormatReact";
+import { IconAddUser, IconFilter, IconHome } from "@/app/components/Icons";
 import { Cliente } from "@/interfaces/client.interface";
 import { seleccionarCliente } from "@/redux/features/clienteSlice";
 import { useAppSelector } from "@/redux/hooks";

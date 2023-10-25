@@ -6,7 +6,6 @@ import { generarTextoFecha } from "@/app/utils/front.global.utils";
 import { formatText } from "@/interfaces/FormatReact";
 import { useAppSelector } from "@/redux/hooks";
 import Link from "next/link";
-import React from "react";
 
 function HederListas() {
   const { searchParams } = useAppSelector((state) => state.globalReducer);

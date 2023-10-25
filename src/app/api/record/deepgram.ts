@@ -1,23 +1,20 @@
-const fs = require("fs");
 const { Deepgram } = require("@deepgram/sdk");
 
 const deepgramApiKey = process.env.DEEPGRAM_API_KEY;
 
-const mimetype = "audio/wav";
-
-export const deepgramTranscript = async (filePath = "") => {
+export const deepgramTranscript = async (filePath:string) => {
+  console.log("filePath", filePath);
+  
   try {
     const deepgram = new Deepgram(deepgramApiKey);
-    const audio = fs.readFileSync(filePath);
     const source = {
-      buffer: audio,
-      mimetype: mimetype,
+      url: filePath,
     };
 
     const transcription = await deepgram.transcription.preRecorded(source, {
       smart_format: true,
       model: "nova",
-      language: "es",
+      language: "es-419",
     });
 
     const texto:string = transcription.results.channels[0].alternatives[0].transcript;
@@ -26,7 +23,7 @@ export const deepgramTranscript = async (filePath = "") => {
 
     return texto;
   } catch (error) {
-    console.log(error);
+    console.log("deepgram error:", error);
     return "";
   }
 };

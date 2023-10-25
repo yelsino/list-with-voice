@@ -7,7 +7,9 @@ export interface ListaState {
     itemSelected: ItemList | null;
     textRecord:string;
     cargando?: boolean;
-    lista: Lista
+    lista: Lista;
+    fetchList: Lista | null;
+    recordUrl: string
 }
 
 export type Status = "pending" | "sent" | "success" | "error" | "updating" | undefined;

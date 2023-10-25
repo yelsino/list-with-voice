@@ -14,8 +14,8 @@ import AutoComplete from "./AutoComplete";
 
 function FiltrarPage() {
     const dispatch = useAppDispatch();
-    // const [selected, setSelected] = useState<Cliente | null>(null)
     const router = useRouter()
+    
     const resetFiltros = () => {
         dispatch(cleanSearchParams());
         dispatch(seleccionarCliente(null))

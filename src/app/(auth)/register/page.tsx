@@ -98,7 +98,7 @@ function Signup() {
                 <div className="flex justify-center pt-4">
                     <button
                         type="submit"
-                        className="bg-secondary-100 px-5 py-3 rounded-full font-bold"
+                        className="bg-secondary-100 px-5 py-3 rounded-full font-bold text-black"
                     >
                         Registrar
                     </button>

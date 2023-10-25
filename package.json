@@ -13,6 +13,7 @@
     "@types/react-flatpickr": "^3.8.8",
     "@types/react-speech-recognition": "^3.9.2",
     "@types/uuid": "^9.0.2",
+    "@vercel/blob": "^0.14.0",
     "assemblyai": "^2.0.2",
     "autoprefixer": "10.4.14",
     "axios": "^1.4.0",

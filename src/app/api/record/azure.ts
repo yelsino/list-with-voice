@@ -1,6 +1,5 @@
 import sdk from 'microsoft-cognitiveservices-speech-sdk';
 import fs from 'node:fs'
-import path from 'node:path';
 
 var subscriptionKey = process.env.AZURE_KEY_SUSCRIPTION ?? "";
 var serviceRegion = process.env.AZURE_REGION ?? "";

@@ -5,18 +5,25 @@ export const assembly = new AssemblyAI({
 });
 
 
+export const assemblyTranscript = async (filePath: string) => {
+  try {
+    const assembly_params = {
+      audio_url: filePath,
+      speaker_labels: true,
+      language_code: 'es'
+    }
 
-// const assembly_params = {
-  //   audio_url: urlAudio,
-  //   speaker_labels: true,
-  //   language_code: 'es'
-  // }
+    const transcript: any = await assembly.transcripts.create(assembly_params);
 
-  // const transcript:any = await assembly.transcripts.create(assembly_params);
-  // console.timeEnd("GENERAR");
+    let texto = ""
+    for (let utterance of transcript.utterances) {
+      texto = utterance.text
+    }
+    console.log("assembly: ", texto);
+    return texto
+  } catch (error) {
+    console.log("assembly error: ", error);
+    return "";
+  }
 
-  // let texto = ""
-  // for (let utterance of transcript.utterances) {
-  //   console.log(`Speaker ${utterance.speaker}: ${utterance.text}`);
-  //   texto = utterance.text
-  // }
+}

@@ -1,7 +1,6 @@
 "use client";
 import { formatText } from "@/interfaces/FormatReact";
 import Link from "next/link";
-// import "regenerator-runtime/runtime";
 import { Header } from "./components/Header";
 import {
     IconAddUser,

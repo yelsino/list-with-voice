@@ -1,3 +1,5 @@
+import { ItemList } from "@prisma/client";
+import { type } from "microsoft-cognitiveservices-speech-sdk/distrib/lib/src/common.speech/RecognizerConfig";
 import { DateType } from "react-tailwindcss-datepicker";
 
 export interface SearchParams {
@@ -10,6 +12,12 @@ export interface SearchParams {
 
 export interface GlobalState {
     searchParams : SearchParams;
+    recordService: Service
+}
+
+export interface ResponseRecord {
+    items: ItemList[]
+    recordUrl: string
 }
 
 export interface ResponseParams<T> {
@@ -19,4 +27,13 @@ export interface ResponseParams<T> {
     metodo?: string;
     cantidad: number;
     data: T;
+}
+
+
+
+export enum Service {
+    Deepgram = 'DEEPGRAM_SERVICE',
+    Whisper = 'WHISPER_SERVICE',
+    Assembly = 'ASSEMBLY_SERVICE',
+    AzureSpeech = 'AZURE_SPEECH_SERVICE'
 }

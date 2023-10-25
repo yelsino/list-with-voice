@@ -1,14 +1,14 @@
 import { VoiceControlProvider } from "@/context/voice.context";
 import { Providers } from "@/redux/provider";
 import { Metadata } from "next";
-import { Inter, Dosis } from "next/font/google";
+import { Dosis, Inter } from "next/font/google";
 import { Toaster } from "react-hot-toast";
 import ButtonBack from "./components/ButtonBack";
 import ButtonRegister from "./components/ButtonRegister";
 import { Cinta } from "./components/Cinta";
 import MicrophoneVoice from "./components/Voice/MicrophoneVoice";
-import "./globals.css";
 import RecordVoice from "./components/Voice/RecordVoice";
+import "./globals.css";
 
 const inter = Inter({
     subsets: ["latin"],

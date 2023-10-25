@@ -1,5 +1,5 @@
 import { Cliente, ClienteState } from "@/interfaces/client.interface";
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { obtenerClientes } from "../chunks/clienteChunck";
 
 const initialState: ClienteState = {

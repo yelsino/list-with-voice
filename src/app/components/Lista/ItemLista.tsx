@@ -9,7 +9,7 @@ import {
 } from "@/redux/features/listaSlice";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { AnimatePresence, motion } from "framer-motion";
-import { IconDelete, IconRefresh } from "../Icons";
+import { IconDelete } from "../Icons";
 
 interface Props {
   item: ItemList;

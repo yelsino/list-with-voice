@@ -1,26 +1,19 @@
 "use client";
 import { IconPause, IconPlay } from "../Icons";
 import { usePathname } from "next/navigation";
-import toast from "react-hot-toast";
 import { useRef, useState } from "react";
-import { useAppDispatch, useAppSelector } from "@/redux/hooks";
-import { useConvertRecordToJsonMutation } from "@/redux/services/listaApi";
-import {
-  addItemsToList,
-  restaurarItems,
-  updateItem,
-  updateItems,
-} from "@/redux/features/listaSlice";
-import { ItemList } from "@prisma/client";
+import useGenerar from "@/app/(lista-app)/generar/useGenerar";
+import { useAppSelector } from "@/redux/hooks";
 
 function RecordVoice() {
+
   const pathName = usePathname();
-  const dispatch = useAppDispatch();
-  const [convertirRecordJson] = useConvertRecordToJsonMutation();
-  const { lista } = useAppSelector((state) => state.listaReducer);
+  const { toastRecord } = useGenerar();
 
   const [microphone, setMicrophone] = useState<MediaRecorder | null>(null);
   const listenButtonRef = useRef<HTMLButtonElement>(null);
+
+  const G = useAppSelector((state) => state.globalReducer);
 
   const getMicrophone = async (): Promise<MediaRecorder> => {
     const config = { audio: true };
@@ -43,35 +36,13 @@ function RecordVoice() {
 
     microphone.onstop = () => {
       const audioBlob = new Blob(chunks, { type: "audio/wav" });
-      // const audioUrl = URL.createObjectURL(audioBlob);
 
       const formData = new FormData();
       formData.append("audio", audioBlob);
+      formData.append("service", G.recordService);
 
-      toast
-        .promise(convertirRecordJson(formData).unwrap(), {
-          loading: "Convirtiendo grabación...",
-          error: "Error al convertir grabación",
-          success: "Converción de grabación completa",
-        })
-        .then((res) => {
-          if (res.length === 0) return toast.error("No se obtuvo resultados");
+      toastRecord(formData)
 
-          const newItems = lista.items.map((item) =>
-            item.status === "updating" ? res[0] : item
-          );
-
-          const itemupdating = lista.items.some(
-            (item) => item.status === "updating"
-          );
-
-          return itemupdating
-            ? dispatch(updateItems(newItems))
-            : dispatch(addItemsToList(res));
-        })
-        .finally(() => {
-          dispatch(restaurarItems());
-        });
     };
   };
 
@@ -89,12 +60,6 @@ function RecordVoice() {
   const validRutes = ["/generar"];
   const shouldShowButton = validRutes.some((e) => pathName.startsWith(e));
 
-  // useEffect(()=>{
-  //   if(itemSelected){
-
-  //   }
-  // },[itemSelected])
-
   return (
     <>
       {shouldShowButton && (
@@ -106,11 +71,10 @@ function RecordVoice() {
             className="select-none focus:select-none"
           >
             <div
-              className={`${
-                microphone
+              className={`${microphone
                   ? " border-secondary-100 "
                   : "bg-primary-100 border-primary-100"
-              } text-secondary-100 p-5 relative rounded-full flex justify-center items-center transition ease-in-out duration-500 border-4 select-none`}
+                } text-secondary-100 p-5 relative rounded-full flex justify-center items-center transition ease-in-out duration-500 border-4 select-none`}
             >
               {microphone ? <IconPause /> : <IconPlay />}
             </div>

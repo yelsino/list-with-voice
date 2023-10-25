@@ -43,8 +43,6 @@ function ClientesPage() {
         });
     };
 
-  
-
     return (
         <div className="text-secondary-100 flex flex-col gap-y-5">
             <Header

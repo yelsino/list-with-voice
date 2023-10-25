@@ -24,6 +24,8 @@ const initialState: ListaState = {
   },
   textRecord: "",
   cargando: false,
+  fetchList: null,
+  recordUrl: ""
 };
 
 export const listaSlice = createSlice({
@@ -93,6 +95,13 @@ export const listaSlice = createSlice({
     abonarLista: (state, action: PayloadAction<Abono>) => {
       state.abono = action.payload;
     },
+    fetchingLista: (state, action: PayloadAction<Lista>) => {
+      state.fetchList = action.payload;
+    },
+    catchUrlRecord: (state, action: PayloadAction<string>) => {
+      state.recordUrl = action.payload
+    }
+
   },
   extraReducers: (builder) => {
     builder.addCase(obtenerImagenLista.fulfilled, (state, action) => {
@@ -118,7 +127,9 @@ export const {
   selectItem,
   updateLista,
   abonarLista,
-  restaurarItems
+  restaurarItems,
+  fetchingLista,
+  catchUrlRecord
 } = listaSlice.actions;
 
 export default listaSlice.reducer;

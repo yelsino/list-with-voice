@@ -1,21 +1,9 @@
 import { URLBASE } from "@/interfaces/constantes";
-import { SearchParams } from "@/interfaces/global.interface";
+import { ResponseRecord, SearchParams } from "@/interfaces/global.interface";
 import {
-    GptRequest,
-    ItemList,
-    Lista,
-    ResponseGPT,
+    Lista
 } from "@/interfaces/list.interface";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-
-// export const URLBASE = {
-//     LOCAL: `${process.env.NEXTAUTH_URL}/api`,
-//     // LOCAL: "http://localhost:3000/api/",
-//     // LOCAL: "https://list-with-voice.vercel.app/api/",
-//     API_NEGOCIO: "https://api-ns-carlos-3b46dcee2dd0.herokuapp.com",
-//     // API_NEGOCIO: "http://localhost:3002",
-//     GPT: "https://api.openai.com/v1/chat/completions",
-// };
 
 interface Response<T> {
     data: T
@@ -41,7 +29,7 @@ export const listaApi = createApi({
             }),
             providesTags: ["lists"]
         }),
-        convertRecordToJson: builder.mutation<ItemList[], FormData>({
+        convertRecordToJson: builder.mutation<ResponseRecord, FormData>({
             query: (bodyFormData) => ({
                 url: `${URLBASE.LOCAL}/record`,
                 method: "POST",
@@ -61,32 +49,6 @@ export const listaApi = createApi({
             query: ({ id }) => `${URLBASE.LOCAL}/listas/${id}`,
             providesTags: ["lists"]
         }),
-        addItem: builder.mutation<ItemList, ItemList>({
-            query: (item) => ({
-                method: "POST",
-                url: `${URLBASE.LOCAL}/listas/${item.listaId}/items`,
-                body: item,
-            }),
-        }),
-        updateItem: builder.mutation<ItemList, ItemList>({
-            query: (item) => ({
-                method: "PUT",
-                url: `${URLBASE.LOCAL}/listas/${item.listaId}/items`,
-                body: item,
-                params: {
-                    id: item.id,
-                },
-            }),
-        }),
-        deleteItem: builder.mutation<ItemList, ItemList>({
-            query: (item) => ({
-                method: "DELETE",
-                url: `${URLBASE.LOCAL}/listas/${item.listaId}/items`,
-                params: {
-                    id: item.id,
-                },
-            }),
-        }),
         updateList: builder.mutation<Lista, Lista>({
             query: (lista) => ({
                 method: "PUT",
@@ -103,8 +65,5 @@ export const {
     useGetListaByIdQuery,
     useConvertRecordToJsonMutation,
     useRegistrarListDBMutation,
-    useAddItemMutation,
-    useUpdateItemMutation,
-    useDeleteItemMutation,
     useUpdateListMutation,
 } = listaApi;

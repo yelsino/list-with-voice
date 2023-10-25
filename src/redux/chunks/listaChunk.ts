@@ -1,10 +1,8 @@
-import { Lista, PrintLista } from "@/interfaces/list.interface";
+import { URLBASE } from "@/interfaces/constantes";
+import { PrintLista } from "@/interfaces/list.interface";
 import { Usuario } from "@/interfaces/user.interface";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { fetchSinToken } from "../fetch";
-import { URLBASE } from "@/interfaces/constantes";
-import axios from "axios";
-import { ResponseParams } from "@/interfaces/global.interface";
 
 export const obtenerImagenLista = createAsyncThunk(
   "obtener_imagen",

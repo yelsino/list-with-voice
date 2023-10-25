@@ -1,9 +1,4 @@
 "use client";
-import { Header } from "@/app/components/Header";
-import { IconCalendar, IconHome } from "@/app/components/Icons";
-import { SuperTitle } from "@/app/components/SuperTitle";
-import { generarTextoFecha } from "@/app/utils/front.global.utils";
-import { formatText } from "@/interfaces/FormatReact";
 import { Lista } from "@/interfaces/list.interface";
 import { dateFormat, moneyFormat } from "@/interfaces/mapper";
 import { useAppSelector } from "@/redux/hooks";
@@ -12,8 +7,8 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { DateType } from "react-tailwindcss-datepicker";
-import ListasSkeleton from "./listas.skeleton";
 import HederListas from "./HederListas";
+import ListasSkeleton from "./listas.skeleton";
 
 function ListasPage() {
     const { searchParams } = useAppSelector((state) => state.globalReducer);
