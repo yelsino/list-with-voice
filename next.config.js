@@ -7,15 +7,9 @@ const withPWA = require('next-pwa')({
 })
 
 
-// const nextConfig = {
-//     env: {
-//         OPENAI_API_KEY: process.env.OPENAI_API_KEY,
-//         NEXTAUTH_URL: process.env.NEXTAUTH_URL
-//     },
-// }
 const nextConfig = withPWA({
     env: {
-        OPENAI_API_KEY: process.env.GPT_TOKEN,
+        OPENAI_API_KEY: process.env.OPENAI_API_KEY,
         NEXTAUTH_URL: process.env.NEXTAUTH_URL
     },
 })
