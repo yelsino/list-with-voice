@@ -107,7 +107,7 @@ function ListasIdPage({ params }: { params: IParams }) {
                         {dateFormat(data?.createdAt)}
                       </p>
                       <p>Monto: {moneyFormat(data?.montoTotal)}</p>
-                      <p>Lista pagada: {data?.pagado ? "Si" : "No"}</p>
+                      {/* <p>Lista pagada: {data?.pagado ? "Si" : "No"}</p> */}
 
                       {(data?.abonos?.length ?? 0) > 0 && (
                         <ContainerAbono
@@ -128,8 +128,6 @@ function ListasIdPage({ params }: { params: IParams }) {
               >
                 <ArrowsPointingOutIcon width={16} height={16} />
                 <span>Productos</span>
-                <button onClick={()=>console.log(data?.items)
-                }>IMPRIMIR</button>
               </p>
               <div
                 className={`flex flex-col gap-y-4 ${

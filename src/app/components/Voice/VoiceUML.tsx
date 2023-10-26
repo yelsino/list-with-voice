@@ -80,7 +80,7 @@ export default function AudioRecorder() {
               {status === "recording" ? <IconPause /> : <IconPlay />}
             </div>
           </button>
-          {audioUrl && <audio className="mb-4" src={audioUrl} controls />}
+          {/* {audioUrl && <audio className="mb-4" src={audioUrl} controls />} */}
         </div>
       }
     </>
