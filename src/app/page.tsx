@@ -103,7 +103,3 @@ export default function Home() {
     );
 }
 
-// async function conectarImpresoraTermica() {
-//     const devices = await noble.startScanning([], true);
-//     console.log("devices", devices);
-// }

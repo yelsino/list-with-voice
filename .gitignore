@@ -44,3 +44,8 @@ next.config.js
 next-env.d.ts
 
 
+# raiz
+yarn.lock
+yarn.error
+
+
