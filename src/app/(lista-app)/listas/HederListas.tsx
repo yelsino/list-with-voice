@@ -25,7 +25,7 @@ function HederListas() {
         }
       />
 
-      <SuperTitle title={formatText("Todas Las listas")}>
+      <SuperTitle title={"Listas"}>
         <p className="text-base font-medium text-secondary-200 break-words">
           {generarTextoFecha(searchParams.startDate, searchParams.endDate)}{" "}
           <span className="text-secondary-100">

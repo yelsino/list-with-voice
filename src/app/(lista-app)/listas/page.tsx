@@ -38,7 +38,7 @@ function ListasPage() {
             <HederListas/>
             <div
                 id="scrollableDiv"
-                className="h-[calc(100vh-320px)] overflow-y-scroll"
+                className="h-[calc(100vh-200px)] overflow-y-scroll mt-3"
             >
                 {!isFetching && dataAcumulada?.length === 0 && (
                     <Link

@@ -46,7 +46,7 @@ export default function RootLayout({
                         <Providers>
                             <VoiceControlProvider>
                                 <Cinta />
-                                <div className="flex flex-col gap-y-3">
+                                <div className="flex flex-col ">
                                     {children}
                                 </div>
                                 <MicrophoneVoice />

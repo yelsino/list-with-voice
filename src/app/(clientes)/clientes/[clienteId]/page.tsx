@@ -1,15 +1,18 @@
 "use client";
+import ListasSkeleton from "@/app/(lista-app)/listas/listas.skeleton";
 import { Header } from "@/app/components/Header";
 import { IconTool, IconUsers } from "@/app/components/Icons";
 import OptionsMenu from "@/app/components/Popover/Popover";
 import { SuperTitle } from "@/app/components/SuperTitle";
 import { formatText } from "@/interfaces/FormatReact";
-import { dateFormat, moneyFormat, moneyFormatSimbol } from "@/interfaces/mapper";
+import { dateFormat, moneyFormatSimbol } from "@/interfaces/mapper";
 import { seleccionarCliente } from "@/redux/features/clienteSlice";
 import { useAppDispatch } from "@/redux/hooks";
 import { useGetCostumerQuery } from "@/redux/services/clienteApi";
 import { ClipboardIcon, FolderPlusIcon } from "@heroicons/react/20/solid";
 import Link from "next/link";
+import { useState } from "react";
+import InfiniteScroll from "react-infinite-scroll-component";
 
 
 interface IParams {
@@ -20,7 +23,7 @@ function ClienteIdPage({ params }: { params: IParams }) {
     const { isLoading, isFetching, data, error } = useGetCostumerQuery({
         id: params.clienteId,
     });
-
+    const [pageNumber, setPageNumber] = useState(1);
     const dispatch = useAppDispatch();
 
     return (
@@ -28,7 +31,7 @@ function ClienteIdPage({ params }: { params: IParams }) {
             {isLoading ? (
                 <p className="text-secondary-100">Cargando datos...</p>
             ) : (
-                <div className="flex flex-col gap-y-4">
+                <>
                     <Header
                         childrenLeft={
                             <Link href="/clientes" className="text-2xl">
@@ -37,8 +40,8 @@ function ClienteIdPage({ params }: { params: IParams }) {
                         }
                         childrenRight={
                             <OptionsMenu
-                                imprimirLista={() => {}}
-                                actualizarLista={() => {}}
+                                imprimirLista={() => { }}
+                                actualizarLista={() => { }}
                             >
                                 <div className="w-full h-full flex items-center justify-center">
                                     <IconTool />
@@ -57,7 +60,7 @@ function ClienteIdPage({ params }: { params: IParams }) {
                     {data?.data.listas?.length === 0 ? (
                         <div>
                             <Link
-                                onClick={()=>{
+                                onClick={() => {
                                     dispatch(seleccionarCliente({
                                         celular: data.data.celular,
                                         nombres: data.data.nombres,
@@ -75,29 +78,41 @@ function ClienteIdPage({ params }: { params: IParams }) {
                             </Link>
                         </div>
                     ) : null}
+                    <div
+                        id="scrollableDiv"
+                        className="h-[calc(100vh-200px)] overflow-y-scroll mt-3 pb-20"
+                    >
+                        <InfiniteScroll
+                            dataLength={data?.cantidad ?? 0}
+                            next={() => setPageNumber(pageNumber + 1)}
+                            hasMore={isFetching}
+                            loader={
+                                <ListasSkeleton />
+                            }
+                            scrollableTarget="scrollableDiv"
+                            className="flex flex-col gap-y-3 pb-22 "
+                        >
+                            {data?.data.listas?.map((lista, index: any) => (
+                                <Link
+                                    href={`/listas/${lista.id}`}
+                                    className="text-secondary-100 bg-primary-100 px-3 cursor-pointer flex  rounded-lg  py-3 items-center gap-x-3"
+                                    key={index}
+                                >
+                                    <ClipboardIcon height={24} width={24} />
+                                    <div className="flex flex-col">
+                                        <p className="text-lg">{moneyFormatSimbol(lista.montoTotal)}</p>
 
-                    <div>
-                        {data?.data.listas?.map((lista, index: any) => (
-                            <Link
-                                href={`/listas/${lista.id}`}
-                                className="text-secondary-100 bg-primary-100 px-3 cursor-pointer flex  rounded-lg  py-4 items-center gap-x-3"
-                                key={index}
-                            >
-                                <ClipboardIcon height={26} width={26} />
-                                <div className="flex flex-col">
-                                    <p className="text-lg">{moneyFormatSimbol(lista.montoTotal)}</p>
-                                    
-                                    <div className="text-secondary-200">
-                                        <p className="capitalize">
-                                        {dateFormat(lista.createdAt)}
-                                    </p>
+                                        <div className="text-secondary-200">
+                                            <p className="capitalize">
+                                                {dateFormat(lista.createdAt)}
+                                            </p>
+                                        </div>
                                     </div>
-                                </div>
-                            </Link>
-                        ))}
+                                </Link>
+                            ))}
+                        </InfiniteScroll>
                     </div>
-                    
-                </div>
+                </>
             )}
         </>
     );
