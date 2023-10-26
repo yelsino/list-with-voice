@@ -9,6 +9,7 @@ import { Cinta } from "./components/Cinta";
 import MicrophoneVoice from "./components/Voice/MicrophoneVoice";
 import RecordVoice from "./components/Voice/RecordVoice";
 import "./globals.css";
+import AudioRecorder from "./components/Voice/VoiceUML";
 
 const inter = Inter({
     subsets: ["latin"],
@@ -49,7 +50,8 @@ export default function RootLayout({
                                     {children}
                                 </div>
                                 <MicrophoneVoice />
-                                <RecordVoice />
+                                <AudioRecorder/>
+                                {/* <RecordVoice /> */}
                                 <ButtonBack />
                                 <ButtonRegister />
                             </VoiceControlProvider>

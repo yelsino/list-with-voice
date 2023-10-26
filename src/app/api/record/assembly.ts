@@ -7,6 +7,8 @@ export const assembly = new AssemblyAI({
 
 export const assemblyTranscript = async (filePath: string) => {
   try {
+    console.log("assembly inicio");
+    
     const assembly_params = {
       audio_url: filePath,
       speaker_labels: true,

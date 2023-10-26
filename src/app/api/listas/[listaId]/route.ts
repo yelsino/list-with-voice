@@ -32,7 +32,8 @@ export async function GET(request: Request, { params }: GetParams) {
                 cliente: true,
             },
         });
-
+        console.log(lista);
+        
         if (!lista) {
             return NextResponse.json(
                 { error: "No se encontró la lista con el ID proporcionado." },

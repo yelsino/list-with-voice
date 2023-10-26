@@ -115,6 +115,8 @@ export async function PUT(request: Request) {
     const body: Lista = await request.json();
     try {
         // Obtener la lista actual
+        console.log(body);
+        
         const listaActual = await prisma.lista.findUnique({
             where: { id: body.id },
             include: { items: true },
@@ -135,7 +137,7 @@ export async function PUT(request: Request) {
         console.log("antes de crear");
         
 
-        console.log(body);
+        // console.log(body);
         
         const listaActualizada = await prisma.lista.update({
             where: { id: body.id },

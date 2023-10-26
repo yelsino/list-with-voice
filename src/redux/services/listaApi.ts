@@ -3,6 +3,7 @@ import { ResponseRecord, SearchParams } from "@/interfaces/global.interface";
 import {
     Lista
 } from "@/interfaces/list.interface";
+import { ItemList } from "@prisma/client";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 interface Response<T> {
@@ -37,6 +38,13 @@ export const listaApi = createApi({
                 formData:true
             })
         }),
+        convertTextToJson: builder.mutation<ItemList[], string>({
+            query: (texto) => ({
+                url: `${URLBASE.LOCAL}/listas/items`,
+                method: "POST",
+                body: {texto},
+            })
+        }),
         registrarListDB: builder.mutation<Lista, Lista>({
             query: (lista) => ({
                 method: "POST",
@@ -63,7 +71,8 @@ export const listaApi = createApi({
 export const {
     useGetListasQuery,
     useGetListaByIdQuery,
-    useConvertRecordToJsonMutation,
-    useRegistrarListDBMutation,
     useUpdateListMutation,
+    useRegistrarListDBMutation,
+    useConvertRecordToJsonMutation,
+    useConvertTextToJsonMutation,
 } = listaApi;

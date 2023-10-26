@@ -86,7 +86,6 @@ function GenerarPage() {
               </div>
             </div>
           )}
-
           <LayoutGroup>
             <motion.div className="flex flex-col  h-[calc(100vh-320px)] pb-10 overflow-hidden overflow-y-scroll gap-y-1">
               {lista.items.map((item, index) => (

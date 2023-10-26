@@ -37,7 +37,7 @@ export async function wishperTranscript(filePath: any) {
     const chatCompletion = await openai.audio.transcriptions.create({
       file: fsReadStream,
       model: 'whisper-1',
-      // language: 'es'
+      language: 'es'
     })
     
     console.log("whisper: ", chatCompletion.text);

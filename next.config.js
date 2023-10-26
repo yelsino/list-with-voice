@@ -1,12 +1,3 @@
-// /** @type {import('next').NextConfig} */
-// const nextConfig = {
-//     env: {
-//         GPT_TOKEN: process.env.GPT_TOKEN
-//     }
-// }
-
-// module.exports = nextConfig
-
 
 /** @type {import('next').NextConfig} */
 
@@ -18,7 +9,7 @@
 
 const nextConfig = {
     env: {
-        GPT_TOKEN: process.env.GPT_TOKEN,
+        OPENAI_API_KEY: process.env.OPENAI_API_KEY,
         NEXTAUTH_URL: process.env.NEXTAUTH_URL
     },
 }

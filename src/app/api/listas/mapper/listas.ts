@@ -13,7 +13,7 @@ export function generarItemListBD(item: any): ItemList {
         montoItem: item.montoItem,
         medida: item.medida,
         texto: item.texto,
-        calculado: item.caculado as boolean,
+        calculado: item.calculado as boolean,
     };
 }
 

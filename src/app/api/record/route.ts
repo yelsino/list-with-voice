@@ -34,11 +34,9 @@ export async function POST(request: Request) {
     switch (service) {
       case Service.Deepgram:
         return await deepgramTranscript(uriUploaded);
-
       case Service.Assembly:
         return await assemblyTranscript(uriUploaded);
       case Service.Whisper:
-        // update codigo whisper
         return await wishperTranscript(uriUploaded)
       default:
         return ""
@@ -48,7 +46,6 @@ export async function POST(request: Request) {
   const transcription = await getTranscript();
 
   const itemsgpt = await completion(transcription ?? "");
-  // console.log("ITEMS GPT: ", itemsgpt);
 
   const itemsList = itemsgpt.map((item) => mapItemToList2(item));
 

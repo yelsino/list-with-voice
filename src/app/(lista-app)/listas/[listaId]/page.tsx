@@ -128,6 +128,8 @@ function ListasIdPage({ params }: { params: IParams }) {
               >
                 <ArrowsPointingOutIcon width={16} height={16} />
                 <span>Productos</span>
+                <button onClick={()=>console.log(data?.items)
+                }>IMPRIMIR</button>
               </p>
               <div
                 className={`flex flex-col gap-y-4 ${
