@@ -24,6 +24,7 @@ export interface Usuario {
     validPassword?: string;
     nombres?: string;
     apellidos?: string;
+    defaultCliente?: string
     tiendas?: Tienda[];
     listas?: Lista[];
     createdAt?: Date;

@@ -6,14 +6,14 @@ const prisma = new PrismaClient();
 
 export function generarItemListBD(item: any): ItemList {
     return {
+        // id: item.id,
         nombre: item.nombre,
         precio: item.precio,
         cantidad: item.cantidad,
         montoItem: item.montoItem,
         medida: item.medida,
-        voz: item.voz,
-        status: item.status,
-        calculated: item.calculated as boolean, 
+        texto: item.texto,
+        calculado: item.calculado as boolean,
     };
 }
 
@@ -43,14 +43,14 @@ interface ListaPrint {
     items: ItemPrint[];
 }
 
-// export function listaToPrint(lista: Lista): ListaPrint {
-//     return {
-//         fecha: dateFormat(lista.createdAt),
-//         montoTotal: moneyFormat(lista.montoTotal),
-//         nombreCliente: lista.cliente?.nombres  ?? "",
-//         items: lista.items.map((item) => ({
-//             descripcion: `${item.cantidad} ${item.nombre} ${item.precio} x und`,
-//             monto: moneyFormat(item.montoItem),
-//         })),
-//     };
-// }
+export function listaToPrint(lista: Lista): ListaPrint {
+    return {
+        fecha: dateFormat(lista.createdAt),
+        montoTotal: moneyFormat(lista.montoTotal),
+        nombreCliente: lista?.cliente?.nombres ?? "",
+        items: lista.items.map((item) => ({
+            descripcion: `${item.cantidad} ${item.nombre} ${item.precio} x und`,
+            monto: moneyFormat(item.montoItem),
+        })),
+    };
+}

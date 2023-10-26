@@ -1,23 +1,12 @@
 import { URLBASE } from "@/interfaces/constantes";
-import { SearchParams } from "@/interfaces/global.interface";
+import { ResponseRecord, SearchParams } from "@/interfaces/global.interface";
 import {
-    GptRequest,
-    ItemList,
-    Lista,
-    ResponseGPT,
+    Lista
 } from "@/interfaces/list.interface";
+import { ItemList } from "@prisma/client";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
-// export const URLBASE = {
-//     LOCAL: `${process.env.NEXTAUTH_URL}/api`,
-//     // LOCAL: "http://localhost:3000/api/",
-//     // LOCAL: "https://list-with-voice.vercel.app/api/",
-//     API_NEGOCIO: "https://api-ns-carlos-3b46dcee2dd0.herokuapp.com",
-//     // API_NEGOCIO: "http://localhost:3002",
-//     GPT: "https://api.openai.com/v1/chat/completions",
-// };
-
-interface Response<T>{
+interface Response<T> {
     data: T
     cantidad: number
 }
@@ -41,143 +30,20 @@ export const listaApi = createApi({
             }),
             providesTags: ["lists"]
         }),
-        sendListaToGPT: builder.mutation<null, GptRequest>({
-            query: ({ message }) => ({
-                url: "gpt",
+        convertRecordToJson: builder.mutation<ResponseRecord, FormData>({
+            query: (bodyFormData) => ({
+                url: `${URLBASE.LOCAL}/record`,
                 method: "POST",
-                body: {
-                    model: "gpt-3.5-turbo",
-                    messages: [
-                        {
-                            role: "system",
-                            content:
-                                "Estás trabajando en una lista de compras. Tu trabajo es tomar descripciones de productos y convertirlas en una lista de compras con formato. Por ejemplo, 'un kilo y medio de manzana son 15 soles' debería convertirse en '1.5 kg manzana 15.00', la unica respuesta que debes dar es el resultado convetido como este -> '1.5 kg manzana 15.00'",
-                        },
-                        { role: "user", content: message },
-                    ],
-                    temperature: 1,
-                },
-            }),
+                body: bodyFormData,
+                formData:true
+            })
         }),
-        convertVoiceToItem: builder.mutation<ResponseGPT, GptRequest>({
-            query: ({ message, codigo }) => ({
-                url: URLBASE.GPT,
+        convertTextToJson: builder.mutation<ItemList[], string>({
+            query: (texto) => ({
+                url: `${URLBASE.LOCAL}/listas/items`,
                 method: "POST",
-                body: {
-                    model: "gpt-3.5-turbo",
-                    // model: "gpt-4",
-                    messages: [
-                        {
-                            role: "system",
-                            content: `
-                            Eres un asistente inteligente que transforma descripciones de productos en formato JSON. Tu objetivo es extraer información relevante de instrucciones en español peruano y generar una respuesta JSON. Debes analizar estos textos; si el texto no contiene números, no es una descripción válida. 
-                            
-                            Aquí hay reglas para la conversión, no son límites rígidos; debes ser inteligente y adaptarte para hacer una lista de compras adecuada:
-                            
-                            1. Si la instrucción contiene información clara y precisa de cantidad, medida, nombre y precio del producto, la respuesta debe incluir todos estos datos y la propiedad "calculated" debe establecerse en "false". Por ejemplo:
-
-                            Instrucción: 'cinco kilos y medio de manzana son 2 soles'
-                            Respuesta: "{ 'cantidad': 5.5, 'medida': 'kg', 'nombre': 'manzana', 'precio': 2, 'calculated': false, 'codigo': '${codigo}' }"
-
-                            Instrucción: 'un litro de aceite a 7 soles'
-                            Respuesta: "{ 'cantidad': 1, 'medida': 'lt', 'nombre': 'aceite', 'precio': 7, 'calculated': false, 'codigo': '${codigo}' }"
-                            
-                            2. Si la instrucción contiene únicamente el montoItem y el nombre del producto, la respuesta debe incluir estos datos, y la propiedad "calculated" debe establecerse en "true". Por ejemplo:
-
-                            Instrucción: '25 soles de manzana'
-                            Respuesta: "{ 'nombre': 'manzana', 'montoItem': 25, 'calculated': true, 'codigo': '${codigo}' }"
-
-                            Instrucción: '20 soles 10 de carne de res'
-                            Respuesta: "{ 'nombre': 'carne de res', 'montoItem': 20.1, 'calculated': true, 'codigo': '${codigo}' }"
-
-                            3. Va haber instrucciones con errores ortograficos y gramaticales o mal redactados a estos intenta decifrarlo con el idioma español Perú. Por ejemplo, "solvente" es un palabla mal pronunciada. su forma correcta seria -> "1 sol con veinte centavos" (1.20). Por ejemplo:
-
-                            Instrucción: '15 kg de zanahorias a un solvente'
-                            Respuesta: "{ 'cantidad': 15, 'medida': 'kg', 'nombre': 'zanahorias', 'precio': 1.20, 'calculated': false, 'codigo': '${codigo}' }"
-                            
-                            4. Si la instrucción tiene información de varios productos, es confuso, no se puede extraer informacion clara añade o  'status': 'error' al objeto y extrae al menos el nombre del producto. Por ejemplo:
-
-                            Respuesta: "{'status':'error', nombre: 'información confusa', 'codigo': '${codigo}'}" 
-
-                            5. En algunos casos la instrucciones incluiran la medida del producto en texto completo por ejemplo. kilos, cajas, unidades, costales, etc. debes analizar los textos y abreviarlos de 2 a 3 caracteres. ejemplo. unidades = und.
-
-                            Instrucción: '10 costales de zanahorias a 65 soles'
-                            Respuesta: "{ 'cantidad': 10, 'medida': 'cos', 'nombre': 'zanahorias', 'precio': 65, 'calculated': false, 'codigo': '${codigo}' }"
-                            `,
-                        },
-                        {
-                            role: "user",
-                            content:
-                                "cinco kilos y medio de cebolla a 2 soles cincuenta",
-                        },
-                        {
-                            role: "assistant",
-                            content: JSON.stringify({
-                                cantidad: 5.5,
-                                medida: "kg",
-                                nombre: "cebolla",
-                                precio: 2.5,
-                                calculated: false,
-                                status: "success",
-                                codigo: codigo,
-                            }),
-                        },
-                        {
-                            role: "user",
-                            content:
-                                "tres litros y cuarto de aceite a 3 soles veinte",
-                        },
-                        {
-                            role: "assistant",
-                            content: JSON.stringify({
-                                cantidad: 3.25,
-                                medida: "lt",
-                                nombre: "aceite",
-                                precio: 3.2,
-                                calculated: false,
-                                status: "success",
-                                codigo: codigo,
-                            }),
-                        },
-                        {
-                            role: "user",
-                            content: "300 gramos de queso a 6 soles 50",
-                        },
-                        {
-                            role: "assistant",
-                            content: JSON.stringify({
-                                cantidad: 0.3,
-                                medida: "g",
-                                nombre: "queso",
-                                precio: 6.5,
-                                calculated: false,
-                                status: "success",
-                                codigo: codigo,
-                            }),
-                        },
-                        {
-                            role: "user",
-                            content: "trece soles de rocoto",
-                        },
-                        {
-                            role: "assistant",
-                            content: JSON.stringify({
-                                nombre: "rocoto",
-                                montoItem: 13,
-                                calculated: true,
-                                status: "success",
-                                codigo: codigo,
-                            }),
-                        },
-                        { role: "user", content: message },
-                    ],
-                    temperature: 0.7,
-                },
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: process.env.GPT_TOKEN,
-                },
-            }),
+                body: {texto},
+            })
         }),
         registrarListDB: builder.mutation<Lista, Lista>({
             query: (lista) => ({
@@ -190,32 +56,6 @@ export const listaApi = createApi({
         getListaById: builder.query<Lista, { id: string }>({
             query: ({ id }) => `${URLBASE.LOCAL}/listas/${id}`,
             providesTags: ["lists"]
-        }),
-        addItem: builder.mutation<ItemList, ItemList>({
-            query: (item) => ({
-                method: "POST",
-                url: `${URLBASE.LOCAL}/listas/${item.listaId}/items`,
-                body: item,
-            }),
-        }),
-        updateItem: builder.mutation<ItemList, ItemList>({
-            query: (item) => ({
-                method: "PUT",
-                url: `${URLBASE.LOCAL}/listas/${item.listaId}/items`,
-                body: item,
-                params: {
-                    id: item.id,
-                },
-            }),
-        }),
-        deleteItem: builder.mutation<ItemList, ItemList>({
-            query: (item) => ({
-                method: "DELETE",
-                url: `${URLBASE.LOCAL}/listas/${item.listaId}/items`,
-                params: {
-                    id: item.id,
-                },
-            }),
         }),
         updateList: builder.mutation<Lista, Lista>({
             query: (lista) => ({
@@ -231,11 +71,8 @@ export const listaApi = createApi({
 export const {
     useGetListasQuery,
     useGetListaByIdQuery,
-    useConvertVoiceToItemMutation,
-    useSendListaToGPTMutation,
-    useRegistrarListDBMutation,
-    useAddItemMutation,
-    useUpdateItemMutation,
-    useDeleteItemMutation,
     useUpdateListMutation,
+    useRegistrarListDBMutation,
+    useConvertRecordToJsonMutation,
+    useConvertTextToJsonMutation,
 } = listaApi;

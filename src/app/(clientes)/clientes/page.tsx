@@ -42,7 +42,7 @@ function ClientesPage() {
                 <p>CARGANDO...</p>
             ) : (
                 // <Loader texto="cargando listas..." />
-                <div className="flex flex-col gap-y-3">
+                <>
                     <Header
                         childrenLeft={
                             <Link href="/" className="text-2xl">
@@ -55,7 +55,7 @@ function ClientesPage() {
                             </Link>
                         }
                     />
-                    <SuperTitle  title={formatText("Todos Los clientes")}>
+                    <SuperTitle  title={"Clientes"}>
                         <p className="text-base font-medium text-secondary-200 break-words">
                             {generarTextoFecha(
                                 searchParams.startDate,
@@ -89,7 +89,7 @@ function ClientesPage() {
 
                     <div
                         id="scrollableDiv"
-                        className="h-[calc(100vh-320px)] overflow-y-scroll"
+                        className="h-[calc(100vh-200px)] overflow-y-scroll mt-3"
                     >
                         <InfiniteScroll
                             dataLength={data?.cantidad ?? 0}
@@ -122,7 +122,7 @@ function ClientesPage() {
                             ))}
                         </InfiniteScroll>
                     </div>
-                </div>
+                </>
             )}
         </>
     );

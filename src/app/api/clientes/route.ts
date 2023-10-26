@@ -23,18 +23,24 @@ export async function GET(request: NextRequest) {
         
     const where: Prisma.ClienteWhereInput = {
         usuarioId: currentUser.id,
+    
         createdAt: {
             lte: dateStringToStringISO(endDate, true), //menores a
             gte: dateStringToStringISO(startDate, false), //mayores a
         },
         OR: [
             {
+                nombres: 'cliente de tienda'
+            },
+            {
                 nombres: {
                     contains: textfilter,
                     mode: 'insensitive',
                 },
             },
+            
         ],
+        
     };
 
     const cantidad = await prisma.cliente.count({ where });
@@ -43,6 +49,9 @@ export async function GET(request: NextRequest) {
         where,
         skip,
         take,
+        orderBy: {
+            createdAt: "desc"
+        }
     });
 
     return NextResponse.json({

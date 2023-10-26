@@ -22,7 +22,10 @@ const initialState: ListaState = {
     id: "",
     cliente: null,
   },
+  textRecord: "",
   cargando: false,
+  fetchList: null,
+  recordUrl: ""
 };
 
 export const listaSlice = createSlice({
@@ -30,12 +33,7 @@ export const listaSlice = createSlice({
   initialState,
   reducers: {
     addItemsToList: (state, action: PayloadAction<ItemList[]>) => {
-      // filtrar todas las voces que no esten en el payload
-      const missingVoices: ItemList[] = action.payload.filter(
-        (item) => !state.lista.items.some((i) => i.voz === item.voz)
-      );
-
-      state.lista.items = state.lista.items.concat(missingVoices);
+      state.lista.items = state.lista.items.concat(action.payload);
     },
     limpiarLista: (state) => {
       state = initialState;
@@ -47,52 +45,63 @@ export const listaSlice = createSlice({
       const filtrarItems = state.lista.items.filter(
         (i) => i.id !== action.payload.id
       );
+        
       state.lista.errors.push({ itemList: action.payload });
       state.lista.items = filtrarItems;
     },
     updateItem: (state, action: PayloadAction<ItemList>) => {
-      // buscar itema a actualizar
-      console.log(action.payload);
 
       const itemIndex = state.lista.items.findIndex(
         (item) => item.id === action.payload.id
       );
-      // actualizar itemsList con el nuevo item
       if (itemIndex !== -1) {
-        
-        const errors:Error[] = Array.from(state.lista.errors);
-        errors.push({ itemList: { ...action.payload, status: "error" }});
 
-        const unicErrors =  errors.reduce((acc,b)=>{
-            const comparar = acc.some((e)=>e.itemList.voz === b.itemList.voz);
-            if(!comparar){
-                acc.push(b)
-            }
-            return acc
-        },[] as Error[])
+        const errors: Error[] = Array.from(state.lista.errors);
+        errors.push({ itemList: action.payload });
+
+        const unicErrors = errors.reduce((acc, b) => {
+          const comparar = acc.some((e) => e.itemList.texto === b.itemList.texto);
+          if (!comparar) {
+            acc.push(b)
+          }
+          return acc
+        }, [] as Error[])
 
         state.lista.errors = Array.from(unicErrors);
         state.lista.items[itemIndex] = action.payload;
       }
     },
     updateItems: (state, action: PayloadAction<ItemList[]>) => {
-      const nuevosItems = state.lista.items.map((item) => {
-        const existe = action.payload.find((p) => item.id === p.id);
-        return existe ? existe : item;
-      });
+      // const nuevosItems = state.lista.items.map((item) => {
+      //   const existe = action.payload.find((p) => item.id === p.id);
+      //   return existe ? existe : item;
+      // });
 
-      state.lista.items = nuevosItems;
+      state.lista.items = action.payload;
     },
     selectItem: (state, action: PayloadAction<ItemList | null>) => {
       state.itemSelected = action.payload;
     },
     updateLista: (state, action: PayloadAction<Lista>) => {
-      // const { items, pagado, id } = action.payload;
       state.lista = action.payload;
+    },
+    restaurarItems: (state) =>{
+      const items = state.lista.items.map((item)=>{
+        delete item.status
+        return item
+      });
+      state.lista.items = items
     },
     abonarLista: (state, action: PayloadAction<Abono>) => {
       state.abono = action.payload;
     },
+    fetchingLista: (state, action: PayloadAction<Lista>) => {
+      state.fetchList = action.payload;
+    },
+    catchUrlRecord: (state, action: PayloadAction<string>) => {
+      state.recordUrl = action.payload
+    }
+
   },
   extraReducers: (builder) => {
     builder.addCase(obtenerImagenLista.fulfilled, (state, action) => {
@@ -118,6 +127,9 @@ export const {
   selectItem,
   updateLista,
   abonarLista,
+  restaurarItems,
+  fetchingLista,
+  catchUrlRecord
 } = listaSlice.actions;
 
 export default listaSlice.reducer;

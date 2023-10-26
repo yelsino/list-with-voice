@@ -1,16 +1,19 @@
-import { GlobalState, SearchParams } from "@/interfaces/global.interface";
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { format, subDays } from "date-fns";
-import { actualizarNegocio } from "../chunks/negocioChunck";
+import {
+    GlobalState,
+    SearchParams,
+    Service,
+} from "@/interfaces/global.interface";
+import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
 const initialState: GlobalState = {
     searchParams: {
-        startDate: format(subDays(new Date(), 7), "yyyy-MM-dd"),
-        endDate: format(new Date(), "yyyy-MM-dd"),
+        startDate: null,
+        endDate: null,
         page: 1,
         pageSize: 10,
         texto: "",
     },
+    recordService: Service.Deepgram,
 };
 
 export const globalSlice = createSlice({
@@ -27,15 +30,16 @@ export const globalSlice = createSlice({
                 endDate: null,
             };
         },
+        updateRecordService: (state, action: PayloadAction<Service>) => {
+            state.recordService = action.payload;
+        },
     },
-    // extraReducers: (builder) => {
-    //     builder.addCase(actualizarNegocio.fulfilled, (state, action) => {
-    //         return state;
-    //     });
-       
-    // },
 });
 
-export const { udateSearchParams, cleanSearchParams } = globalSlice.actions;
+export const { 
+    udateSearchParams, 
+    cleanSearchParams, 
+    updateRecordService
+ } = globalSlice.actions;
 
 export default globalSlice.reducer;

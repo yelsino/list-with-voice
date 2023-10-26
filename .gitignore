@@ -9,7 +9,8 @@
 
 # testing
 /coverage
-
+.turbo
+turbo.json
 # next.js
 /.next/
 /out/
@@ -36,6 +37,7 @@ package-lock.json*
 
 # vercel
 .vercel
+next.config.js
 
 # typescript
 *.tsbuildinfo

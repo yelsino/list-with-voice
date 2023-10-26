@@ -1,12 +1,11 @@
-import React, { useState } from "react";
+import { udateSearchParams } from "@/redux/features/globalSlice";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { format, startOfWeek, subDays } from "date-fns";
+import { useRouter } from "next/navigation";
 import Datepicker, {
     DateType,
     DateValueType,
 } from "react-tailwindcss-datepicker";
-import { format, subDays, startOfWeek, endOfWeek } from "date-fns";
-import { useAppDispatch, useAppSelector } from "@/redux/hooks";
-import { useRouter, usePathname } from "next/navigation";
-import { udateSearchParams } from "@/redux/features/globalSlice";
 
 function SelectDate() {
     const router = useRouter();

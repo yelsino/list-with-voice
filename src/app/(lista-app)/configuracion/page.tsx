@@ -3,10 +3,14 @@ import { Header } from "@/app/components/Header";
 import { IconHome } from "@/app/components/Icons";
 import { SuperTitle } from "@/app/components/SuperTitle";
 import { comando } from "@/app/components/Voice/comandos";
+import { Service } from "@/interfaces/global.interface";
+import { updateRecordService } from "@/redux/features/globalSlice";
+import { useAppDispatch } from "@/redux/hooks";
+import { RadioGroup } from '@headlessui/react';
 import { AnimatePresence, LayoutGroup, motion } from "framer-motion";
 import { signOut } from "next-auth/react";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 function ConfiguracionPage() {
     return (
@@ -52,8 +56,117 @@ function ConfiguracionPage() {
                 misma acción.
             </p>
 
+            <div className="flex flex-col gap-y-4">
+                <ConfigService />
+                <ComandosVoz />
+            </div>
+
+
+        </div>
+    );
+}
+
+export default ConfiguracionPage;
+
+
+const servicios = [
+  {
+    id: Service.Deepgram,
+    nombre: "Deepgram",
+  },
+  {
+    id: Service.Assembly,
+    nombre: "Assembly",
+  },
+  {
+    id: Service.Whisper,
+    nombre: "Whisper",
+  },
+];
+
+
+const ConfigService = () => {
+
+    const dispatch = useAppDispatch();
+
+    const getDefaultService = () => {
+        const ls = localStorage.getItem('recordService');
+        return ls ? JSON.parse(ls) : servicios[0]
+    }
+
+    let [servicio, setServicio] = useState({
+        id: Service.Assembly,
+        nombre: "Assembly",
+      })
+    // updateRecordService
+
+    const changeService = (servicio:any) => {
+        setServicio(servicio);
+        dispatch(updateRecordService(servicio.id));
+        localStorage.setItem('recordService', JSON.stringify(servicio))
+    }
+
+    useEffect(() => {
+        const serviceDefault = getDefaultService();
+        changeService(serviceDefault);
+    }, []);
+    
+    return (
+      <>
+        <RadioGroup value={servicio} onChange={changeService} >
+          <RadioGroup.Label className="text-secondary-100 font-medium">
+            Servicios de grabación
+          </RadioGroup.Label>
+
+          <div className="flex gap-x-4 mt-2">
+            {servicios.map((s) => (
+              <RadioGroup.Option
+                key={s.id}
+                value={s}
+                // defaultValue={servicio}
+                className={({ checked, active }) =>
+                  `bg-primary-100 font-medium cursor-pointer select-none p-3 ${
+                    checked && "bg-secondary-100 text-black"
+                  }`
+                }
+              >
+                <span>{s.nombre}</span>
+              </RadioGroup.Option>
+            ))}
+          </div>
+        </RadioGroup>
+
+        {/*  */}
+        {/* <RadioGroup value={plan} onChange={setPlan}>
+          <RadioGroup.Label>Plan</RadioGroup.Label>
+          <div className="flex">
+            <RadioGroup.Option value="startup">
+              {({ checked }) => (
+                <span className={checked ? "bg-blue-200" : ""}>Startup</span>
+              )}
+            </RadioGroup.Option>
+            <RadioGroup.Option value="business">
+              {({ checked }) => (
+                <span className={checked ? "bg-blue-200" : ""}>Business</span>
+              )}
+            </RadioGroup.Option>
+            <RadioGroup.Option value="enterprise">
+              {({ checked }) => (
+                <span className={checked ? "bg-blue-200" : ""}>Enterprise</span>
+              )}
+            </RadioGroup.Option>
+          </div>
+        </RadioGroup> */}
+      </>
+    );
+}
+
+const ComandosVoz = () => {
+    return (
+        <div>
+            <h2 className="text-secondary-100 font-medium">Comandos de voz</h2>
             <LayoutGroup>
-                <motion.div className="flex flex-col  h-[calc(100vh-320px)] pb-20 overflow-hidden overflow-y-scroll text-secondary-100 text-lg">
+                <motion.div className="flex flex-col  h-[calc(100vh-320px)] pb-20 overflow-hidden overflow-y-scroll text-secondary-100 ">
                     {Object.entries(comando).map(
                         ([key, subcomandos], index) => {
                             return (
@@ -98,10 +211,8 @@ function ConfiguracionPage() {
                 </motion.div>
             </LayoutGroup>
         </div>
-    );
+    )
 }
-
-export default ConfiguracionPage;
 
 const ItemsComando = ({ title, children, stilo }: any) => {
     const [isOpen, setIsOpen] = useState(false);
@@ -137,3 +248,5 @@ const ItemsComando = ({ title, children, stilo }: any) => {
         </div>
     );
 };
+
+

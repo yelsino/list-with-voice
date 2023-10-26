@@ -1,42 +1,88 @@
 'use client';
-import { useState } from "react";
 import useLLM from "usellm";
+import React, { useEffect, useState } from "react";
+import { IconPause, IconPlay } from "../Icons";
+import { usePathname } from "next/navigation";
+import useCreateItems from "@/app/hooks/useCreateItems";
+
+type RecordStatus = | 'recording' | 'stop' | 'transcribing'
 
 export default function AudioRecorder() {
-  const [audioUrl, setAudioUrl] = useState("");
-  const [transcript, setTranscript] = useState("");
-  const [status, setStatus] = useState("");
 
-  const llm = useLLM({ serviceUrl: "https://usellm.org/api/llm" });
+  const pathName = usePathname();
+  const [audioUrl, setAudioUrl] = useState("");
+  // const [transcript, setTranscript] = useState("");
+  const [status, setStatus] = useState<RecordStatus>("stop");
+
+  const {toastTextToItems} = useCreateItems()
+
+  // convertTextToJson
+
+  const llm = useLLM({ serviceUrl: "/api/llm" });
 
   const startRecording = async () => {
     await llm.record();
-    setStatus("Recording...");
+    setStatus("recording");
   };
 
   const stopRecording = async () => {
     const { audioUrl } = await llm.stopRecording();
+    console.log("audiourl:", audioUrl);
+
     setAudioUrl(audioUrl);
-    setStatus("");
+    setStatus("stop");
+    // await transcribe();
   };
 
   const transcribe = async () => {
-    setStatus("Transcribing...");
+    setStatus("transcribing");
     const { text } = await llm.transcribe({ audioUrl });
-    setTranscript(text);
-    setStatus("");
+    console.log(text);
+    
+    toastTextToItems(text);
+    setStatus("stop");
   };
 
+  const handleClick = async () => {
+    if (status === "stop") {
+      await startRecording();
+    }
+    if (status === "recording") {
+      await stopRecording()
+    }
+
+  };
+
+  const validRutes = ["/generar"];
+  const shouldShowButton = validRutes.some((e) => pathName.startsWith(e));
+
+  useEffect(() => {
+    if (audioUrl) {
+      transcribe()
+    }
+  }, [audioUrl])
+
   return (
-    <div className="absolute bottom-12 left-1/2 transform -translate-x-1/2 text-cyan-300">
-     <div className="flex gap-x-3 ">
-     <button onClick={startRecording}>Record</button>
-      <button onClick={stopRecording}>Stop</button>
-      <button onClick={transcribe}>Transcribe</button>
-     </div>
-      <p>{status}</p>
-      {audioUrl && <audio src={audioUrl} controls />}
-      {transcript && <p>Transcript: {transcript}</p>}
-    </div>
+    <>
+      {
+        shouldShowButton && <div className="fixed sm:absolute bottom-0 left-1/2 transform py-3 -translate-x-1/2  bg-primary-200 w-full flex justify-center  sm:rounded-3xl select-none">
+          <button
+            onClick={handleClick}
+            type="button"
+            className="select-none focus:select-none"
+          >
+            <div
+              className={`${status === "recording"
+                ? " border-secondary-100 "
+                : "bg-primary-100 border-primary-100"
+                } text-secondary-100 p-5 relative rounded-full flex justify-center items-center transition ease-in-out duration-500 border-4 select-none`}
+            >
+              {status === "recording" ? <IconPause /> : <IconPlay />}
+            </div>
+          </button>
+          {/* {audioUrl && <audio className="mb-4" src={audioUrl} controls />} */}
+        </div>
+      }
+    </>
   );
 }

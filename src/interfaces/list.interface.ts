@@ -3,20 +3,16 @@ import { Cliente } from "./client.interface";
 import { Tienda, Usuario } from "./user.interface";
 
 export interface ListaState {
-    // id?: string;
-    // itemsList: ItemList[];
     abono: Abono | null;
     itemSelected: ItemList | null;
-    // montoTotal?: number;
-    // edit?: boolean;
-    // pagada?: boolean;
+    textRecord:string;
     cargando?: boolean;
-    lista: Lista
-    // startDate?: DateType;
-    // endDate?: DateType;
+    lista: Lista;
+    fetchList: Lista | null;
+    recordUrl: string
 }
 
-export type Status = "pending" | "sent" | "success" | "error" | "updating";
+export type Status = "pending" | "sent" | "success" | "error" | "updating" | undefined;
 
 export interface Sesion {
     user?: Usuario;
@@ -26,14 +22,14 @@ export interface Sesion {
 export interface ItemList {
     id?: string;
     listaId?: string;
+    status?: Status;
     nombre: string;
     precio: number;
     cantidad: number;
     montoItem: number;
     medida: string;
-    voz: string;
-    status: Status;
-    calculated?: boolean;
+    texto: string;
+    calculado?: boolean;
     createdAt?: Date;
     updatedAt?: Date;
 }
@@ -69,7 +65,7 @@ export interface PrintLista {
 }
 
 export interface GptRequest {
-    message: string;
+    texto: string;
     codigo?: string;
 }
 

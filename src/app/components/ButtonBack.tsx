@@ -5,7 +5,7 @@ function ButtonBack() {
     const router = useRouter();
     const pathName = usePathname();
 
-    const validRutes = ["/generar", "/configuracion", "/listas", '/register',"/clientes","/filtrar"];
+    const validRutes = ["/configuracion", "/listas", '/register',"/clientes","/filtrar"];
 
     const shouldShowButton = validRutes.some((e) => pathName.startsWith(e));
 

@@ -1,13 +1,13 @@
 import { Cliente, ClienteState } from "@/interfaces/client.interface";
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { obtenerClientes } from "../chunks/clienteChunck";
 
 const initialState: ClienteState = {
     clientes: [],
-    cliente: null,
+    cliente: {nombres:"", celular: ""},
 };
 
-export const clienteSlice = createSlice({
+export const clienteSlice  = createSlice({
     name: "global",
     initialState,
     reducers: {

@@ -3,6 +3,7 @@ import { Header } from "@/app/components/Header";
 import { IconLists, IconTool } from "@/app/components/Icons";
 import OptionsMenu from "@/app/components/Popover/Popover";
 import { SuperTitle } from "@/app/components/SuperTitle";
+import { useVoiceControl } from "@/context/voice.context";
 import { formatText } from "@/interfaces/FormatReact";
 import { Cliente } from "@/interfaces/client.interface";
 import { Abono, Lista } from "@/interfaces/list.interface";
@@ -12,15 +13,14 @@ import { seleccionarCliente } from "@/redux/features/clienteSlice";
 import { updateLista } from "@/redux/features/listaSlice";
 import { useAppDispatch } from "@/redux/hooks";
 import { useGetListaByIdQuery } from "@/redux/services/listaApi";
+import { ArrowsPointingOutIcon } from "@heroicons/react/20/solid";
 import { AnimatePresence, LayoutGroup, motion } from "framer-motion";
+import { getSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import ListasIdSkeleton from "./lista.skeleton";
 import toast from "react-hot-toast";
-import { getSession } from "next-auth/react";
-import { ArrowsPointingOutIcon } from "@heroicons/react/20/solid";
-import { useVoiceControl } from "@/context/voice.context";
+import ListasIdSkeleton from "./lista.skeleton";
 
 interface IParams {
   listaId: string;
@@ -65,7 +65,7 @@ function ListasIdPage({ params }: { params: IParams }) {
 
   const toggleExpand = () => {
     setExpand(!expand);
-    resetTranscript()
+    resetTranscript();
   }
 
   return (
@@ -107,7 +107,7 @@ function ListasIdPage({ params }: { params: IParams }) {
                         {dateFormat(data?.createdAt)}
                       </p>
                       <p>Monto: {moneyFormat(data?.montoTotal)}</p>
-                      <p>Lista pagada: {data?.pagado ? "Si" : "No"}</p>
+                      {/* <p>Lista pagada: {data?.pagado ? "Si" : "No"}</p> */}
 
                       {(data?.abonos?.length ?? 0) > 0 && (
                         <ContainerAbono
@@ -133,7 +133,7 @@ function ListasIdPage({ params }: { params: IParams }) {
                 className={`flex flex-col gap-y-4 ${
                   expand
                     ? "h-[calc(100vh-200px)] sm:h-[calc(100vh-340px)]"
-                    : "h-[calc(100vh-400px)] sm:h-[calc(100vh-520px)]"
+                    : "h-[calc(100vh-200px)] sm:h-[calc(100vh-520px)]"
                 }   overflow-x-hidden pb-5 overflow-y-scroll  font-sans `}
               >
                 {data?.items.map((item, index) => (
@@ -145,7 +145,7 @@ function ListasIdPage({ params }: { params: IParams }) {
                       {index + 1}.-{" "}
                     </span>{" "}
                     <div className="w-full  flex justify-between">
-                      {item.calculated ? (
+                      {item.calculado ? (
                         <span>{item?.nombre}</span>
                       ) : (
                         <span className="tracking-tight">

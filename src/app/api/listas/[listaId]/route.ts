@@ -32,7 +32,8 @@ export async function GET(request: Request, { params }: GetParams) {
                 cliente: true,
             },
         });
-
+        console.log(lista);
+        
         if (!lista) {
             return NextResponse.json(
                 { error: "No se encontró la lista con el ID proporcionado." },
@@ -40,7 +41,11 @@ export async function GET(request: Request, { params }: GetParams) {
             );
         }
 
-        return NextResponse.json(lista);
+        const updateResponse = Object.assign({},lista,{
+            errors: []
+        })
+
+        return NextResponse.json(updateResponse);
     } catch (error) {
         console.error("Error al obtener la lista:", error);
         return NextResponse.json(
