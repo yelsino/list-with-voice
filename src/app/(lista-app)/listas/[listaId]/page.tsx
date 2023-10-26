@@ -133,7 +133,7 @@ function ListasIdPage({ params }: { params: IParams }) {
                 className={`flex flex-col gap-y-4 ${
                   expand
                     ? "h-[calc(100vh-200px)] sm:h-[calc(100vh-340px)]"
-                    : "h-[calc(100vh-400px)] sm:h-[calc(100vh-520px)]"
+                    : "h-[calc(100vh-200px)] sm:h-[calc(100vh-520px)]"
                 }   overflow-x-hidden pb-5 overflow-y-scroll  font-sans `}
               >
                 {data?.items.map((item, index) => (
