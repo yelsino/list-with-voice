@@ -7,6 +7,10 @@ import { fetchSinToken } from "../fetch";
 export const obtenerImagenLista = createAsyncThunk(
   "obtener_imagen",
   async (printLista: PrintLista): Promise<Blob> => {
+    console.log("HOLA!!!!", process.env.API_NEGOCIO);
+    
+    console.log(URLBASE.API_NEGOCIO);
+    
     const response = await fetch(`${URLBASE.API_NEGOCIO}/reporte`, {
       method: "POST",
       body: JSON.stringify(printLista),

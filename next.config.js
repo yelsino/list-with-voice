@@ -10,7 +10,8 @@ const withPWA = require('next-pwa')({
 const nextConfig = withPWA({
     env: {
         OPENAI_API_KEY: process.env.OPENAI_API_KEY,
-        NEXTAUTH_URL: process.env.NEXTAUTH_URL
+        NEXTAUTH_URL: process.env.NEXTAUTH_URL,
+        API_NEGOCIO: process.env.API_NEGOCIO,
     },
 })
 

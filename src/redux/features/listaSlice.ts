@@ -105,9 +105,11 @@ export const listaSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(obtenerImagenLista.fulfilled, (state, action) => {
+      console.log("action.payload", action.payload);
+      
       const url = URL.createObjectURL(action.payload);
 
-      saveAs(url, "archivo.jpeg");
+      saveAs(url, "archivo.png");
 
       URL.revokeObjectURL(url);
 
