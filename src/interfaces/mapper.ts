@@ -231,14 +231,10 @@ export const formatNameTitle = (input: string) => {
     const totalWords = words.length;
 
     if (totalWords === 3) {
-        console.log(`${words[0]} \n${words[1]} ${words[2]}`);
-
         return `${words[0]} \n${words[1]} ${words[2]}`;
     }
 
     if (totalWords === 4) {
-        console.log(`${words[0]} ${words[1]} \n${words.slice(2).join(" ")}`);
-
         return `${words[0]} ${words[1]} \n${words.slice(2).join(" ")}`;
     }
 

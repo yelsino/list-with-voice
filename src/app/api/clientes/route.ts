@@ -18,9 +18,6 @@ export async function GET(request: NextRequest) {
         request.nextUrl.searchParams
     );
 
-    console.log("TEXTO FILTER: ", textfilter);
-    
-        
     const where: Prisma.ClienteWhereInput = {
         usuarioId: currentUser.id,
     

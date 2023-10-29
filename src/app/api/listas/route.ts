@@ -7,33 +7,26 @@ import {
     dateStringToStringISO,
 } from "../utils/back.global.utils";
 import { generarItemListBD, montoTotalLista } from "./mapper/listas";
+import { isMongoId } from "@/interfaces/mapper";
 
 const prisma = new PrismaClient();
 
 export async function POST(request: Request) {
     const body: Lista = await request.json();
-    console.log("BODY::::", JSON.stringify(body)); 
 
     try {
         const currentUser = await getCurrentUser();
-        console.log(currentUser);
-        
+
         if (!currentUser) {
             return NextResponse.error();
         }
         if (!body.cliente) {
             return NextResponse.error();
         }
-        console.log("validaciones");
-        
+
         const ordenLista = await prisma.lista.count();
-
         const montoTotal = montoTotalLista(body.items);
-        
         let clienteId: string = body.cliente.id ?? currentUser.defaultCliente;
-
-        console.log(clienteId);
-        
 
         const nuevaLista = await prisma.lista.create({
             data: {
@@ -52,8 +45,8 @@ export async function POST(request: Request) {
             },
         });
 
-        const errores:any[] = body.errors ?? [];
-        if(errores.length > 0){
+        const errores: any[] = body.errors ?? [];
+        if (errores.length > 0) {
             await prisma.error.createMany({
                 data: errores as any
             })
@@ -103,6 +96,9 @@ export async function GET(request: NextRequest) {
         skip,
         take,
         include: { items: true, cliente: true },
+        orderBy: {
+            createdAt: "desc"
+        }
     });
 
     return NextResponse.json({
@@ -115,8 +111,7 @@ export async function PUT(request: Request) {
     const body: Lista = await request.json();
     try {
         // Obtener la lista actual
-        console.log(body);
-        
+
         const listaActual = await prisma.lista.findUnique({
             where: { id: body.id },
             include: { items: true },
@@ -134,11 +129,13 @@ export async function PUT(request: Request) {
         const montoTotalNuevo = montoTotalLista(body.items);
 
         const abonos: any = listaActual.abonos;
-        console.log("antes de crear");
+    
+        const deleteItems = body.errors
+            .filter((e) => isMongoId(e.itemList.id))
+            .map((e) => ({ id: e.itemList.id }));
         
+        const removeUniqueItems = new Set(deleteItems);
 
-        // console.log(body);
-        
         const listaActualizada = await prisma.lista.update({
             where: { id: body.id },
             data: {
@@ -153,11 +150,11 @@ export async function PUT(request: Request) {
                         create: generarItemListBD(item),
                         update: generarItemListBD(item),
                     })),
+                    delete: Array.from(removeUniqueItems)
                 },
             },
             include: { items: true },
         });
-        console.log("despues de actualizar");
         return NextResponse.json(listaActualizada);
     } catch (error) {
         console.log(error);

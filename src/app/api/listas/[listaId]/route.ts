@@ -13,7 +13,6 @@ interface GetParams {
 // get lista por ID
 export async function GET(request: Request, { params }: GetParams) {
     const { listaId } = params;
-    console.log("listaId", listaId);
     
     if (!listaId) {
         return NextResponse.json(
@@ -32,7 +31,6 @@ export async function GET(request: Request, { params }: GetParams) {
                 cliente: true,
             },
         });
-        console.log(lista);
         
         if (!lista) {
             return NextResponse.json(

@@ -7,8 +7,6 @@ import axios from "axios";
 export const obtenerClientes = createAsyncThunk(
     "obtener_clientes",
     async (params: SearchParams) => {
-        console.log(params);
-        
         const response = await axios.get<ResponseParams<Cliente[]>>(
             `${URLBASE.LOCAL}/clientes`,
             {
@@ -18,8 +16,6 @@ export const obtenerClientes = createAsyncThunk(
                 params: params,
             }
         );
-        
-        console.log("RESPONSE AXIOS: ", response);
         
         if(response.status !== 200) return [];
 

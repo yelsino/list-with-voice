@@ -55,28 +55,10 @@ export const listaSlice = createSlice({
         (item) => item.id === action.payload.id
       );
       if (itemIndex !== -1) {
-
-        const errors: Error[] = Array.from(state.lista.errors);
-        errors.push({ itemList: action.payload });
-
-        const unicErrors = errors.reduce((acc, b) => {
-          const comparar = acc.some((e) => e.itemList.texto === b.itemList.texto);
-          if (!comparar) {
-            acc.push(b)
-          }
-          return acc
-        }, [] as Error[])
-
-        state.lista.errors = Array.from(unicErrors);
         state.lista.items[itemIndex] = action.payload;
       }
     },
     updateItems: (state, action: PayloadAction<ItemList[]>) => {
-      // const nuevosItems = state.lista.items.map((item) => {
-      //   const existe = action.payload.find((p) => item.id === p.id);
-      //   return existe ? existe : item;
-      // });
-
       state.lista.items = action.payload;
     },
     selectItem: (state, action: PayloadAction<ItemList | null>) => {
@@ -100,12 +82,14 @@ export const listaSlice = createSlice({
     },
     catchUrlRecord: (state, action: PayloadAction<string>) => {
       state.recordUrl = action.payload
+    },
+    addError: (state, action: PayloadAction<Error>) => {
+      state.lista.errors.push(action.payload)
     }
 
   },
   extraReducers: (builder) => {
     builder.addCase(obtenerImagenLista.fulfilled, (state, action) => {
-      console.log("action.payload", action.payload);
       
       const url = URL.createObjectURL(action.payload);
 
@@ -131,7 +115,8 @@ export const {
   abonarLista,
   restaurarItems,
   fetchingLista,
-  catchUrlRecord
+  catchUrlRecord,
+  addError
 } = listaSlice.actions;
 
 export default listaSlice.reducer;

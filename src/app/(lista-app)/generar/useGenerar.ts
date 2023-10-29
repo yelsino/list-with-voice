@@ -53,7 +53,6 @@ function useGenerar() {
       });
   };
   const actualizarLista = async () => {
-    console.log("voy a actualizar lsita");
 
     const abonos = LR.abono ? [LR.abono] : [];
 

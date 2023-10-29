@@ -1,7 +1,8 @@
 
-import { addItemsToList, catchUrlRecord, restaurarItems, updateItems } from '@/redux/features/listaSlice';
+import { addError, addItemsToList, catchUrlRecord, restaurarItems, updateItems } from '@/redux/features/listaSlice';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { useConvertRecordToJsonMutation, useConvertTextToJsonMutation } from '@/redux/services/listaApi';
+import { ItemList } from '@prisma/client';
 import toast from 'react-hot-toast';
 
 function useCreateItems() {
@@ -57,7 +58,8 @@ function useCreateItems() {
         const itemupdating = LR.lista.items.some(
           (item) => item.status === "updating"
         );
-
+        if (itemupdating) dispatch(addError({ itemList: LR.itemSelected as ItemList }));
+        
         return itemupdating
           ? dispatch(updateItems(newItems))
           : dispatch(addItemsToList(items));
