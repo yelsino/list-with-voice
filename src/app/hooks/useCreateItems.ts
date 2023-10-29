@@ -2,13 +2,14 @@
 import { addError, addItemsToList, catchUrlRecord, restaurarItems, updateItems } from '@/redux/features/listaSlice';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { useConvertRecordToJsonMutation, useConvertTextToJsonMutation } from '@/redux/services/listaApi';
+import useLLM from "usellm";
 import { ItemList } from '@prisma/client';
 import toast from 'react-hot-toast';
 
 function useCreateItems() {
 
   const dispatch = useAppDispatch();
-
+  const llm = useLLM({ serviceUrl: "/api/llm" });
   const [convertirRecordJson] = useConvertRecordToJsonMutation();
   const [convertTextToJson] = useConvertTextToJsonMutation()
   const LR = useAppSelector((state) => state.listaReducer);
@@ -59,7 +60,7 @@ function useCreateItems() {
           (item) => item.status === "updating"
         );
         if (itemupdating) dispatch(addError({ itemList: LR.itemSelected as ItemList }));
-        
+
         return itemupdating
           ? dispatch(updateItems(newItems))
           : dispatch(addItemsToList(items));
@@ -69,10 +70,21 @@ function useCreateItems() {
       });
   }
 
+  const toastTranscription = async (audioUrl: string) => {
+    const { text } = await toast.promise(llm.transcribe({ audioUrl }), {
+      loading: "Convirtiendo grabación...",
+      error: "Error al convertir grabación",
+      success: "Converción de grabación completa",
+    });
+
+    return text
+  }
+
 
   return {
     toastRecordToItems,
     toastTextToItems,
+    toastTranscription
   }
 }
 

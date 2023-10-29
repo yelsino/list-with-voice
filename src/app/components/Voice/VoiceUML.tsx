@@ -14,7 +14,7 @@ export default function AudioRecorder() {
   // const [transcript, setTranscript] = useState("");
   const [status, setStatus] = useState<RecordStatus>("stop");
 
-  const {toastTextToItems} = useCreateItems()
+  const {toastTextToItems, toastTranscription} = useCreateItems()
 
   // convertTextToJson
 
@@ -35,11 +35,8 @@ export default function AudioRecorder() {
   };
 
   const transcribe = async () => {
-    setStatus("transcribing");
-    const { text } = await llm.transcribe({ audioUrl });
-    console.log(text);
-    
-    toastTextToItems(text);
+    const transcript:string = await toastTranscription(audioUrl);
+    toastTextToItems(transcript);
     setStatus("stop");
   };
 
