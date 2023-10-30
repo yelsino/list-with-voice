@@ -1,7 +1,6 @@
 'use client'
 
 import { convertListToPrint } from "@/util/print.util";
-import { DATA } from "./parseo";
 
 
 
@@ -11,17 +10,18 @@ const PrintFile = () => {
 
     const handleClick = async () => {
         // Crear un elemento de canvas
-        const dataPrint = convertListToPrint(DATA);
+        // const dataPrint = convertListToPrint(DATA);
 
-        // const fontLink: any = document.createElement('link');
-        // fontLink.href = 'https://fonts.googleapis.com/css2?family=Dosis:wght@300;400;500;600&display=swap';
-        // fontLink.rel = 'stylesheet';
-        // document.head.appendChild(fontLink);
+        const fontLink: any = document.createElement('link');
+        fontLink.href = 'https://fonts.googleapis.com/css2?family=Dosis:wght@300;400;500;600&display=swap';
+        fontLink.rel = 'stylesheet';
+        document.head.appendChild(fontLink);
 
-        // fontLink.addEventListener('load', function () {
+        fontLink.addEventListener('load', function () {
             const width = 800;
             const itemHeight = 50;
-            const numItems = dataPrint.items.length;
+            // const numItems = dataPrint.items.length;
+            const numItems = 5;
             const height = 400 + numItems * itemHeight + 200; // Adjust the height based on the number of items
 
             const canvas = document.createElement('canvas');
@@ -37,48 +37,48 @@ const PrintFile = () => {
             ctx.font = "bold 80px 'Dosis'";
             ctx.fillStyle = "black";
 
-            const nombreTiendaX = (width - ctx.measureText(dataPrint.nombreTienda).width) / 2
-            ctx.fillText(dataPrint.nombreTienda, nombreTiendaX, 70);
+            const nombreTiendaX = (width - ctx.measureText("TIENDA YOLA").width) / 2
+            ctx.fillText("TIENDA YOLA", nombreTiendaX, 70);
 
-            // Dibujar Bienvenida
-            ctx.font = "37px 'Dosis'";
-            ctx.fillStyle = "#565656";
-            const texto1X = (width - ctx.measureText(dataPrint.texto1).width) / 2
-            const texto2X = (width - ctx.measureText(dataPrint.texto2).width) / 2
-            ctx.fillText(dataPrint.texto1, texto1X, 120);
-            ctx.fillText(dataPrint.texto2, texto2X, 160);
+            // // Dibujar Bienvenida
+            // ctx.font = "37px 'Dosis'";
+            // ctx.fillStyle = "#565656";
+            // const texto1X = (width - ctx.measureText(dataPrint.texto1).width) / 2
+            // const texto2X = (width - ctx.measureText(dataPrint.texto2).width) / 2
+            // ctx.fillText(dataPrint.texto1, texto1X, 120);
+            // ctx.fillText(dataPrint.texto2, texto2X, 160);
 
-            // Datos del comercio
-            ctx.font = "37px Dosis";
-            ctx.fillText(`Fecha: ${dataPrint.fecha}`, 30, 230);
-            ctx.fillText(`Cliente: ${dataPrint.nombreCliente}`, 30, 270);
+            // // Datos del comercio
+            // ctx.font = "37px Dosis";
+            // ctx.fillText(`Fecha: ${dataPrint.fecha}`, 30, 230);
+            // ctx.fillText(`Cliente: ${dataPrint.nombreCliente}`, 30, 270);
 
-            // Detalles de la compra
-            ctx.font = "37px Dosis";
-            let y = 370;
+            // // Detalles de la compra
+            // ctx.font = "37px Dosis";
+            // let y = 370;
 
-            ctx.fillText("Descripción", 30, y);
-            ctx.fillText("Precio", 600, y);
-            y += 70;
+            // ctx.fillText("Descripción", 30, y);
+            // ctx.fillText("Precio", 600, y);
+            // y += 70;
 
-            dataPrint.items.forEach((item) => {
+            // dataPrint.items.forEach((item) => {
 
-                ctx.font = "Dosis 37px";
-                ctx.fillText(
-                    item.texto,
-                    30,
-                    y
-                );
+            //     ctx.font = "Dosis 37px";
+            //     ctx.fillText(
+            //         item.texto,
+            //         30,
+            //         y
+            //     );
 
-                // Dibuja el monto normalmente
-                ctx.font = "37px Dosis";
-                ctx.fillText(item.monto, 600, y);
-                y += itemHeight;
-            });
+            //     // Dibuja el monto normalmente
+            //     ctx.font = "37px Dosis";
+            //     ctx.fillText(item.monto, 600, y);
+            //     y += itemHeight;
+            // });
 
-            // Dibujar el total
-            ctx.font = "bold 37px Dosis";
-            ctx.fillText(`Total: ${dataPrint.montoTotal}`, 30, height - 100);
+            // // Dibujar el total
+            // ctx.font = "bold 37px Dosis";
+            // ctx.fillText(`Total: ${dataPrint.montoTotal}`, 30, height - 100);
 
             // Convertir el canvas en una imagen
             const image = new Image();
@@ -90,7 +90,7 @@ const PrintFile = () => {
             link.download = 'imagen.png';
 
             link.click();
-        // })
+        })
 
 
     };
