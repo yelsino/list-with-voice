@@ -89,7 +89,6 @@ const PrintFile = () => {
             link.href = image.src;
             link.download = 'imagen.png';
 
-            // Simular un clic en el enlace para descargar automáticamente la imagen
             link.click();
         })
 
