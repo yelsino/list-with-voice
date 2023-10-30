@@ -2,6 +2,7 @@
 import { useGetListaByIdQuery } from "@/redux/services/listaApi";
 import { convertListToPrint } from "@/util/print.util";
 import { getSession } from "next-auth/react";
+import { DATA } from "./parseo";
 
 
 interface IParams {
@@ -11,9 +12,10 @@ interface IParams {
 
 const PrintPage = ({ params }: { params: IParams }) => {
 
-    const { isLoading, isFetching, data, error } = useGetListaByIdQuery({
-        id: params.listaId,
-      });
+    const getData = async () => {
+      const data = await DATA
+      return data
+    } 
 
     const handleClick = async () => {
         // Crear un elemento de canvas
@@ -21,10 +23,7 @@ const PrintPage = ({ params }: { params: IParams }) => {
         const session: any = await getSession();
         if (!session) return;
 
-        const dataPrint = convertListToPrint({
-            tienda: session.user.tienda,
-            lista: data as any,
-        });
+        const dataPrint = await convertListToPrint(await getData());
 
         const fontLink: any = document.createElement('link');
         fontLink.href = 'https://fonts.googleapis.com/css2?family=Dosis:wght@300;400;500;600&display=swap';
