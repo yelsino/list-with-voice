@@ -3,6 +3,7 @@ import { PrintLista } from "@/interfaces/list.interface";
 import { Usuario } from "@/interfaces/user.interface";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { fetchSinToken } from "../fetch";
+// import { imageListGenerate } from "@/util/print.util";
 
 export const obtenerImagenLista = createAsyncThunk(
   "obtener_imagen",
@@ -15,6 +16,11 @@ export const obtenerImagenLista = createAsyncThunk(
         "Content-Type": "application/json",
       },
     });
+    console.log("print1");
+    
+    // const fileBuffer = await imageListGenerate(printLista);
+    // const blob = new Blob([fileBuffer]);
+
 
     const blob = await response.blob();
     return blob;
