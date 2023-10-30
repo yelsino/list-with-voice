@@ -13,12 +13,12 @@ const PrintFile = () => {
         // Crear un elemento de canvas
         const dataPrint = convertListToPrint(DATA);
 
-        const fontLink: any = document.createElement('link');
-        fontLink.href = 'https://fonts.googleapis.com/css2?family=Dosis:wght@300;400;500;600&display=swap';
-        fontLink.rel = 'stylesheet';
-        document.head.appendChild(fontLink);
+        // const fontLink: any = document.createElement('link');
+        // fontLink.href = 'https://fonts.googleapis.com/css2?family=Dosis:wght@300;400;500;600&display=swap';
+        // fontLink.rel = 'stylesheet';
+        // document.head.appendChild(fontLink);
 
-        fontLink.addEventListener('load', function () {
+        // fontLink.addEventListener('load', function () {
             const width = 800;
             const itemHeight = 50;
             const numItems = dataPrint.items.length;
@@ -90,7 +90,7 @@ const PrintFile = () => {
             link.download = 'imagen.png';
 
             link.click();
-        })
+        // })
 
 
     };
