@@ -1,4 +1,4 @@
-import PrintFile from "../../prueba/PrintFile";
+import PrintFile from "./PrintFile";
 
 export default async function PrintPage() {
 
