@@ -37,6 +37,9 @@ export default function RootLayout({
 }) {
     return (
         <html lang="en" className="bg-primary-200">
+            <head>
+            <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+            </head>
             <body className={`
                 ${inter.variable} 
                 ${dosis.variable}

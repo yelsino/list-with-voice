@@ -8,11 +8,11 @@ import { formatText } from "@/interfaces/FormatReact";
 import { Cliente } from "@/interfaces/client.interface";
 import { Abono, Lista } from "@/interfaces/list.interface";
 import { dateFormat, dateFormatShort, moneyFormat } from "@/interfaces/mapper";
-import { obtenerImagenLista } from "@/redux/chunks/listaChunk";
 import { seleccionarCliente } from "@/redux/features/clienteSlice";
 import { updateLista } from "@/redux/features/listaSlice";
 import { useAppDispatch } from "@/redux/hooks";
 import { useGetListaByIdQuery } from "@/redux/services/listaApi";
+import { convertirListaImagen } from "@/util/print.util";
 import { ArrowsPointingOutIcon } from "@heroicons/react/20/solid";
 import { AnimatePresence, LayoutGroup, motion } from "framer-motion";
 import { getSession } from "next-auth/react";
@@ -21,7 +21,6 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import ListasIdSkeleton from "./lista.skeleton";
-import { convertirListaImagen } from "@/util/print.util";
 
 interface IParams {
   listaId: string;
