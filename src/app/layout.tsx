@@ -1,7 +1,6 @@
 import { VoiceControlProvider } from "@/context/voice.context";
 import { Providers } from "@/redux/provider";
 import { Metadata } from "next";
-import { Dosis, Inter } from "next/font/google";
 import { Toaster } from "react-hot-toast";
 import ButtonBack from "./components/ButtonBack";
 import ButtonRegister from "./components/ButtonRegister";
@@ -10,6 +9,7 @@ import MicrophoneVoice from "./components/Voice/MicrophoneVoice";
 import RecordVoice from "./components/Voice/RecordVoice";
 import "./globals.css";
 import AudioRecorder from "./components/Voice/VoiceUML";
+import { Dosis, Inter } from "next/font/google";
 
 const inter = Inter({
     subsets: ["latin"],

@@ -1,9 +1,6 @@
 'use client'
-import { useGetListaByIdQuery } from "@/redux/services/listaApi";
 import { convertListToPrint } from "@/util/print.util";
 import { getSession } from "next-auth/react";
-import { DATA } from "./parseo";
-import { Lista, PrintLista } from "@/interfaces/list.interface";
 import axios from "axios";
 import { URLBASE } from "@/interfaces/constantes";
 

@@ -21,6 +21,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import ListasIdSkeleton from "./lista.skeleton";
+import { convertirListaImagen } from "@/util/print.util";
 
 interface IParams {
   listaId: string;
@@ -45,22 +46,20 @@ function ListasIdPage({ params }: { params: IParams }) {
   };
 
   const imprimirLista = async () => {
-    const session: any = await getSession();
-    if (!session) return;
-
     toast.promise(
-      dispatch(
-        obtenerImagenLista({
-          lista: data as any,
-          tienda: session.user.tienda,
-        })
-      ),
+      getSession(),
       {
         loading: "Generando recibo...",
         success: "Recibo listo",
         error: "Error al generar",
       }
-    );
+    ).then((session: any)=>{
+      if (!session) return;
+      convertirListaImagen({
+        lista: data as any,
+        tienda: session.user.tienda,
+      })
+    });
   };
 
   const toggleExpand = () => {
