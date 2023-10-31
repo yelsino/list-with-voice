@@ -30,19 +30,19 @@ const PrintPage = async ({ params }: { params: IParams }) => {
 
   const handleClick = async () => {
 
-    const print = convertListToPrint({
+    const print:any = convertListToPrint({
       tienda: session.user.tienda,
       lista: lista
     })
 
-    const dataPrint = {
-      fecha: "hoy",
-      montoTotal: 500,
-      nombreCliente: "JUAN VALDEZ",
-      nombreTienda: "DON PEPE",
-      texto1: "HOLA PE BATERIA",
-      texto2: "OTRA VEZ TU?",
-    }
+    // const print = {
+    //   fecha: "hoy",
+    //   montoTotal: 500,
+    //   nombreCliente: "JUAN VALDEZ",
+    //   nombreTienda: "DON PEPE",
+    //   texto1: "HOLA PE BATERIA",
+    //   texto2: "OTRA VEZ TU?",
+    // }
 
     const fontLink: any = document.createElement('link');
     fontLink.href = 'https://fonts.googleapis.com/css2?family=Dosis:wght@300;400;500;600&display=swap';
@@ -75,10 +75,10 @@ const PrintPage = async ({ params }: { params: IParams }) => {
       // Dibujar Bienvenida
       ctx.font = "37px 'Dosis'";
       ctx.fillStyle = "#565656";
-      const texto1X = (width - ctx.measureText(dataPrint.texto1).width) / 2
-      const texto2X = (width - ctx.measureText(dataPrint.texto2).width) / 2
-      ctx.fillText(dataPrint.texto1, texto1X, 120);
-      ctx.fillText(dataPrint.texto2, texto2X, 160);
+      const texto1X = (width - ctx.measureText(print.texto1).width) / 2
+      const texto2X = (width - ctx.measureText(print.texto2).width) / 2
+      ctx.fillText(print.texto1, texto1X, 120);
+      ctx.fillText(print.texto2, texto2X, 160);
 
       // // Datos del comercio
       // ctx.font = "37px Dosis";
