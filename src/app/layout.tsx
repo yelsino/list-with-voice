@@ -38,7 +38,7 @@ export default function RootLayout({
     return (
         <html lang="en" className="bg-primary-200">
             <head>
-            <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+            <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
             </head>
             <body className={`
                 ${inter.variable} 
@@ -55,7 +55,6 @@ export default function RootLayout({
                                 </div>
                                 <MicrophoneVoice />
                                 <AudioRecorder/>
-                                {/* <RecordVoice /> */}
                                 <ButtonBack />
                                 <ButtonRegister />
                             </VoiceControlProvider>

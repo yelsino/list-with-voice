@@ -35,6 +35,7 @@ package-lock.json*
 .env*
 .env
 
+
 # vercel
 .vercel
 next.config.js

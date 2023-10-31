@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Header } from "./components/Header";
 import {
     IconAddUser,
+    IconApple,
     IconConfig,
     IconLists,
     IconNegocio,
@@ -21,7 +22,7 @@ export default function Home() {
             display: ""
         },
         {
-            title: "ver listas",
+            title: "listas",
             url: "/listas",
             icon: <IconLists estilo="" />,
             display: ""
@@ -33,7 +34,7 @@ export default function Home() {
             display: ""
         },
         {
-            title: "ver clientes",
+            title: "clientes",
             url: "/clientes",
             icon: <IconUsers estilo="" />,
             display: ""
@@ -56,6 +57,11 @@ export default function Home() {
             icon: <IconNegocio estilo="" />,
             display: "hidden"
         },
+        {
+            title: "precios",
+            url: "/precios",
+            icon: <IconApple/>
+        }
     ];
 
     return (
