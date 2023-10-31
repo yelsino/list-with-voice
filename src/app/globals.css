@@ -5,6 +5,9 @@
 body {
   /* Bloquear la rotación */
   orientation: portrait;
+  touch-action: none;
+  /* touch-action: manipulation; */
+  -ms-content-zooming: none;
 }
 
 .triangulo-equilatero-bottom-left {
@@ -14,6 +17,7 @@ body {
     border-top: 50px solid transparent;
     border-left: 50px solid #f0ad4e;
     border-bottom: 50px solid #f0ad4e;
+    
 }
 
 ::-webkit-scrollbar {
