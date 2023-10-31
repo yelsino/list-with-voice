@@ -14,9 +14,9 @@ interface IParams {
 
 async function obtenerLista(listaId: string) {
   const response = await axios.get(`${URLBASE.LOCAL}/listas/${listaId}`);
-  console.log("response:0", response.data);
+  // console.log("response:0", response.data);
 
-  return response
+  return response.data
 }
 
 
@@ -25,24 +25,17 @@ const PrintPage = async ({ params }: { params: IParams }) => {
   const session: any = await getSession();
   if (!session) return;
 
-  const lista:any = await obtenerLista(params.listaId);
-
-
+  
+  
   const handleClick = async () => {
+    
+    const lista: any = await obtenerLista(params.listaId);
 
-    const print:any = convertListToPrint({
+    const print = convertListToPrint({
       tienda: session.user.tienda,
       lista: lista
     })
 
-    // const print = {
-    //   fecha: "hoy",
-    //   montoTotal: 500,
-    //   nombreCliente: "JUAN VALDEZ",
-    //   nombreTienda: "DON PEPE",
-    //   texto1: "HOLA PE BATERIA",
-    //   texto2: "OTRA VEZ TU?",
-    // }
 
     const fontLink: any = document.createElement('link');
     fontLink.href = 'https://fonts.googleapis.com/css2?family=Dosis:wght@300;400;500;600&display=swap';
@@ -52,8 +45,8 @@ const PrintPage = async ({ params }: { params: IParams }) => {
     fontLink.addEventListener('load', function () {
       const width = 800;
       const itemHeight = 50;
-      // const numItems = dataPrint.items.length;
-      const numItems = 5;
+      const numItems = print.items.length;
+      // const numItems = 5;
       const height = 400 + numItems * itemHeight + 200; // Adjust the height based on the number of items
 
       const canvas = document.createElement('canvas');
@@ -69,8 +62,8 @@ const PrintPage = async ({ params }: { params: IParams }) => {
       ctx.font = "bold 80px 'Dosis'";
       ctx.fillStyle = "black";
 
-      const nombreTiendaX = (width - ctx.measureText("TIENDA YOLA").width) / 2
-      ctx.fillText("TIENDA YOLA", nombreTiendaX, 70);
+      const nombreTiendaX = (width - ctx.measureText(print.nombreTienda).width) / 2
+      ctx.fillText(print.nombreTienda, nombreTiendaX, 70);
 
       // Dibujar Bienvenida
       ctx.font = "37px 'Dosis'";
@@ -80,37 +73,37 @@ const PrintPage = async ({ params }: { params: IParams }) => {
       ctx.fillText(print.texto1, texto1X, 120);
       ctx.fillText(print.texto2, texto2X, 160);
 
-      // // Datos del comercio
-      // ctx.font = "37px Dosis";
-      // ctx.fillText(`Fecha: ${dataPrint.fecha}`, 30, 230);
-      // ctx.fillText(`Cliente: ${dataPrint.nombreCliente}`, 30, 270);
+      // Datos del comercio
+      ctx.font = "37px Dosis";
+      ctx.fillText(`Fecha: ${print.fecha}`, 30, 230);
+      ctx.fillText(`Cliente: ${print.nombreCliente}`, 30, 270);
 
-      // // Detalles de la compra
-      // ctx.font = "37px Dosis";
-      // let y = 370;
+      // Detalles de la compra
+      ctx.font = "37px Dosis";
+      let y = 370;
 
-      // ctx.fillText("Descripción", 30, y);
-      // ctx.fillText("Precio", 600, y);
-      // y += 70;
+      ctx.fillText("Descripción", 30, y);
+      ctx.fillText("Precio", 600, y);
+      y += 70;
 
-      // dataPrint.items.forEach((item) => {
+      print.items.forEach((item: any) => {
 
-      //     ctx.font = "Dosis 37px";
-      //     ctx.fillText(
-      //         item.texto,
-      //         30,
-      //         y
-      //     );
+        ctx.font = "Dosis 37px";
+        ctx.fillText(
+          item.texto,
+          30,
+          y
+        );
 
-      //     // Dibuja el monto normalmente
-      //     ctx.font = "37px Dosis";
-      //     ctx.fillText(item.monto, 600, y);
-      //     y += itemHeight;
-      // });
+        // Dibuja el monto normalmente
+        ctx.font = "37px Dosis";
+        ctx.fillText(item.monto, 600, y);
+        y += itemHeight;
+      });
 
-      // // Dibujar el total
-      // ctx.font = "bold 37px Dosis";
-      // ctx.fillText(`Total: ${dataPrint.montoTotal}`, 30, height - 100);
+      // Dibujar el total
+      ctx.font = "bold 37px Dosis";
+      ctx.fillText(`Total: ${print.montoTotal}`, 30, height - 100);
 
       // Convertir el canvas en una imagen
       const image = new Image();

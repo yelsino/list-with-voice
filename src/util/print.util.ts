@@ -1,30 +1,26 @@
+import { Lista, PrintLista } from "@/interfaces/list.interface";
 
-export function convertListToPrint(dataLit:any) {
+export function convertListToPrint(dataLit:PrintLista) {
   const { lista, tienda } = dataLit;
 
-  const datos =  {
+  return {
     fecha: dateFormat(lista.createdAt),
     montoTotal: moneyFormatSimbol(lista.montoTotal),
     nombreCliente: lista?.cliente?.nombres ?? "",
     nombreTienda: tienda.nombreTienda.toUpperCase(),
     texto1: tienda.texto1,
     texto2: tienda.texto2,
-    // items: lista.items.map((item: any) => {
+    items: lista.items.map((item: any) => {
 
-    //   const texto = item.calculado ? `${item.nombre}` : `${item.cantidad} ${item.medida} ${item.nombre} ${item.precio} x und`;
-    //   const monto = moneyFormat(item.montoItem);
+      const texto = item.calculado ? `${item.nombre}` : `${item.cantidad} ${item.medida} ${item.nombre} ${item.precio} x und`;
+      const monto = moneyFormat(item.montoItem);
 
-    //   return {
-    //     texto: texto,
-    //     monto: monto
-    //   }
-    // }),
+      return {
+        texto: texto,
+        monto: monto
+      }
+    }),
   };
-
-
-  console.log("DATOS: ", datos);
-  
-  return datos 
 
 }
 
