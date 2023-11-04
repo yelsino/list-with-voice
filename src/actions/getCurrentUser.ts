@@ -22,6 +22,9 @@ export default async function getCurrentUser() {
             where: {
                 id: session.user.id,
             },
+            include: {
+                tienda: true
+            }
         });
         if (!currentUser) {
             await signOut()

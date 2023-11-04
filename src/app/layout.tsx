@@ -27,7 +27,7 @@ const dosis = Dosis({
 export const metadata: Metadata = {
     title: "Asistente de lista",
     description: "Crea e imprime tus listas",
-    manifest: "/manifest.webmanifest",
+    // manifest: "/manifest.webmanifest",
 };
 
 export default function RootLayout({
@@ -50,7 +50,7 @@ export default function RootLayout({
                         <Providers>
                             <VoiceControlProvider>
                                 <Cinta />
-                                <div className="flex flex-col ">
+                                <div>
                                     {children}
                                 </div>
                                 <MicrophoneVoice />

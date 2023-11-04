@@ -1,31 +1,9 @@
-import { URLBASE } from "@/interfaces/constantes";
 import { PrintLista } from "@/interfaces/list.interface";
 import { Usuario } from "@/interfaces/user.interface";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { fetchSinToken } from "../fetch";
+import { API_LOCAL } from "@/types/apis.types";
 // import { imageListGenerate } from "@/util/print.util";
-
-export const obtenerImagenLista = createAsyncThunk(
-  "obtener_imagen",
-  async (printLista: PrintLista): Promise<Blob> => {
-    
-    const response = await fetch(`${URLBASE.API_NEGOCIO}/reporte`, {
-      method: "POST",
-      body: JSON.stringify(printLista),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-    console.log("print1");
-    
-    // const fileBuffer = await imageListGenerate(printLista);
-    // const blob = new Blob([fileBuffer]);
-
-
-    const blob = await response.blob();
-    return blob;
-  }
-);
 
 interface ResFetch<T> {
   message: string;
@@ -47,7 +25,7 @@ export const registrarUsuario = createAsyncThunk(
     }
 
     const response = await fetchSinToken<ResFetch<Usuario>>({
-      endpoint: `${URLBASE.LOCAL}/auth/signup`,
+      endpoint: `${API_LOCAL}/auth/signup`,
       body: { nombreUsuario, password },
       method: "POST",
     });
@@ -55,19 +33,4 @@ export const registrarUsuario = createAsyncThunk(
     return response;
   }
 );
-
-
-// export const recordToItems = createAsyncThunk("record_text",
-//   async (audio: Blob):Promise<string> => {
-
-//     const formData = new FormData();
-//     formData.append("audio", audio);
-//     const response = await axios.post<{texto: string}>(
-//       `${URLBASE.LOCAL}/record`,
-//       formData,
-//     );
-
-//     return response.data.texto ?? ""
-//   }
-// )
 

@@ -1,6 +1,6 @@
 import { Cliente } from "@/interfaces/client.interface";
-import { URLBASE } from "@/interfaces/constantes";
 import { ResponseParams, SearchParams } from "@/interfaces/global.interface";
+import { API_URL_CLIENTS } from "@/types/uri.types";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 export const clienteApi = createApi({
@@ -13,7 +13,7 @@ export const clienteApi = createApi({
     endpoints: (builder) => ({
         getCostumers: builder.query<ResponseParams<Cliente[]>, SearchParams>({
             query: (params) => ({
-                url: `${URLBASE.LOCAL}/clientes`,
+                url: API_URL_CLIENTS,
                 method: "GET",
                 params: params,
                 headers: {
@@ -23,13 +23,13 @@ export const clienteApi = createApi({
             providesTags: ["clientes"]
         }),
         getCostumer: builder.query<ResponseParams<Cliente>, { id: string }>({
-            query: ({ id }) => `${URLBASE.LOCAL}/clientes/${id}`,
+            query: ({ id }) => `${API_URL_CLIENTS}/${id}`,
             providesTags: ["cliente"]
         }),
         updateList: builder.mutation<ResponseParams<Cliente>, Cliente>({
             query: (lista) => ({
                 method: "PUT",
-                url: `${URLBASE.LOCAL}/clientes`,
+                url: API_URL_CLIENTS,
                 body: JSON.stringify(lista),
             }),
             invalidatesTags: ["clientes","cliente"]
@@ -37,7 +37,7 @@ export const clienteApi = createApi({
         registerCostumer: builder.mutation<ResponseParams<Cliente>, Cliente>({
             query: (cliente) => ({
                 method: "POST",
-                url: `${URLBASE.LOCAL}/clientes`,
+                url: API_URL_CLIENTS,
                 body: JSON.stringify(cliente),
             }),
             invalidatesTags: ["clientes"]

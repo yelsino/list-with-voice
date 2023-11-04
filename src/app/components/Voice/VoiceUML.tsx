@@ -7,14 +7,14 @@ import useCreateItems from "@/app/hooks/useCreateItems";
 
 type RecordStatus = | 'recording' | 'stop' | 'transcribing'
 
+// solo debe generar el audio
 export default function AudioRecorder() {
 
   const pathName = usePathname();
   const [audioUrl, setAudioUrl] = useState("");
-  // const [transcript, setTranscript] = useState("");
   const [status, setStatus] = useState<RecordStatus>("stop");
 
-  const {toastTextToItems, toastTranscription} = useCreateItems()
+  const {toastTextToItems, toastTranscription, toasTextoToProductos} = useCreateItems()
 
   // convertTextToJson
 
@@ -27,16 +27,26 @@ export default function AudioRecorder() {
 
   const stopRecording = async () => {
     const { audioUrl } = await llm.stopRecording();
-    console.log("audiourl:", audioUrl);
 
     setAudioUrl(audioUrl);
     setStatus("stop");
-    // await transcribe();
+   
   };
 
   const transcribe = async () => {
     const transcript:string = await toastTranscription(audioUrl);
-    toastTextToItems(transcript);
+
+    switch (pathName) {
+      case "/generar":
+        toastTextToItems(transcript);
+        break;
+      case "/precios":
+        toasTextoToProductos(transcript);
+        break;
+    
+      default:
+        break;
+    }
     setStatus("stop");
   };
 
@@ -50,7 +60,7 @@ export default function AudioRecorder() {
 
   };
 
-  const validRutes = ["/generar"];
+  const validRutes = ["/generar","/precios"];
   const shouldShowButton = validRutes.some((e) => pathName.startsWith(e));
 
   useEffect(() => {

@@ -9,10 +9,21 @@ generator client {
   provider = "prisma-client-js"
 }
 
+
+model Price {
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  Tienda      Tienda    @relation(fields: [tiendaId], references: [id])
+  tiendaId    String    @db.ObjectId
+  nombre      String
+  precio      Float
+  categoria   String
+}
+
 model Tienda {
   id             String   @id @default(auto()) @map("_id") @db.ObjectId
   usuario        Usuario  @relation(fields: [usuarioId], references: [id])
   usuarioId      String   @unique @db.ObjectId
+  prices         Price[]
   nombreTienda   String
   logo           String
   ubicacion      String
@@ -57,8 +68,8 @@ model Error {
   itemList   Json
 }
 
-// usuario   Usuario  @relation(fields: [usuarioId], references: [id])
-// usuarioId String   @map("usuarioId") @db.ObjectId
+
+
 model Lista {
   id         String     @id @default(auto()) @map("_id") @db.ObjectId
   cliente    Cliente    @relation(fields: [clienteId], references: [id])

@@ -1,0 +1,1 @@
+export const URL_FONT_DOSIS = "https://fonts.googleapis.com/css2?family=Dosis:wght@300;400;500;600&display=swap";

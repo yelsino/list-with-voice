@@ -6,8 +6,7 @@ import {
   ListaState,
 } from "@/interfaces/list.interface";
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { saveAs } from "file-saver";
-import { obtenerImagenLista, registrarUsuario } from "../chunks/listaChunk";
+import { registrarUsuario } from "../chunks/listaChunk";
 
 const initialState: ListaState = {
   abono: null,
@@ -89,16 +88,6 @@ export const listaSlice = createSlice({
 
   },
   extraReducers: (builder) => {
-    builder.addCase(obtenerImagenLista.fulfilled, (state, action) => {
-      
-      const url = URL.createObjectURL(action.payload);
-
-      saveAs(url, "archivo.png");
-
-      URL.revokeObjectURL(url);
-
-      return state;
-    });
     builder.addCase(registrarUsuario.fulfilled, (state) => state);
   },
 });

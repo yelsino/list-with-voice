@@ -9,7 +9,7 @@ function MicrophoneVoice() {
     const pathName = usePathname();
     const { startListening, listening } = useVoiceControl();
 
-    const validRutes = ["/generar"];
+    const validRutes = ["/generar", "/precios"];
 
     const shouldShowButton = validRutes.some((e) => pathName.startsWith(e));
 

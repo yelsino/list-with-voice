@@ -5,6 +5,7 @@ import { useConvertRecordToJsonMutation, useConvertTextToJsonMutation } from '@/
 import useLLM from "usellm";
 import { ItemList } from '@prisma/client';
 import toast from 'react-hot-toast';
+import { textToPrices } from '@/redux/chunks/productosChunck';
 
 function useCreateItems() {
 
@@ -70,6 +71,14 @@ function useCreateItems() {
       });
   }
 
+  const toasTextoToProductos = (texto:string) => {
+    toast.promise(dispatch(textToPrices(texto)).unwrap(), {
+      loading: "Convirtiendo texto a productos...",
+      error: "Error al convertir texto",
+      success: "Converción de texto completa",
+    });
+  }
+
   const toastTranscription = async (audioUrl: string) => {
     const { text } = await toast.promise(llm.transcribe({ audioUrl }), {
       loading: "Convirtiendo grabación...",
@@ -84,7 +93,8 @@ function useCreateItems() {
   return {
     toastRecordToItems,
     toastTextToItems,
-    toastTranscription
+    toastTranscription,
+    toasTextoToProductos
   }
 }
 

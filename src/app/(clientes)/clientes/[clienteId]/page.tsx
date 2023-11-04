@@ -32,7 +32,7 @@ function ClienteIdPage({ params }: { params: IParams }) {
                 <p className="text-secondary-100">Cargando datos...</p>
             ) : (
                 <>
-                    <Header
+                    {/* <Header
                         childrenLeft={
                             <Link href="/clientes" className="text-2xl">
                                 <IconUsers estilo="w-8 h-8" />
@@ -48,7 +48,7 @@ function ClienteIdPage({ params }: { params: IParams }) {
                                 </div>
                             </OptionsMenu>
                         }
-                    />
+                    /> */}
 
                     <SuperTitle title={formatText(data?.data.nombres ?? "")}>
                         <div className="text-secondary-200 text-lg font-normal">
