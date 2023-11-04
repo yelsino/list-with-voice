@@ -6,7 +6,7 @@ export const productApi = createApi({
     reducerPath: "productApi",
     refetchOnFocus: true, // when the window is refocused, refetch the data
     baseQuery: fetchBaseQuery({
-        baseUrl: "",
+        baseUrl: "", 
     }),
     tagTypes: ["prices"],
     endpoints: (builder) => ({
@@ -25,13 +25,23 @@ export const productApi = createApi({
             }),
             invalidatesTags: ["prices"]
         }),
+        createPrices: builder.mutation< Price[], string>({
+            query: (texto) => ({
+                url: PRICE_LIST,
+                method: "POST",
+                body:{texto:texto}
+            }),
+            invalidatesTags: ["prices"]
+        }),
         
        
     }),
 });
 
+
+
 export const {
   useGetPricesQuery,
-  useDeletePriceMutation
-
+  useDeletePriceMutation,
+  useCreatePricesMutation
 } = productApi;

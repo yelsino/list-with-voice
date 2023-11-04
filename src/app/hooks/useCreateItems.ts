@@ -6,6 +6,7 @@ import useLLM from "usellm";
 import { ItemList } from '@prisma/client';
 import toast from 'react-hot-toast';
 import { textToPrices } from '@/redux/chunks/productosChunck';
+import { useCreatePricesMutation } from '@/redux/services/productApi';
 
 function useCreateItems() {
 
@@ -13,6 +14,7 @@ function useCreateItems() {
   const llm = useLLM({ serviceUrl: "/api/llm" });
   const [convertirRecordJson] = useConvertRecordToJsonMutation();
   const [convertTextToJson] = useConvertTextToJsonMutation()
+  const [createPrices] = useCreatePricesMutation()
   const LR = useAppSelector((state) => state.listaReducer);
 
   const toastRecordToItems = (formData: FormData) => {
@@ -72,7 +74,7 @@ function useCreateItems() {
   }
 
   const toasTextoToProductos = (texto:string) => {
-    toast.promise(dispatch(textToPrices(texto)).unwrap(), {
+    toast.promise(createPrices(texto).unwrap(), {
       loading: "Convirtiendo texto a productos...",
       error: "Error al convertir texto",
       success: "Converción de texto completa",
