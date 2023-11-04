@@ -1,6 +1,4 @@
 "use client";
-import React, { useState } from "react";
-// import { PrecioProducto } from "./page";
 import { IconDelete } from "@/app/components/Icons";
 import { Price } from "@/interfaces/product.interface";
 
